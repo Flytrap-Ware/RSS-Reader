@@ -20,9 +20,7 @@ public class SubscribeEventQueue {
     }
 
     public boolean offer(SubscribeEvent event) {
-        boolean returnValue = queue.offer(event);
-        healthCheck();
-        return returnValue;
+        return queue.offer(event);
     }
 
     public SubscribeEvent peek() {
@@ -34,9 +32,7 @@ public class SubscribeEventQueue {
         if (queue.isEmpty()) {
             throw new IllegalStateException("No events in the queue !");
         }
-        SubscribeEvent event = queue.poll();
-        healthCheck();
-        return event;
+        return queue.poll();
     }
 
     private int size() {
@@ -51,7 +47,4 @@ public class SubscribeEventQueue {
         return size() > 0;
     }
 
-    private void healthCheck() {
-        log.info("{\"totalQueueSize\":{}, \"currentQueueSize\":{}}", size());
-    }
 }

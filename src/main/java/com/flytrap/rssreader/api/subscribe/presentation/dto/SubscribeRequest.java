@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 /**
- * 로그인 후 Rss구독할 URL입니다.
+ * 로그인 후 RSS구독할 URL입니다.
  */
 public record SubscribeRequest() {
 

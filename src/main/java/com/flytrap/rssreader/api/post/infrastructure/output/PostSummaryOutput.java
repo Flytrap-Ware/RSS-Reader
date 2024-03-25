@@ -34,4 +34,3 @@ public record PostSummaryOutput(
                 .build();
     }
 }
-// 잠깐 화장실

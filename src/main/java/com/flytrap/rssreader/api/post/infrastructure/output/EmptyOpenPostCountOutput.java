@@ -1,6 +1,5 @@
 package com.flytrap.rssreader.api.post.infrastructure.output;
 
-
 /**
  * 빈 OpenPostCount
  * 테이블에 레코드가 없을때 사용합니다.

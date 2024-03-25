@@ -10,19 +10,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@Slf4j
 @Component
 @Order(3)
 @RequiredArgsConstructor
 public class AuthenticationFilter extends OncePerRequestFilter {
-    //TODO 통합테스트 해보면 좋겠습니다. 필터는 presectation은? 어느 범주로 하는게 좋을지... 빼는게 낫겠죠?
+    // TODO: 통합테스트 해보면 좋겠습니다. 필터는 presectation은? 어느 범주로 하는게 좋을지... 빼는게 낫겠죠?
     // 이게 의존성에 따라서 해봐도 될거같아요.
-    //
 
     private final AuthProperties authProperties;
     private final AuthorizationContext context;

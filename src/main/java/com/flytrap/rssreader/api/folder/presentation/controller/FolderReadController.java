@@ -55,14 +55,14 @@ public class FolderReadController implements FolderReadControllerApi {
     }
 
     @GetMapping("/{folderId}/rss")
-    public ApplicationResponse<SubscribeRequest.ResponseList> read(
+    public ApplicationResponse<SubscribeRequest.ResponseList> read( // TODO: 폴더에 구독된 블로그 목록 불러오기 API인데 이름 변경했으면 좋겠어요.
             @PathVariable Long folderId,
             @Login SessionMember member) {
 
-        //TODO 폴더에 추가된 블로그 리스트 보기 즉 folderId 가 일치하는 구독된 정보를 다가져오기
         Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
         List<Long> list = folderSubscribeService.getFolderSubscribeId(verifiedFolder.getId());
         List<Subscribe> subscribeList = subscribeService.read(list);
+
         return new ApplicationResponse<>(SubscribeRequest.ResponseList.from(subscribeList));
     }
 

@@ -17,11 +17,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-@Component // todo 외부 API는 어떤 패키지 구조로 관리하는게 좋을까요?
-public record AuthGithubProvider(WebClient githubAuthorizationServer,
-                                 WebClient githubResourceServer,
-                                 WebClient githubResourceEmailServer,
-                                 OauthProperties oauthProperties) implements AuthProvider {
+@Component
+public record AuthGithubProvider(
+    WebClient githubAuthorizationServer,
+    WebClient githubResourceServer,
+    WebClient githubResourceEmailServer,
+    OauthProperties oauthProperties) implements AuthProvider {
 
     @Override
     public Mono<AccessToken> requestAccessToken(String code) {

@@ -1,6 +1,5 @@
 package com.flytrap.rssreader.api.alert.domain;
 
-import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
 import com.flytrap.rssreader.global.model.DefaultDomain;
 import com.flytrap.rssreader.global.model.Domain;
 import lombok.AccessLevel;

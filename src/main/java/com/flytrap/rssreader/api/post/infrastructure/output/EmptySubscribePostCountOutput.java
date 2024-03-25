@@ -1,6 +1,5 @@
 package com.flytrap.rssreader.api.post.infrastructure.output;
 
-
 public class EmptySubscribePostCountOutput implements PostSubscribeCountOutput {
 
     @Override

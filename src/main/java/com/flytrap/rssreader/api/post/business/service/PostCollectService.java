@@ -10,7 +10,6 @@ import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscribeEntityJpaRepository;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-@Slf4j
 @AllArgsConstructor
 @Service
 public class PostCollectService {
@@ -88,7 +86,6 @@ public class PostCollectService {
                 postUrlMap.put(post.getGuid(), post.getTitle());
             }
             publisher.publish(post);
-            log.info("bulkInsertQueue.size() = {}", bulkInsertQueue.size());
         }
         return postUrlMap;
     }

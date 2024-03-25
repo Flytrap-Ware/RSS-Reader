@@ -40,6 +40,6 @@ public class AuthController implements AuthControllerApi {
 
         authService.logout(session);
 
-        return new ApplicationResponse<>(null); // DTO 반환
+        return new ApplicationResponse<>(null);
     }
 }
