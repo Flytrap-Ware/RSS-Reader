@@ -15,20 +15,15 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostCollectService {
-
-    @Value("${collector.subscribe-queue.select-batch-size}")
-    private int selectBatchSize;
 
     private final SubscribeCollectionPriorityQueue collectionQueue;
     private final SubscribeEntityJpaRepository subscribeRepository;
@@ -37,8 +32,7 @@ public class PostCollectService {
     // TODO: SubscribeEvent 알림 이벤트 개선하기
     // private final SubscribeEventListener subscribeEventListener;
 
-    @Scheduled(fixedDelay = 1000)
-    public void collectPosts() {
+    public void collectPosts(int selectBatchSize) {
         var now = Instant.now();
         var pageable = PageRequest.of(
             0, selectBatchSize,
