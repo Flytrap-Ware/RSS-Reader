@@ -121,8 +121,21 @@ public class FixtureFactory {
                 .build();
     }
 
-    public static List<SubscribeEntity> generateSingleSubscribeEntityList() {
-        return List.of(generateSubscribeEntity());
+    public static SubscribeEntity generateSubscribeEntity(Long id) {
+        return SubscribeEntity.builder()
+            .id(id)
+            .url(SubscribeEntityFields.url)
+            .platform(SubscribeEntityFields.platform)
+            .build();
+    }
+
+    public static List<SubscribeEntity> generateSubscribeEntityList(int times) {
+        List<SubscribeEntity> subscribeEntities = new ArrayList<>();
+        for (int i = 1; i <= times; i++) {
+            subscribeEntities.add(generateSubscribeEntity((long) i));
+        }
+
+        return subscribeEntities;
     }
 
     public static Optional<RssSubscribeData> generateRssSubscribeData() {
