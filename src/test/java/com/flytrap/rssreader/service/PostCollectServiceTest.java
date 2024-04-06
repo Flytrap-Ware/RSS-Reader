@@ -1,30 +1,30 @@
 package com.flytrap.rssreader.service;
 
-import static com.flytrap.rssreader.fixture.FixtureFactory.generate100PostEntityList;
 import static com.flytrap.rssreader.fixture.FixtureFactory.generate50RssItemDataList;
-import static com.flytrap.rssreader.fixture.FixtureFactory.generateSingleSubscribeEntityList;
+import static com.flytrap.rssreader.fixture.FixtureFactory.generateSubscribeEntityList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.anyString;
-import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.when;
+import static org.mockito.Mockito.times;
 
-import com.flytrap.rssreader.domain.post.q.PostBulkInsertPublisher;
-import com.flytrap.rssreader.domain.post.q.PostBulkInsertQueue;
-import com.flytrap.rssreader.infrastructure.api.parser.RssPostParser;
-import com.flytrap.rssreader.infrastructure.api.parser.dto.RssPostsData;
-import com.flytrap.rssreader.infrastructure.entity.subscribe.SubscribeEntity;
-import com.flytrap.rssreader.infrastructure.repository.PostEntityJpaRepository;
-import com.flytrap.rssreader.infrastructure.repository.SubscribeEntityJpaRepository;
+import com.flytrap.rssreader.api.parser.RssPostParser;
+import com.flytrap.rssreader.api.parser.dto.RssPostsData;
+import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
+import com.flytrap.rssreader.api.post.business.service.collect.SubscribeCollectionPriorityQueue;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscribeEntityJpaRepository;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 @DisplayName("PostCollect 서비스 로직 단위 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -37,42 +37,30 @@ class PostCollectServiceTest {
     SubscribeEntityJpaRepository subscribeEntityJpaRepository;
 
     @Mock
-    PostEntityJpaRepository postEntityJpaRepository;
-
-    @Mock
-    PostBulkInsertPublisher publisher;
-
-    @Mock
-    PostBulkInsertQueue bulkInsertQueue;
+    SubscribeCollectionPriorityQueue collectionQueue;
 
     @InjectMocks
     PostCollectService postCollectService;
 
-
-    @BeforeEach
-    void init() {
-        List<SubscribeEntity> subscribes = generateSingleSubscribeEntityList();
-        when(postEntityJpaRepository.findAllBySubscribeOrderByPubDateDesc(any()))
-                .thenReturn(generate100PostEntityList());
-
-    }
-
-    @DisplayName("RSS 문서에서 파싱된 게시글 목록을 모두 DB에 저장할 수 있다.")
+    @DisplayName("한번에 n개의 Subscribe를 불러와 파싱할 수 있다.")
     @Test
-    void processPostCollectionAsyncTest() throws InterruptedException {
-
+    void collectPostsTest() {
         // given
-        RssPostsData postData = new RssPostsData("title",
-                generate50RssItemDataList());
-        SubscribeEntity subscribe = generateSingleSubscribeEntityList().get(0);
+        AtomicInteger callCount = new AtomicInteger(0);
+        int expectedPollCount = 50;
+        List<SubscribeEntity> subscribes = generateSubscribeEntityList(expectedPollCount);
+        RssPostsData postData = new RssPostsData("title", generate50RssItemDataList());
+        when(subscribeEntityJpaRepository.findAll(any(Pageable.class)))
+            .thenReturn(new PageImpl<>(subscribes));
+
+        when(collectionQueue.isQueueEmpty()).thenAnswer(invocation -> callCount.getAndIncrement() >= expectedPollCount);
+        when(collectionQueue.poll()).thenAnswer(invocation -> subscribes.get(0));
+        when(postParser.parseRssDocuments(anyString())).thenReturn(Optional.of(postData));
 
         // when
-        when(postParser.parseRssDocuments(anyString())).thenReturn(Optional.of(postData));
-        postCollectService.processPostCollectionAsync(subscribe).join();
+        postCollectService.collectPosts(expectedPollCount);
 
         // then
-        verify(subscribeEntityJpaRepository).save(subscribe);
-        verify(postEntityJpaRepository).findAllBySubscribeOrderByPubDateDesc(subscribe);
-        verify(publisher, times(postData.itemData().size())).publish(any());
+        verify(collectionQueue, times(expectedPollCount)).poll();
     }
 }

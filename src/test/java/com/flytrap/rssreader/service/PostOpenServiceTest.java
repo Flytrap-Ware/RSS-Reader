@@ -1,13 +1,14 @@
 package com.flytrap.rssreader.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import com.flytrap.rssreader.infrastructure.entity.post.OpenPostCount;
-import com.flytrap.rssreader.infrastructure.repository.PostOpenRepository;
 import java.util.List;
+
+import com.flytrap.rssreader.api.post.business.service.PostOpenService;
+import com.flytrap.rssreader.api.post.infrastructure.output.OpenPostCountOutput;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenRepository;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -39,7 +40,7 @@ class PostOpenServiceTest {
         void countOpens_shouldCountOpensOfSubscribers() {
             // given
             when(postOpenRepository.countOpens(anyLong(), anyList()))
-                    .thenReturn(List.of(new OpenPostCount() {
+                    .thenReturn(List.of(new OpenPostCountOutput() {
                         @Override
                         public long getSubscribeId() {
                             return 1L;
@@ -66,7 +67,7 @@ class PostOpenServiceTest {
         void countOpens_shouldCountOpensOfSubscribersByBlog() {
             // given
             when(postOpenRepository.countOpens(anyLong(), anyList()))
-                    .thenReturn(List.of(new OpenPostCount() {
+                    .thenReturn(List.of(new OpenPostCountOutput() {
                         @Override
                         public long getSubscribeId() {
                             return 1L;
@@ -76,7 +77,7 @@ class PostOpenServiceTest {
                         public int getPostCount() {
                             return 3;
                         }
-                    }, new OpenPostCount() {
+                    }, new OpenPostCountOutput() {
                         @Override
                         public long getSubscribeId() {
                             return 2L;

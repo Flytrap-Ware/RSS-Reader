@@ -1,9 +1,9 @@
 spring:
   profiles:
-    active: prod
+    active: local
     group:
         local: [ local ] # localhost
         prod: [ prod ] # aws ec2
-    include: [ admin, oauth, auth ]
+    include: [ admin, oauth, auth, collector ]
   jpa:
     open-in-view: false

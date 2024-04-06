@@ -1,8 +1,8 @@
 package com.flytrap.rssreader.fixture;
 
-import com.flytrap.rssreader.domain.member.OauthServer;
-import com.flytrap.rssreader.domain.subscribe.BlogPlatform;
-import com.flytrap.rssreader.infrastructure.entity.subscribe.SubscribeEntity;
+import com.flytrap.rssreader.api.member.domain.OauthServer;
+import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import java.time.Instant;
 
 public class FixtureFields {

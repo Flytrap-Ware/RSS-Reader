@@ -5,12 +5,14 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.flytrap.rssreader.domain.folder.Folder;
-import com.flytrap.rssreader.domain.shared.SharedFolder;
+import com.flytrap.rssreader.api.folder.business.facade.InvitedToFolderFacade;
+import com.flytrap.rssreader.api.folder.business.service.SharedFolderReadService;
+import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.domain.SharedFolder;
+import com.flytrap.rssreader.api.member.business.service.MemberService;
 import com.flytrap.rssreader.fixture.FixtureFactory;
 import com.flytrap.rssreader.fixture.FolderFixtureFactory;
-import com.flytrap.rssreader.service.MemberService;
-import com.flytrap.rssreader.service.SharedFolderReadService;
+
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.SoftAssertions;

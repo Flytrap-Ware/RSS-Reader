@@ -3,9 +3,9 @@ package com.flytrap.rssreader.domain;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.flytrap.rssreader.domain.alert.SubscribeEvent;
-import com.flytrap.rssreader.domain.alert.q.SubscribeEventListener;
-import com.flytrap.rssreader.domain.alert.q.SubscribeEventQueue;
+import com.flytrap.rssreader.api.alert.business.event.subscribe.SubscribeEvent;
+import com.flytrap.rssreader.api.alert.business.event.subscribe.SubscribeEventListener;
+import com.flytrap.rssreader.api.alert.business.event.subscribe.SubscribeEventQueue;
 import java.util.Map;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;

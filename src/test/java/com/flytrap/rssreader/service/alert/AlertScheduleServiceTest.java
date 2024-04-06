@@ -8,15 +8,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.flytrap.rssreader.domain.alert.Alert;
-import com.flytrap.rssreader.domain.alert.AlertPlatform;
-import com.flytrap.rssreader.domain.alert.SubscribeEvent;
-import com.flytrap.rssreader.domain.alert.q.SubscribeEventQueue;
-import com.flytrap.rssreader.domain.folder.Folder;
-import com.flytrap.rssreader.infrastructure.entity.alert.AlertEntity;
-import com.flytrap.rssreader.service.folder.FolderReadService;
+import com.flytrap.rssreader.api.alert.business.event.subscribe.SubscribeEvent;
+import com.flytrap.rssreader.api.alert.business.service.AlertScheduleService;
+import com.flytrap.rssreader.api.alert.business.service.AlertService;
+import com.flytrap.rssreader.api.alert.domain.Alert;
+import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
+import com.flytrap.rssreader.api.alert.business.event.subscribe.SubscribeEventQueue;
 import java.util.List;
 import java.util.Map;
+
+import com.flytrap.rssreader.api.folder.business.service.FolderReadService;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

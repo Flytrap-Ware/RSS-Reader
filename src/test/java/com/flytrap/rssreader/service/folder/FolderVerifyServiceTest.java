@@ -3,17 +3,18 @@ package com.flytrap.rssreader.service.folder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import com.flytrap.rssreader.domain.folder.Folder;
-import com.flytrap.rssreader.domain.member.Member;
+import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
+import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
+import com.flytrap.rssreader.api.folder.infrastructure.repository.SharedFolderJpaRepository;
+import com.flytrap.rssreader.api.member.domain.Member;
 import com.flytrap.rssreader.fixture.FixtureFactory;
 import com.flytrap.rssreader.fixture.FolderFixtureFactory;
-import com.flytrap.rssreader.global.exception.ForbiddenAccessFolderException;
-import com.flytrap.rssreader.global.exception.NotBelongToMemberException;
-import com.flytrap.rssreader.infrastructure.repository.FolderEntityJpaRepository;
+import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
+import com.flytrap.rssreader.global.exception.domain.NotBelongToMemberException;
 
 import java.util.Optional;
 
-import com.flytrap.rssreader.infrastructure.repository.SharedFolderJpaRepository;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

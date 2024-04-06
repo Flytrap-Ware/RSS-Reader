@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.flytrap.rssreader.domain.folder.Folder;
+import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
+import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.subscribe.business.facade.SubscribeInFolderFacade;
 import com.flytrap.rssreader.fixture.FolderFixtureFactory;
 import com.flytrap.rssreader.fixture.SubscribeFixtureFactory;
-import com.flytrap.rssreader.service.SubscribeService;
-import com.flytrap.rssreader.service.folder.FolderSubscribeService;
+import com.flytrap.rssreader.api.subscribe.business.service.SubscribeService;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;

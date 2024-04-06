@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.global.config;
 
-import com.flytrap.rssreader.presentation.resolver.AuthorizationArgumentResolver;
+import com.flytrap.rssreader.global.presentation.resolver.AuthorizationArgumentResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

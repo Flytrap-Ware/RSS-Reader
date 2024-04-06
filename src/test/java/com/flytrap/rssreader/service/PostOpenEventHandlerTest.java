@@ -1,11 +1,12 @@
 package com.flytrap.rssreader.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.flytrap.rssreader.domain.post.PostOpenEvent;
-import com.flytrap.rssreader.service.dto.PostOpenParam;
+import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEvent;
+import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventHandler;
+import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventParam;
+import com.flytrap.rssreader.api.post.business.service.PostOpenService;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ class PostOpenEventHandlerTest {
     @DisplayName("handle 메서드는 PostOpenEvent를 처리한다.")
     void handle_shouldHandlePostOpenEvent() {
         // given
-        PostOpenEvent event = new PostOpenEvent(new PostOpenParam(1L, 0L));
+        PostOpenEvent event = new PostOpenEvent(new PostOpenEventParam(1L, 0L));
 
         // when
         postOpenEventHandler.handle(event);

@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.global.config;
 
-import com.flytrap.rssreader.infrastructure.properties.OauthProperties;
+import com.flytrap.rssreader.global.properties.OauthProperties;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;

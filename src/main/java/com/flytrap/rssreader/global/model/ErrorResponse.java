@@ -1,9 +1,8 @@
 package com.flytrap.rssreader.global.model;
 
-import com.flytrap.rssreader.global.exception.ApplicationException;
+import com.flytrap.rssreader.global.exception.domain.ApplicationException;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
 @Getter

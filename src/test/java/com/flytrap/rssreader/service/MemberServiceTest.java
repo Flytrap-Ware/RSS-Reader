@@ -8,9 +8,11 @@ import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.when;
 
-import com.flytrap.rssreader.domain.member.Member;
-import com.flytrap.rssreader.infrastructure.repository.MemberEntityJpaRepository;
 import java.util.Optional;
+
+import com.flytrap.rssreader.api.member.business.service.MemberService;
+import com.flytrap.rssreader.api.member.domain.Member;
+import com.flytrap.rssreader.api.member.infrastructure.repository.MemberEntityJpaRepository;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
