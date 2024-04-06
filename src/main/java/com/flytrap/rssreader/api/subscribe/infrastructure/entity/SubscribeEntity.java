@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +35,9 @@ public class SubscribeEntity {
 
     @Enumerated(EnumType.STRING)
     private BlogPlatform platform;
+
+    @Column
+    private Instant lastCollectedAt;
 
     @Builder
     protected SubscribeEntity(Long id, String title, String url,
@@ -87,5 +91,9 @@ public class SubscribeEntity {
 
     public void updateTitle(String title) {
         this.title = title;
+    }
+
+    public void updateLastCollectedAt(Instant lastCollectedAt) {
+        this.lastCollectedAt = lastCollectedAt;
     }
 }

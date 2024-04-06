@@ -8,6 +8,10 @@ public record RssPostsData(
     List<RssItemData> itemData
 ) {
 
+    public int getItemSize() {
+        return itemData.size();
+    }
+
     public record RssItemData(
         String guid,
         String title,
