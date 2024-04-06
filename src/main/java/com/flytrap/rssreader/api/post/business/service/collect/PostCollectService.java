@@ -63,7 +63,7 @@ public class PostCollectService {
 
     private List<PostEntity> generateCollectedPostsForUpsert(RssPostsData postData, SubscribeEntity subscribe) {
         var pageable = PageRequest.of(
-            0, postData.getItemSize(),
+            0, (int) Math.ceil(postData.getItemSize() * 1.5),
             Sort.by(Direction.DESC, "pubDate"));
         List<PostEntity> existingPosts = postRepository.findAllBySubscribe(
             subscribe, pageable);
