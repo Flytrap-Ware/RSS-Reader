@@ -1,8 +1,8 @@
 package com.flytrap.rssreader.fixture;
 
-import com.flytrap.rssreader.domain.folder.Folder;
-import com.flytrap.rssreader.domain.member.Member;
-import com.flytrap.rssreader.infrastructure.entity.folder.FolderEntity;
+import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
+import com.flytrap.rssreader.api.member.domain.Member;
 
 public class FolderFixtureFactory {
 

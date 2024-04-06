@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.global.config;
 
-import com.flytrap.rssreader.domain.alert.q.SubscribeEventQueue;
+import com.flytrap.rssreader.api.alert.business.event.subscribe.SubscribeEventQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,19 +1,19 @@
 package com.flytrap.rssreader.fixture;
 
-import com.flytrap.rssreader.domain.member.Member;
-import com.flytrap.rssreader.domain.subscribe.BlogPlatform;
+import com.flytrap.rssreader.api.member.domain.Member;
+import com.flytrap.rssreader.api.member.infrastructure.entity.MemberEntity;
+import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
+import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import com.flytrap.rssreader.fixture.FixtureFields.MemberEntityFields;
 import com.flytrap.rssreader.fixture.FixtureFields.MemberFields;
 import com.flytrap.rssreader.fixture.FixtureFields.PostEntityFields;
 import com.flytrap.rssreader.fixture.FixtureFields.RssItemResourceFields;
 import com.flytrap.rssreader.fixture.FixtureFields.SubscribeEntityFields;
 import com.flytrap.rssreader.fixture.FixtureFields.UserResourceFields;
-import com.flytrap.rssreader.infrastructure.api.parser.dto.RssPostsData.RssItemData;
-import com.flytrap.rssreader.infrastructure.api.dto.UserResource;
-import com.flytrap.rssreader.infrastructure.entity.member.MemberEntity;
-import com.flytrap.rssreader.infrastructure.entity.post.PostEntity;
-import com.flytrap.rssreader.infrastructure.entity.subscribe.SubscribeEntity;
-import com.flytrap.rssreader.infrastructure.api.parser.dto.RssSubscribeData;
+import com.flytrap.rssreader.api.parser.dto.RssPostsData.RssItemData;
+import com.flytrap.rssreader.api.auth.infrastructure.external.dto.UserResource;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
+import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

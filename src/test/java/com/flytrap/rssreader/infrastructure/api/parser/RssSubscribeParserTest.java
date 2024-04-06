@@ -2,9 +2,10 @@ package com.flytrap.rssreader.infrastructure.api.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.flytrap.rssreader.domain.subscribe.BlogPlatform;
-import com.flytrap.rssreader.infrastructure.api.parser.dto.RssSubscribeData;
-import com.flytrap.rssreader.presentation.dto.SubscribeRequest.CreateRequest;
+import com.flytrap.rssreader.api.parser.RssSubscribeParser;
+import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
+import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
+import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest.CreateRequest;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Assertions;

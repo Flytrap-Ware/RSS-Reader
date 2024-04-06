@@ -4,12 +4,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.flytrap.rssreader.domain.folder.Folder;
-import com.flytrap.rssreader.domain.member.Member;
+import com.flytrap.rssreader.api.folder.business.service.SharedFolderUpdateService;
+import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.infrastructure.entity.SharedFolderEntity;
+import com.flytrap.rssreader.api.folder.infrastructure.repository.SharedFolderJpaRepository;
+import com.flytrap.rssreader.api.member.domain.Member;
 import com.flytrap.rssreader.fixture.FixtureFactory;
 import com.flytrap.rssreader.fixture.FolderFixtureFactory;
-import com.flytrap.rssreader.infrastructure.entity.shared.SharedFolderEntity;
-import com.flytrap.rssreader.infrastructure.repository.SharedFolderJpaRepository;
+
 import javax.security.sasl.AuthenticationException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;

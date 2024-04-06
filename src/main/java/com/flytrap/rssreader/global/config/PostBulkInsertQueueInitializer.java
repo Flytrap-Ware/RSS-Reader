@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.global.config;
 
-import com.flytrap.rssreader.domain.post.q.PostBulkInsertQueue;
+import com.flytrap.rssreader.api.post.business.event.postInsert.PostBulkInsertQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

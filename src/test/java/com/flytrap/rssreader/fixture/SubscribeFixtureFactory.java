@@ -1,7 +1,6 @@
 package com.flytrap.rssreader.fixture;
 
-import com.flytrap.rssreader.domain.member.Member;
-import com.flytrap.rssreader.domain.subscribe.Subscribe;
+import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
 
 public class SubscribeFixtureFactory {
 

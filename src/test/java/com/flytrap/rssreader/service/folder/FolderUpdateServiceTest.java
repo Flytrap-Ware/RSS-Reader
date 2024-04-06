@@ -2,15 +2,15 @@ package com.flytrap.rssreader.service.folder;
 
 import static org.mockito.Mockito.when;
 
-import com.flytrap.rssreader.domain.folder.Folder;
-import com.flytrap.rssreader.domain.member.Member;
+import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
+import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
+import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
+import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
+import com.flytrap.rssreader.api.folder.presentation.dto.FolderRequest;
+import com.flytrap.rssreader.api.member.domain.Member;
 import com.flytrap.rssreader.fixture.FixtureFactory;
 import com.flytrap.rssreader.fixture.FolderFixtureFactory;
-import com.flytrap.rssreader.infrastructure.entity.folder.FolderEntity;
-import com.flytrap.rssreader.infrastructure.repository.FolderEntityJpaRepository;
-import com.flytrap.rssreader.presentation.dto.FolderRequest;
-import com.flytrap.rssreader.service.folder.FolderUpdateService;
-import com.flytrap.rssreader.service.folder.FolderVerifyService;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
