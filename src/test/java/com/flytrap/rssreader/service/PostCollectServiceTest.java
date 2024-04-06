@@ -12,6 +12,7 @@ import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
 import com.flytrap.rssreader.api.post.business.service.collect.SubscribeCollectionPriorityQueue;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscribeEntityJpaRepository;
 import java.util.List;
@@ -35,6 +36,9 @@ class PostCollectServiceTest {
 
     @Mock
     SubscribeEntityJpaRepository subscribeEntityJpaRepository;
+
+    @Mock
+    PostEntityJpaRepository postEntityJpaRepository;
 
     @Mock
     SubscribeCollectionPriorityQueue collectionQueue;
