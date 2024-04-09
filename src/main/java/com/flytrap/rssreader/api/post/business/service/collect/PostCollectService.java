@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -62,11 +61,7 @@ public class PostCollectService {
     }
 
     private List<PostEntity> generateCollectedPostsForUpsert(RssPostsData postData, SubscribeEntity subscribe) {
-        var pageable = PageRequest.of(
-            0, (int) Math.ceil(postData.getItemSize() * 1.5),
-            Sort.by(Direction.DESC, "pubDate"));
-        List<PostEntity> existingPosts = postRepository.findAllBySubscribe(
-            subscribe, pageable);
+        List<PostEntity> existingPosts = postRepository.findAllBySubscribe(subscribe);
 
         Map<String, PostEntity> existingPostsMap = convertListToHashSet(existingPosts);
         List<PostEntity> collectedPosts = new ArrayList<>();
