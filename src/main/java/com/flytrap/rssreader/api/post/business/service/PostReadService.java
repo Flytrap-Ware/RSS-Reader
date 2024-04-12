@@ -28,7 +28,7 @@ public class PostReadService {
 
     @Transactional(readOnly = true)
     @PublishEvent(eventType = PostOpenEvent.class,
-            params = "#{T(com.flytrap.rssreader.service.dto.PostOpenParam).create(#sessionMember.id(), #postId)}")
+            params = "#{T(com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventParam).create(#sessionMember.id(), #postId)}")
     public Post getPost(SessionMember sessionMember, Long postId) {
 
         return postListReadRepository.findById(postId)
