@@ -1,19 +1,15 @@
 package com.flytrap.rssreader.api.alert.business.service;
 
-import com.flytrap.rssreader.api.alert.business.event.subscribe.AlertEvent;
-import com.flytrap.rssreader.api.alert.business.service.dto.AlertParam;
 import com.flytrap.rssreader.api.alert.domain.Alert;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
 import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
-import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertEntityJpaRepository;
-import com.flytrap.rssreader.global.event.PublishEvent;
-import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import com.flytrap.rssreader.api.alert.infrastructure.external.AlertSender;
+import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertEntityJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
+import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -38,16 +34,12 @@ public class AlertService {
         alertRepository.deleteById(alert.getId());
     }
 
-    @PublishEvent(eventType = AlertEvent.class,
-            params = "#{T(com.flytrap.rssreader.api.alert.business.service.dto.AlertParam).create(#folderName, #webhookUrl, #posts)}")
-    public void publishAlertEvent(String folderName, String webhookUrl, Map<String, String> posts) {}
-
-    public void sendAlertToPlatform(AlertParam value) {
-        AlertPlatform alertPlatform = AlertPlatform.parseWebhookUrl(value.webhookUrl());
+    public void sendAlertToPlatform(String folderName, String webhookUrl, List<PostEntity> posts) {
+        AlertPlatform alertPlatform = AlertPlatform.parseWebhookUrl(webhookUrl);
 
         for (AlertSender alertSender : alertSenders) {
             if (alertSender.isSupport(alertPlatform)) {
-                alertSender.sendAlert(value);
+                alertSender.sendAlert(folderName, webhookUrl, posts);
             }
         }
     }

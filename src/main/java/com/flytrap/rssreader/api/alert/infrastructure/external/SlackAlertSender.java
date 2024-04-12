@@ -1,9 +1,9 @@
 package com.flytrap.rssreader.api.alert.infrastructure.external;
 
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
-import com.flytrap.rssreader.api.alert.business.service.dto.AlertParam;
+import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -26,11 +26,11 @@ public class SlackAlertSender implements AlertSender {
     }
 
     @Override
-    public void sendAlert(AlertParam value) {
-        String text = generateText(value);
+    public void sendAlert(String folderName, String webhookUrl, List<PostEntity> posts) {
+        String text = generateText(folderName, posts);
 
         webClient
-            .baseUrl(value.webhookUrl())
+            .baseUrl(webhookUrl)
             .build()
             .method(HttpMethod.POST)
             .uri("")
@@ -48,15 +48,15 @@ public class SlackAlertSender implements AlertSender {
      *
      * * Slack API Docs: https://api.slack.com/messaging/webhooks#posting_with_webhooks
      *
-     * @return Slack 웹 훅으로 보낼 메시
+     * @return Slack 웹 훅으로 보낼 메시지
      */
-    private String generateText(AlertParam value) {
+    private String generateText(String folderName, List<PostEntity> posts) {
         StringBuilder builder = new StringBuilder();
         builder.append("*새로운 글이 갱신되었습니다!*\n\n");
-        builder.append("*폴더 이름:* ").append(value.folderName()).append("\n\n");
+        builder.append("*폴더 이름:* ").append(folderName).append("\n\n");
 
-        for (Entry<String, String> entry : value.posts().entrySet()) {
-            builder.append("<").append(entry.getKey()).append("|").append(entry.getValue()).append(">\n\n");
+        for (PostEntity post :  posts) {
+            builder.append("<").append(post.getGuid()).append("|").append(post.getTitle()).append(">\n\n");
         }
 
         return builder.toString();
