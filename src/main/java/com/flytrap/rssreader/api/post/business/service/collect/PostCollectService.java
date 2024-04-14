@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.post.business.service.collect;
 
+import com.flytrap.rssreader.api.alert.business.event.NewPostAlertEventPublisher;
 import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
@@ -28,8 +29,7 @@ public class PostCollectService {
     private final SubscribeEntityJpaRepository subscribeRepository;
     private final PostEntityJpaRepository postRepository;
     private final RssPostParser postParser;
-    // TODO: SubscribeEvent 알림 이벤트 개선하기
-    // private final SubscribeEventListener subscribeEventListener;
+    private final NewPostAlertEventPublisher newPostAlertEventPublisher;
 
     public void collectPosts(int selectBatchSize) {
         var now = Instant.now();
@@ -65,6 +65,7 @@ public class PostCollectService {
 
         Map<String, PostEntity> existingPostsMap = convertListToHashSet(existingPosts);
         List<PostEntity> collectedPosts = new ArrayList<>();
+        List<PostEntity> newPosts = new ArrayList<>();
 
         for (RssPostsData.RssItemData itemData : postData.itemData()) {
             PostEntity post;
@@ -74,9 +75,13 @@ public class PostCollectService {
                 post.updateBy(itemData);
             } else {
                 post = PostEntity.from(itemData, subscribe);
+                newPosts.add(post);
             }
             collectedPosts.add(post);
         }
+
+        if (!newPosts.isEmpty())
+            newPostAlertEventPublisher.publishNewPostAlertEvent(subscribe, newPosts);
 
         return collectedPosts;
     }

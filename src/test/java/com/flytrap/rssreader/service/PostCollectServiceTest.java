@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.times;
 
+import com.flytrap.rssreader.api.alert.business.event.NewPostAlertEventPublisher;
 import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
@@ -43,6 +44,9 @@ class PostCollectServiceTest {
     @Mock
     SubscribeCollectionPriorityQueue collectionQueue;
 
+    @Mock
+    NewPostAlertEventPublisher newPostAlertEventPublisher;
+
     @InjectMocks
     PostCollectService postCollectService;
 
@@ -54,14 +58,14 @@ class PostCollectServiceTest {
         int expectedPollCount = 50;
         List<SubscribeEntity> subscribes = generateSubscribeEntityList(expectedPollCount);
         RssPostsData postData = new RssPostsData("title", generate50RssItemDataList());
+
+        // when
         when(subscribeEntityJpaRepository.findAll(any(Pageable.class)))
             .thenReturn(new PageImpl<>(subscribes));
-
         when(collectionQueue.isQueueEmpty()).thenAnswer(invocation -> callCount.getAndIncrement() >= expectedPollCount);
         when(collectionQueue.poll()).thenAnswer(invocation -> subscribes.get(0));
         when(postParser.parseRssDocuments(anyString())).thenReturn(Optional.of(postData));
 
-        // when
         postCollectService.collectPosts(expectedPollCount);
 
         // then
