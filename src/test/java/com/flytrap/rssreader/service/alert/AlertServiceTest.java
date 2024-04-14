@@ -7,15 +7,15 @@ import static org.mockito.Mockito.when;
 
 import com.flytrap.rssreader.api.alert.business.service.AlertService;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
+import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
 import com.flytrap.rssreader.api.alert.infrastructure.external.AlertSender;
 import com.flytrap.rssreader.api.alert.infrastructure.external.DiscordAlertSender;
 import com.flytrap.rssreader.api.alert.infrastructure.external.SlackAlertSender;
-import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
 import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertEntityJpaRepository;
-import com.flytrap.rssreader.api.alert.business.service.dto.AlertParam;
+import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
+import com.flytrap.rssreader.fixture.FixtureFactory;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -100,23 +100,16 @@ class AlertServiceTest {
     @Test
     @DisplayName("특정 플랫폼 알람 받기")
     void testNotifyPlatform() {
-
         // then
-        AlertParam alertParam = new AlertParam(
-            "folderName",
-            AlertPlatform.SLACK.getSignatureUrl(),
-            Map.of(
-                "newPostUrl1", "newPostTitle1",
-                "newPostUrl2", "newPostTitle2",
-                "newPostUrl3", "newPostTitle3"
-            )
-        );
+        String folderName = "folder1";
+        String webhookUrl = AlertPlatform.SLACK.getSignatureUrl() + "webhookUrl";
+        List<PostEntity> posts = FixtureFactory.generate100PostEntityList();
 
         // when
         when(slackAlertSender.isSupport(AlertPlatform.SLACK)).thenReturn(true);
-        alertService.sendAlertToPlatform(alertParam);
+        alertService.sendAlertToPlatform(folderName, webhookUrl, posts);
 
         // then
-        verify(slackAlertSender, times(1)).sendAlert(alertParam);
+        verify(slackAlertSender, times(1)).sendAlert(folderName, webhookUrl, posts);
     }
 }
