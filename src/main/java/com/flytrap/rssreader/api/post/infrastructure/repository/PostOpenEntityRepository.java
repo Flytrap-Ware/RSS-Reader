@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PostOpenRepository extends JpaRepository<OpenEntity, Long> {
+public interface PostOpenEntityRepository extends JpaRepository<OpenEntity, Long> {
 
     boolean existsByMemberIdAndPostId(Long memberId, Long postId);
 

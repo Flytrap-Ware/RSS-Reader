@@ -9,7 +9,7 @@ import com.flytrap.rssreader.api.folder.presentation.controller.swagger.FolderRe
 import com.flytrap.rssreader.api.folder.presentation.dto.Folders;
 import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest;
 import com.flytrap.rssreader.api.post.business.facade.OpenCheckFacade;
 import com.flytrap.rssreader.api.subscribe.business.facade.SubscribeInFolderFacade;
@@ -37,7 +37,7 @@ public class FolderReadController implements FolderReadControllerApi {
     private final FolderSubscribeService folderSubscribeService;
 
     @GetMapping
-    public ApplicationResponse<Folders> getFolders(@Login SessionMember member) {
+    public ApplicationResponse<Folders> getFolders(@Login AccountSession member) {
 
         // 내가 소속된 폴더 목록 반환
         List<? extends Folder> folders = myFolderFacade.getMyFolders(member.id());
@@ -57,7 +57,7 @@ public class FolderReadController implements FolderReadControllerApi {
     @GetMapping("/{folderId}/rss")
     public ApplicationResponse<SubscribeRequest.ResponseList> read( // TODO: 폴더에 구독된 블로그 목록 불러오기 API인데 이름 변경했으면 좋겠어요.
             @PathVariable Long folderId,
-            @Login SessionMember member) {
+            @Login AccountSession member) {
 
         Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
         List<Long> list = folderSubscribeService.getFolderSubscribeId(verifiedFolder.getId());

@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.post.business.service.PostOpenService;
 import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostUpdateControllerApi;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.reaction.presentation.dto.ReactionRequest;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import com.flytrap.rssreader.api.reaction.business.service.ReactionService;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ public class PostUpdateController implements PostUpdateControllerApi {
     public ApplicationResponse<Long> addReaction(
             @PathVariable Long postId,
             @Valid @RequestBody ReactionRequest request,
-            @Login SessionMember member) {
+            @Login AccountSession member) {
 
         //TODO: 1.공유된 폴더인가?, 유효한 폴더 인가?
         // 2.공유폴더에 구독된 POST를 알아야한다
@@ -43,7 +43,7 @@ public class PostUpdateController implements PostUpdateControllerApi {
     @DeleteMapping("/{postId}/reactions")
     public ApplicationResponse<Void> deleteReaction(
             @PathVariable Long postId,
-            @Login SessionMember member) {
+            @Login AccountSession member) {
 
         //TODO: 1.공유된 폴더인가?, 유효한 폴더 인가?
         // 2.공유폴더에 구독된 POST를 알아야한다
@@ -57,7 +57,7 @@ public class PostUpdateController implements PostUpdateControllerApi {
     @DeleteMapping("/{postId}/read")
     public ApplicationResponse<Void> deleteRead(
             @PathVariable Long postId,
-            @Login SessionMember member) {
+            @Login AccountSession member) {
 
         postOpenService.deleteRead(member.id(), postId);
 

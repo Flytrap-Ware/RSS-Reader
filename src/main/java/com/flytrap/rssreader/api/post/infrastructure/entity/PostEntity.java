@@ -1,7 +1,10 @@
 package com.flytrap.rssreader.api.post.infrastructure.entity;
 
+import com.flytrap.rssreader.api.post.domain.Bookmark;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
+import com.flytrap.rssreader.api.post.domain.PostId;
+import com.flytrap.rssreader.api.post.domain.PostRead;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -72,15 +75,17 @@ public class PostEntity {
         this.description = itemData.description();
     }
 
-    public Post toDomain() {
+    public Post toDomain(PostRead read, Bookmark bookmark) {
         return Post.builder()
-                .id(id)
-                .subscribeId(subscribe.getId())
+                .id(new PostId(id))
+                .subscribeTitle(subscribe.getTitle())
                 .guid(guid)
                 .title(title)
                 .thumbnailUrl(thumbnailUrl)
                 .description(description)
                 .pubDate(pubDate)
+                .read(read)
+                .bookmark(bookmark)
                 .build();
     }
 

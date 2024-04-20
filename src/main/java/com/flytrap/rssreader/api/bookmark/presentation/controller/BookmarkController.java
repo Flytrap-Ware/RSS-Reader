@@ -4,10 +4,11 @@ import com.flytrap.rssreader.api.bookmark.domain.Bookmark;
 import com.flytrap.rssreader.api.post.business.service.PostReadService;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
+import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.presentation.dto.response.PostResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.bookmark.presentation.dto.BookmarkRequest;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import com.flytrap.rssreader.api.bookmark.business.service.BookmarkService;
 import com.flytrap.rssreader.api.bookmark.business.service.BookmarkVerifyOwnerService;
@@ -40,7 +41,7 @@ public class BookmarkController implements BookmarkControllerApi {
     public ApplicationResponse<PostResponse.PostListResponse> getBookmarks(
         PostFilter postFilter,
         @PageableDefault(page = 0, size = 15) Pageable pageable,
-        @Login SessionMember member
+        @Login AccountSession member
     ) {
 
         List<PostResponse> posts = bookmarkService.getBookmarks(member, postFilter, pageable)
@@ -56,10 +57,10 @@ public class BookmarkController implements BookmarkControllerApi {
     @PostMapping("/posts/{postId}/bookmarks")
     public ApplicationResponse<BookmarkRequest.Response> addBookmark(
         @PathVariable Long postId,
-        @Login SessionMember member
+        @Login AccountSession member
     ) {
 
-        Post post = postService.getPost(member, postId);
+        Post post = postService.getPost(member, new PostId(postId));
         Bookmark bookmark = bookmarkService.addBookmark(member, post);
 
         return new ApplicationResponse<>(BookmarkRequest.Response.from(bookmark));
@@ -69,7 +70,7 @@ public class BookmarkController implements BookmarkControllerApi {
     @DeleteMapping("/posts/{postId}/bookmarks")
     public ApplicationResponse<String> removeBookmark(
         @PathVariable Long postId,
-        @Login SessionMember member
+        @Login AccountSession member
     ) {
 
         bookmarkService.removeBookmark(member, postId);

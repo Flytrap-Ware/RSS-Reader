@@ -2,7 +2,8 @@ package com.flytrap.rssreader.api.post.business.service;
 
 import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventParam;
 import com.flytrap.rssreader.api.post.infrastructure.output.OpenPostCountOutput;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenEntityRepository;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,27 +16,41 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostOpenService {
 
-    private final PostOpenRepository postOpenRepository;
+    private final PostOpenEntityRepository postOpenEntityRepository;
 
     @Transactional
     public void open(PostOpenEventParam value) {
 
-        if (postOpenRepository.existsByMemberIdAndPostId(value.memberId(), value.postId())) {
+        if (postOpenEntityRepository.existsByMemberIdAndPostId(value.memberId(), value.postId())) {
             return;
         }
 
-        postOpenRepository.save(value.toEntity());
+        postOpenEntityRepository.save(value.toEntity());
     }
 
     @Transactional(readOnly = true)
-    public Map<Long, OpenPostCountOutput> countOpens(long id, List<Long> subscribes) {
-        return postOpenRepository.countOpens(id, subscribes).stream()
-                .collect(Collectors.toMap(OpenPostCountOutput::getSubscribeId, it -> it));
+    public Map<SubscriptionId, OpenPostCountOutput> countReadInSubscription(long id, SubscriptionId subscriptionId) {
+        return postOpenEntityRepository.countOpens(id, List.of(subscriptionId.id())).stream()
+                .collect(Collectors.toMap(
+                    output -> new SubscriptionId(output.getSubscribeId()),
+                    output -> output
+                ));
+    }
+
+    @Transactional(readOnly = true)
+    public Map<SubscriptionId, OpenPostCountOutput> countReadInSubscriptions(long id, List<SubscriptionId> subscriptionIds) {
+        List<Long> ids = subscriptionIds.stream().map(SubscriptionId::id).toList();
+
+        return postOpenEntityRepository.countOpens(id, ids).stream()
+                .collect(Collectors.toMap(
+                    output -> new SubscriptionId(output.getSubscribeId()),
+                    output -> output
+                ));
     }
 
     @Transactional
     public void deleteRead(long memberId, Long postId) {
-        postOpenRepository.deleteByMemberIdAndPostId(memberId, postId);
+        postOpenEntityRepository.deleteByMemberIdAndPostId(memberId, postId);
     }
 
 }

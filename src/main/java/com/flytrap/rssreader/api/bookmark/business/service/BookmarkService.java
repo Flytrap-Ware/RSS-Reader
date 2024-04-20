@@ -8,7 +8,7 @@ import com.flytrap.rssreader.api.post.infrastructure.repository.PostListReadRepo
 import com.flytrap.rssreader.global.exception.domain.DuplicateDomainException;
 import com.flytrap.rssreader.api.bookmark.infrastructure.entity.BookmarkEntity;
 import com.flytrap.rssreader.api.bookmark.infrastructure.repository.BookmarkEntityJpaRepository;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -23,29 +23,29 @@ public class BookmarkService {
     private final PostListReadRepository postListReadRepository;
     private final BookmarkEntityJpaRepository bookmarkRepository;
 
-    public List<Post> getBookmarks(SessionMember member, PostFilter postFilter, Pageable pageable) {
+    public List<Post> getBookmarks(AccountSession member, PostFilter postFilter, Pageable pageable) {
         return postListReadRepository.findAllBookmarks(member.id(), postFilter, pageable)
             .stream()
             .map(PostSummaryOutput::toDomain)
             .toList();
     }
 
-    public Bookmark addBookmark(SessionMember member, Post post) {
+    public Bookmark addBookmark(AccountSession member, Post post) {
 
         if (existBookmark(member, post)) {
             throw new DuplicateDomainException(Bookmark.class);
         }
 
-        return bookmarkRepository.save(BookmarkEntity.create(member.id(), post.getId())).toDomain();
+        return bookmarkRepository.save(BookmarkEntity.create(member.id(), post.getId().id())).toDomain();
     }
 
-    public void removeBookmark(SessionMember member, Long postId) {
+    public void removeBookmark(AccountSession member, Long postId) {
 
         bookmarkRepository.deleteAllByMemberIdAndPostId(member.id(), postId);
     }
 
-    public boolean existBookmark(SessionMember member, Post post) {
-        return bookmarkRepository.existsByMemberIdAndPostId(member.id(), post.getId());
+    public boolean existBookmark(AccountSession member, Post post) {
+        return bookmarkRepository.existsByMemberIdAndPostId(member.id(), post.getId().id());
     }
 
 }

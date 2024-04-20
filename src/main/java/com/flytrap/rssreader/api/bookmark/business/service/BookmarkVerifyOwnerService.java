@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.bookmark.domain.Bookmark;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import com.flytrap.rssreader.global.exception.domain.NotBelongToMemberException;
 import com.flytrap.rssreader.api.bookmark.infrastructure.repository.BookmarkEntityJpaRepository;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ public class BookmarkVerifyOwnerService {
     private final BookmarkEntityJpaRepository bookmarkRepository;
 
     @Transactional(readOnly = true)
-    public Bookmark getVerifiedBookmark(SessionMember member, Long bookmarkId) {
+    public Bookmark getVerifiedBookmark(AccountSession member, Long bookmarkId) {
 
        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
            .orElseThrow(() -> new NoSuchDomainException(Bookmark.class))
@@ -27,7 +27,7 @@ public class BookmarkVerifyOwnerService {
         return bookmark;
     }
 
-    private void verifyOwnership(SessionMember member, Bookmark bookmark) {
+    private void verifyOwnership(AccountSession member, Bookmark bookmark) {
         if (bookmark.getMemberId() != member.id()) {
             throw new NotBelongToMemberException(bookmark);
         }

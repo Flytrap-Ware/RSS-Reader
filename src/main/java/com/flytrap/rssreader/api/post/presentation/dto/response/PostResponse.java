@@ -13,7 +13,7 @@ public record PostResponse(
         String description,
         Instant pubDate,
         String subscribeTitle,
-        boolean open,
+        boolean read,
         boolean bookmark
 ) {
 
@@ -24,15 +24,15 @@ public record PostResponse(
 
     public static PostResponse from(Post post) {
         return new PostResponse(
-                post.getId(),
+                post.getId().id(),
                 post.getGuid(),
                 post.getTitle(),
                 post.getThumbnailUrl(),
                 post.getDescription(),
                 post.getPubDate(),
                 post.getSubscribeTitle(),
-                post.isOpen(),
-                post.isBookmark()
+                post.getRead().isOpen(),
+                post.getBookmark().isBookmark()
         );
     }
 }
