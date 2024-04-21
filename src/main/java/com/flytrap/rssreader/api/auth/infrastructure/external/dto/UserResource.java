@@ -1,8 +1,9 @@
 package com.flytrap.rssreader.api.auth.infrastructure.external.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.flytrap.rssreader.api.member.domain.Member;
-import com.flytrap.rssreader.api.member.domain.OauthServer;
+import com.flytrap.rssreader.api.account.domain.Account;
+import com.flytrap.rssreader.api.account.domain.AccountId;
+import com.flytrap.rssreader.api.account.domain.AuthProvider;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,8 @@ public class UserResource {
         this.avatarUrl = avatarUrl;
     }
 
-    public Member toDomainForCreate() {
-        return Member.of(null, login, email, avatarUrl, id, OauthServer.GITHUB, null);
+    public Account toDomainForInsert() {
+        return Account.newAccount(login, email, avatarUrl, id, AuthProvider.GITHUB);
     }
 
     public void updateEmail(UserEmailResource userEmailResource) {
