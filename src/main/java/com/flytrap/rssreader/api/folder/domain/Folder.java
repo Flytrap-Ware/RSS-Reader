@@ -5,14 +5,13 @@ import com.flytrap.rssreader.api.post.infrastructure.output.PostSubscribeCountOu
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.global.model.DefaultDomain;
 import com.flytrap.rssreader.global.model.Domain;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Getter
 @Domain(name = "folder")
@@ -79,8 +78,8 @@ public class Folder implements DefaultDomain {
         this.sharedStatus = SharedStatus.PRIVATE;
     }
 
-    public boolean isOwner(long id) {
-        return this.memberId == id;
+    public boolean isOwner(long accountId) { // TODO: 여기서 AccountId를 파라미터로 받기
+        return this.memberId == accountId;
     }
 
     public void addSubscribe(FolderSubscribe subscribe) {

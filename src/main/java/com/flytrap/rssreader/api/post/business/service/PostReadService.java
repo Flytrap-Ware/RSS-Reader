@@ -1,6 +1,5 @@
 package com.flytrap.rssreader.api.post.business.service;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEvent;
 import com.flytrap.rssreader.api.post.domain.Post;
@@ -18,8 +17,8 @@ public class PostReadService {
 
     @PublishEvent(eventType = PostOpenEvent.class,
             params = "#{T(com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventParam).create(#accountSession.id(), #postId.id())}")
-    public Post getPost(AccountSession accountSession, PostId postId) {
-        return postReader.read(postId, new AccountId(accountSession.id()));
+    public Post getPost(AccountId accountId, PostId postId) {
+        return postReader.read(postId, accountId);
     }
 
 }

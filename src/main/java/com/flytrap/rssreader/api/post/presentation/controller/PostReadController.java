@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.post.presentation.controller;
 
+import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.service.PostReadService;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostReadControllerApi;
@@ -22,10 +23,11 @@ public class PostReadController implements PostReadControllerApi {
 
     @GetMapping("/{postId}")
     public ApplicationResponse<PostResponse> getPost(
-            @PathVariable Long postId,
-            @Login AccountSession member) {
+        @PathVariable Long postId,
+        @Login AccountSession accountSession) {
 
-        PostResponse post = PostResponse.from(postReadService.getPost(member, new PostId(postId)));
+        PostResponse post = PostResponse.from(
+            postReadService.getPost(new AccountId(accountSession.id()), new PostId(postId)));
         return new ApplicationResponse<>(post);
     }
 }
