@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.fixture;
 
-import com.flytrap.rssreader.api.member.domain.OauthServer;
+import com.flytrap.rssreader.api.account.domain.AuthProvider;
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import java.time.Instant;
@@ -33,7 +33,7 @@ public class FixtureFields {
         public static String name = NAME;
         public static String profile = AVATAR_URL;
         public static Long oauthPk = LONG_1L;
-        public static OauthServer oauthServer = OauthServer.GITHUB;
+        public static AuthProvider authProvider = AuthProvider.GITHUB;
     }
 
     public static class MemberFields {
@@ -43,13 +43,13 @@ public class FixtureFields {
         public static String email = EMAIL_TEST_GMAIL;
         public static String profile = AVATAR_URL;
         public static Long oauthPk = LONG_1L;
-        public static OauthServer oauthServer = OauthServer.GITHUB;
+        public static AuthProvider authProvider = AuthProvider.GITHUB;
         public static Long anotherId = 2L;
         public static String anotherName = "anotherName";
         public static String anotherEmail = "anotherEmail";
         public static String anotherProfile = "anotherProfile";
         public static long anotherOauthPk = 2L;
-        public static OauthServer anotherOauthServer = OauthServer.GITHUB;
+        public static AuthProvider anotherAuthProvider = AuthProvider.GITHUB;
     }
 
     public static class RssItemResourceFields {

@@ -2,21 +2,21 @@ package com.flytrap.rssreader.fixture;
 
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
-import com.flytrap.rssreader.api.member.domain.Member;
+import com.flytrap.rssreader.api.account.domain.Account;
 
 public class FolderFixtureFactory {
 
     public static class FolderFields {
         public static Long id = 1L;
         public static String name = "folderName";
-        public static Member member = FixtureFactory.generateMember();
+        public static Account member = FixtureFactory.generateAccount();
     }
 
     public static FolderEntity generateFolderEntity() {
         return FolderEntity.builder()
                 .id(FolderFields.id)
                 .name(FolderFields.name)
-                .memberId(FolderFields.member.getId())
+                .memberId(FolderFields.member.getId().value())
                 .isShared(false)
                 .isDeleted(false)
                 .build();
@@ -26,7 +26,7 @@ public class FolderFixtureFactory {
         return Folder.builder()
                 .id(FolderFields.id)
                 .name(FolderFields.name)
-                .memberId(FolderFields.member.getId())
+                .memberId(FolderFields.member.getId().value())
                 .isShared(false)
                 .isDeleted(false)
                 .build();
@@ -36,7 +36,7 @@ public class FolderFixtureFactory {
         return Folder.builder()
                 .id(FolderFields.id)
                 .name(FolderFields.name)
-                .memberId(FolderFields.member.getId())
+                .memberId(FolderFields.member.getId().value())
                 .isShared(true)
                 .isDeleted(false)
                 .build();

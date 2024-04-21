@@ -1,7 +1,9 @@
 package com.flytrap.rssreader.fixture;
 
-import com.flytrap.rssreader.api.member.domain.Member;
-import com.flytrap.rssreader.api.member.infrastructure.entity.MemberEntity;
+import com.flytrap.rssreader.api.account.domain.Account;
+import com.flytrap.rssreader.api.account.domain.AccountId;
+import com.flytrap.rssreader.api.account.domain.AccountName;
+import com.flytrap.rssreader.api.account.infrastructure.entity.AccountEntity;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import com.flytrap.rssreader.fixture.FixtureFields.MemberEntityFields;
@@ -20,7 +22,7 @@ import java.util.Optional;
 
 public class FixtureFactory {
 
-    // Member
+    // Account
     public static UserResource generateUserResource() {
         return UserResource.builder()
                 .id(UserResourceFields.id)
@@ -30,47 +32,47 @@ public class FixtureFactory {
                 .build();
     }
 
-    public static MemberEntity generateMemberEntity() {
-        return MemberEntity.builder()
+    public static AccountEntity generateAccountEntity() {
+        return AccountEntity.builder()
                 .id(MemberEntityFields.id)
                 .email(MemberEntityFields.email)
                 .name(MemberEntityFields.name)
                 .profile(MemberEntityFields.profile)
-                .oauthPk(MemberEntityFields.oauthPk)
-                .oauthServer(MemberEntityFields.oauthServer)
+                .providerKey(MemberEntityFields.oauthPk)
+                .authProvider(MemberEntityFields.authProvider)
                 .build();
     }
 
-    public static Member generateMember() {
-        return Member.builder()
-                .id(MemberFields.id)
-                .name(MemberFields.name)
+    public static Account generateAccount() {
+        return Account.builder()
+                .id(new AccountId(MemberFields.id))
+                .name(new AccountName(MemberFields.name))
                 .email(MemberFields.email)
                 .profile(MemberFields.profile)
-                .oauthPk(MemberFields.oauthPk)
-                .oauthServer(MemberFields.oauthServer)
+                .providerKey(MemberFields.oauthPk)
+                .authProvider(MemberFields.authProvider)
                 .build();
     }
 
-    public static Member generateMember(Long id) {
-        return Member.builder()
-                .id(id)
-                .name(MemberFields.name)
+    public static Account generateAccount(Long id) {
+        return Account.builder()
+                .id(new AccountId(id))
+                .name(new AccountName(MemberFields.name))
                 .email(MemberFields.email)
                 .profile(MemberFields.profile)
-                .oauthPk(MemberFields.oauthPk)
-                .oauthServer(MemberFields.oauthServer)
+                .providerKey(MemberFields.oauthPk)
+                .authProvider(MemberFields.authProvider)
                 .build();
     }
 
-    public static Member generateAnotherMember() {
-        return Member.builder()
-                .id(MemberFields.anotherId)
-                .name(MemberFields.anotherName)
+    public static Account generateAnotherMember() {
+        return Account.builder()
+                .id(new AccountId(MemberFields.anotherId))
+                .name(new AccountName(MemberFields.anotherName))
                 .email(MemberFields.anotherEmail)
                 .profile(MemberFields.anotherProfile)
-                .oauthPk(MemberFields.anotherOauthPk)
-                .oauthServer(MemberFields.anotherOauthServer)
+                .providerKey(MemberFields.anotherOauthPk)
+                .authProvider(MemberFields.anotherAuthProvider)
                 .build();
     }
 
