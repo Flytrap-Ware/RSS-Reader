@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.presentation.controller.swagger;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
+import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
 import com.flytrap.rssreader.api.post.presentation.dto.response.PostResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
@@ -21,6 +21,6 @@ public interface PostReadControllerApi {
     })
     ApplicationResponse<PostResponse> getPost(
             @PathVariable Long postId,
-            @Login AccountSession member);
+            @Login SessionAccount member);
 
 }

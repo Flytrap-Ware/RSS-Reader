@@ -8,7 +8,7 @@ import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertListResponse;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertRequest;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
+import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -32,9 +32,9 @@ public class AlertController implements AlertControllerApi {
     @GetMapping("/{folderId}/alerts")
     public ApplicationResponse<AlertListResponse> getAlerts(
         @PathVariable Long folderId,
-        @Login AccountSession member
+        @Login SessionAccount member
     ) {
-        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id());
+        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         List<Alert> alerts = alertService.getAlertListByFolder(folderId);
 
         return new ApplicationResponse<>(AlertListResponse.from(alerts));
@@ -44,10 +44,10 @@ public class AlertController implements AlertControllerApi {
     public ApplicationResponse<AlertResponse> registerAlert(
         @PathVariable Long folderId,
         @Valid @RequestBody AlertRequest request,
-        @Login AccountSession member) {
+        @Login SessionAccount member) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id());
-        Alert alert = alertService.registerAlert(verifiedFolder.getId(), member.id(), request.webhookUrl());
+        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
+        Alert alert = alertService.registerAlert(verifiedFolder.getId(), member.id().value(), request.webhookUrl());
         return new ApplicationResponse<>(AlertResponse.from(alert));
     }
 
@@ -55,9 +55,9 @@ public class AlertController implements AlertControllerApi {
     public ApplicationResponse<String> removeAlert(
         @PathVariable Long folderId,
         @PathVariable Long alertId,
-        @Login AccountSession member) {
+        @Login SessionAccount member) {
 
-        folderVerifyService.getVerifiedAccessableFolder(folderId, member.id());
+        folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         alertService.removeAlert(alertId);
 
         return new ApplicationResponse<>("알람이 삭제되었습니다. ID = " + alertId);

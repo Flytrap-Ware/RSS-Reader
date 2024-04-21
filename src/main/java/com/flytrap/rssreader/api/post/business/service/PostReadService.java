@@ -20,6 +20,7 @@ public class PostReadService {
     private final SubscriptionReader subscriptionReader;
     private final GlobalEventPublisher globalEventPublisher;
 
+
     public Post viewPost(AccountId accountId, PostId postId) {
 
         PostAggregate postAggregate = postCommand.readAggregate(postId, accountId);

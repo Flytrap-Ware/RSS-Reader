@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.folder.presentation.controller;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
+import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
 import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
 import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
 import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
@@ -47,10 +47,10 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse<FolderUpdateResponse> createNewFolder(
             @Valid @RequestBody FolderUpdateRequest request,
-            @Login AccountSession accountSession) {
+            @Login SessionAccount accountSession) {
 
         MyOwnFolder newFolder = folderUpdateService
-            .createNewFolder(new AccountId(accountSession.id()), request.name());
+            .createNewFolder(new AccountId(accountSession.id().value()), request.name());
 
         return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
@@ -60,10 +60,10 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     public ApplicationResponse<FolderUpdateResponse> updateFolder(
             @Valid @RequestBody FolderUpdateRequest request,
             @PathVariable Long folderId,
-            @Login AccountSession accountSession) {
+            @Login SessionAccount accountSession) {
 
         MyOwnFolder newFolder = folderUpdateService
-            .updateFolder(new AccountId(accountSession.id()), new FolderId(folderId), request.name());
+            .updateFolder(new AccountId(accountSession.id().value()), new FolderId(folderId), request.name());
 
         return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
@@ -72,9 +72,9 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     @DeleteMapping("/{folderId}")
     public ApplicationResponse<Void> deleteFolder(
             @PathVariable Long folderId,
-            @Login AccountSession accountSession) {
+            @Login SessionAccount accountSession) {
 
-        folderUpdateService.deleteFolder(new AccountId(accountSession.id()), new FolderId(folderId));
+        folderUpdateService.deleteFolder(new AccountId(accountSession.id().value()), new FolderId(folderId));
 
         return new ApplicationResponse<>(null);
     }
@@ -84,9 +84,9 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     public ApplicationResponse<SubscribeRequest.Response> subscribe(
             @PathVariable Long folderId,
             @Valid @RequestBody SubscribeRequest.CreateRequest request,
-            @Login AccountSession member) {
+            @Login SessionAccount member) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id());
+        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         Subscribe subscribe = subscribeService.subscribe(request);
         folderSubscribeService.folderSubscribe(subscribe, verifiedFolder.getId());
 
@@ -95,7 +95,7 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
         }
 
         FolderSubscribe folderSubscribe = FolderSubscribe.from(subscribe);
-        folderSubscribe = openCheckFacade.addUnreadCountInFolderSubscribe(member.id(), subscribe, folderSubscribe);
+        folderSubscribe = openCheckFacade.addUnreadCountInFolderSubscribe(member.id().value(), subscribe, folderSubscribe);
 
         return new ApplicationResponse<>(SubscribeRequest.Response.from(folderSubscribe));
     }
@@ -105,9 +105,9 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     public ApplicationResponse<Void> unsubscribe(
             @PathVariable Long folderId,
             @PathVariable Long subscribeId,
-            @Login AccountSession member) {
+            @Login SessionAccount member) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id());
+        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         folderSubscribeService.folderUnsubscribe(subscribeId,
                 verifiedFolder.getId());
         return new ApplicationResponse<>(null);

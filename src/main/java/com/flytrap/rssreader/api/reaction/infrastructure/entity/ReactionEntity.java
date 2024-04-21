@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.reaction.infrastructure.entity;
 
-import com.flytrap.rssreader.api.member.infrastructure.entity.MemberEntity;
+import com.flytrap.rssreader.api.account.infrastructure.entity.AccountEntity;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,20 +32,20 @@ public class ReactionEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private MemberEntity member;
+    private AccountEntity member;
 
     @Column(length = 25)
     private String emoji;
 
     @Builder
-    public ReactionEntity(Long id, PostEntity post, MemberEntity member, String emoji) {
+    public ReactionEntity(Long id, PostEntity post, AccountEntity member, String emoji) {
         this.id = id;
         this.post = post;
         this.member = member;
         this.emoji = emoji;
     }
 
-    public static ReactionEntity create(PostEntity post, MemberEntity member, String emoji) {
+    public static ReactionEntity create(PostEntity post, AccountEntity member, String emoji) {
         return ReactionEntity.builder()
                 .post(post)
                 .member(member)

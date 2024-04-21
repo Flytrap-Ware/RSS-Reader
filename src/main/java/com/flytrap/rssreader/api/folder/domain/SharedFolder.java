@@ -26,5 +26,6 @@ public class SharedFolder {
         this.subscriptions = subscriptions;
         this.sharedMembers = sharedMembers;
     }
+
 }
 
