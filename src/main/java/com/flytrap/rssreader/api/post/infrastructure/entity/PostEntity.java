@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.post.domain.Bookmark;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.domain.PostRead;
+import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -75,7 +75,7 @@ public class PostEntity {
         this.description = itemData.description();
     }
 
-    public Post toDomain(PostRead read, Bookmark bookmark) {
+    public Post toDomain(Open open, Bookmark bookmark) {
         return Post.builder()
                 .id(new PostId(id))
                 .subscribeTitle(subscribe.getTitle())
@@ -84,7 +84,7 @@ public class PostEntity {
                 .thumbnailUrl(thumbnailUrl)
                 .description(description)
                 .pubDate(pubDate)
-                .read(read)
+                .open(open)
                 .bookmark(bookmark)
                 .build();
     }

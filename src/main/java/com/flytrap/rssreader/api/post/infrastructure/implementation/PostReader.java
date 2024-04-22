@@ -7,7 +7,7 @@ import com.flytrap.rssreader.api.post.domain.Bookmark;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.domain.PostRead;
+import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSubscribeCountOutput;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostListReadRepository;
@@ -41,7 +41,7 @@ public class PostReader {
 
         return postEntityJpaRepository.findById(postId.id())
             .orElseThrow(() -> new NoSuchDomainException(Post.class))
-            .toDomain(new PostRead(isRead), new Bookmark(isBookmark));
+            .toDomain(Open.from(isRead), Bookmark.from(isBookmark));
     }
 
     @Transactional(readOnly = true)

@@ -31,8 +31,8 @@ public record PostResponse(
                 post.getDescription(),
                 post.getPubDate(),
                 post.getSubscribeTitle(),
-                post.getRead().isOpen(),
-                post.getBookmark().isBookmark()
+                post.getOpen().flag(),
+                post.getBookmark().flag()
         );
     }
 }

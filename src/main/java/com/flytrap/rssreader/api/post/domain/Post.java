@@ -20,13 +20,13 @@ public class Post implements NewDefaultDomain {
     private String description;
     private Instant pubDate;
     private String subscribeTitle;
-    private PostRead read;
+    private Open open;
     private Bookmark bookmark;
     // TODO: react
 
     @Builder
     protected Post(PostId id, String guid, String title, String thumbnailUrl,
-        String description, Instant pubDate, String subscribeTitle, PostRead read,
+        String description, Instant pubDate, String subscribeTitle, Open open,
         Bookmark bookmark) {
         this.id = id;
         this.guid = guid;
@@ -35,7 +35,7 @@ public class Post implements NewDefaultDomain {
         this.description = description;
         this.pubDate = pubDate;
         this.subscribeTitle = subscribeTitle;
-        this.read = read;
+        this.open = open;
         this.bookmark = bookmark;
     }
 }
