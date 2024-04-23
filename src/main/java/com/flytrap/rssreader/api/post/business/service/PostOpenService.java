@@ -28,18 +28,21 @@ public class PostOpenService {
         postOpenEntityRepository.save(value.toEntity());
     }
 
+
+    // TODO: Folder쪽으로 옮기기
     @Transactional(readOnly = true)
     public Map<SubscriptionId, OpenPostCountOutput> countReadInSubscription(long id, SubscriptionId subscriptionId) {
-        return postOpenEntityRepository.countOpens(id, List.of(subscriptionId.id())).stream()
+        return postOpenEntityRepository.countOpens(id, List.of(subscriptionId.value())).stream()
                 .collect(Collectors.toMap(
                     output -> new SubscriptionId(output.getSubscribeId()),
                     output -> output
                 ));
     }
 
+    // TODO: Folder쪽으로 옮기기
     @Transactional(readOnly = true)
     public Map<SubscriptionId, OpenPostCountOutput> countReadInSubscriptions(long id, List<SubscriptionId> subscriptionIds) {
-        List<Long> ids = subscriptionIds.stream().map(SubscriptionId::id).toList();
+        List<Long> ids = subscriptionIds.stream().map(SubscriptionId::value).toList();
 
         return postOpenEntityRepository.countOpens(id, ids).stream()
                 .collect(Collectors.toMap(

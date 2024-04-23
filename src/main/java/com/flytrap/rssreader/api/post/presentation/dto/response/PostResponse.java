@@ -23,7 +23,7 @@ public record PostResponse(
 
     public static PostResponse from(Post post) {
         return new PostResponse(
-                post.getId().id(),
+                post.getId().value(),
                 post.getGuid(),
                 post.getTitle(),
                 post.getThumbnailUrl(),

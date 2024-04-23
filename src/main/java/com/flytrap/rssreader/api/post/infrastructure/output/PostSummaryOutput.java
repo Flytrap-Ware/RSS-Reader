@@ -2,10 +2,10 @@ package com.flytrap.rssreader.api.post.infrastructure.output;
 
 
 import com.flytrap.rssreader.api.post.domain.Bookmark;
+import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.domain.Post;
 
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.domain.PostRead;
 import java.time.Instant;
 
 public record PostSummaryOutput(
@@ -17,7 +17,7 @@ public record PostSummaryOutput(
         String description,
         Instant pubDate,
         String subscribeTitle,
-        boolean read,
+        boolean open,
         boolean bookmark
         // TODO: react 추가하기
 ) {
@@ -31,8 +31,8 @@ public record PostSummaryOutput(
                 .description(description)
                 .pubDate(pubDate)
                 .subscribeTitle(subscribeTitle)
-                .read(new PostRead(read))
-                .bookmark(new Bookmark(bookmark))
+                .open(Open.from(open))
+                .bookmark(Bookmark.from(bookmark))
                 .build();
     }
 }

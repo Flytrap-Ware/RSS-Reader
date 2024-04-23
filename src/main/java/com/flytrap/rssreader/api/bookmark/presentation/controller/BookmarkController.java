@@ -38,7 +38,7 @@ public class BookmarkController implements BookmarkControllerApi {
         @Login AccountSession accountSession
     ) {
 
-        Post post = postService.getPost(new AccountId(accountSession.id()), new PostId(postId));
+        Post post = postService.viewPost(new AccountId(accountSession.id()), new PostId(postId));
         Bookmark bookmark = bookmarkService.addBookmark(accountSession, post);
 
         return new ApplicationResponse<>(BookmarkRequest.Response.from(bookmark));

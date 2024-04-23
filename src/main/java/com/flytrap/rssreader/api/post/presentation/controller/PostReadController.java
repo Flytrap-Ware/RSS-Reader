@@ -26,8 +26,8 @@ public class PostReadController implements PostReadControllerApi {
         @PathVariable Long postId,
         @Login AccountSession accountSession) {
 
-        PostResponse post = PostResponse.from(
-            postReadService.getPost(new AccountId(accountSession.id()), new PostId(postId)));
-        return new ApplicationResponse<>(post);
+        PostResponse response = PostResponse.from(
+            postReadService.viewPost(new AccountId(accountSession.id()), new PostId(postId)));
+        return new ApplicationResponse<>(response);
     }
 }

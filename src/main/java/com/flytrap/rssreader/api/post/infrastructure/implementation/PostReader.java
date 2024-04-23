@@ -11,6 +11,7 @@ import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSubscribeCountOutput;
+import com.flytrap.rssreader.api.post.infrastructure.output.PostSummaryOutput;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostListReadRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenEntityRepository;
@@ -40,15 +41,16 @@ public class PostReader {
     @Transactional(readOnly = true)
     public Post read(PostId postId, AccountId accountId) {
 
-        PostEntity postEntity = postEntityJpaRepository.findById(postId.id())
+        PostEntity postEntity = postEntityJpaRepository.findById(postId.value())
             .orElseThrow(() -> new NoSuchDomainException(Post.class));
         SubscribeEntity subscribeEntity = subscriptionEntityJpaRepository.findById(
                 postEntity.getId())
             .orElseThrow(() -> new NoSuchDomainException(Subscribe.class));
-        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(accountId.id(),
-            postId.id());
-        boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(accountId.id(),
-            postId.id());
+        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(accountId.value(),
+            postId.value());
+        boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(
+            accountId.value(),
+            postId.value());
 
         return postEntity.toDomain(Open.from(isRead), Bookmark.from(isBookmark), subscribeEntity);
     }
@@ -56,12 +58,13 @@ public class PostReader {
     @Transactional(readOnly = true)
     public PostAggregate readAggregate(PostId postId, AccountId accountId) {
 
-        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(accountId.id(),
-            postId.id());
-        boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(accountId.id(),
-            postId.id());
+        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(accountId.value(),
+            postId.value());
+        boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(
+            accountId.value(),
+            postId.value());
 
-        return postEntityJpaRepository.findById(postId.id())
+        return postEntityJpaRepository.findById(postId.value())
             .orElseThrow(() -> new NoSuchDomainException(Post.class))
             .toAggregate(Open.from(isRead), Bookmark.from(isBookmark));
     }
@@ -69,27 +72,32 @@ public class PostReader {
     @Transactional(readOnly = true)
     public List<Post> readAllByAccount(AccountId accountId, PostFilter postFilter,
         Pageable pageable) {
-        return postListReadRepository.findAllByAccount(accountId.value(), postFilter, pageable);
+        return postListReadRepository
+            .findAllByAccount(accountId.value(), postFilter, pageable)
+            .stream().map(PostSummaryOutput::toDomain).toList();
     }
 
     @Transactional(readOnly = true)
     public List<Post> readAllByFolder(AccountId accountId, FolderId folderId, PostFilter postFilter,
         Pageable pageable) {
-        return postListReadRepository.findAllByFolder(accountId.value(), folderId.value(),
-            postFilter, pageable);
+        return postListReadRepository
+            .findAllByFolder(accountId.value(), folderId.value(), postFilter, pageable)
+            .stream().map(PostSummaryOutput::toDomain).toList();
     }
 
     @Transactional(readOnly = true)
     public List<Post> readAllBySubscription(AccountId accountId, SubscriptionId subscriptionId,
         PostFilter postFilter, Pageable pageable) {
         return postListReadRepository.findAllBySubscription(accountId.value(),
-            subscriptionId.value(), postFilter, pageable);
+                subscriptionId.value(), postFilter, pageable).stream()
+            .map(PostSummaryOutput::toDomain).toList();
     }
 
     @Transactional(readOnly = true)
     public List<Post> readAllBookmarked(AccountId accountId, PostFilter postFilter,
         Pageable pageable) {
-        return postListReadRepository.findAllBookmarked(accountId.value(), postFilter, pageable);
+        return postListReadRepository.findAllBookmarked(accountId.value(), postFilter, pageable)
+            .stream().map(PostSummaryOutput::toDomain).toList();
     }
 
     // TODO: Folder 리팩토링 때 다시 봐야함
@@ -97,10 +105,10 @@ public class PostReader {
     public Map<SubscriptionId, PostSubscribeCountOutput> countPostsInSubscription(
         SubscriptionId subscriptionId) {
 
-        return postEntityJpaRepository.findSubscribeCounts(List.of(subscriptionId.id()))
+        return postEntityJpaRepository.countBySubscriptions(List.of(subscriptionId.value()))
             .stream()
             .collect(Collectors.toMap(
-                output -> new SubscriptionId(output.getSubscribeId()),
+                output -> new SubscriptionId(output.getSubscriptionId()),
                 output -> output
             ));
     }
@@ -110,11 +118,11 @@ public class PostReader {
     public Map<SubscriptionId, PostSubscribeCountOutput> countPostsInSubscriptions(
         List<SubscriptionId> subscriptionIds) {
 
-        return postEntityJpaRepository.findSubscribeCounts(
-                subscriptionIds.stream().map(SubscriptionId::id).toList())
+        return postEntityJpaRepository.countBySubscriptions(
+                subscriptionIds.stream().map(SubscriptionId::value).toList())
             .stream()
             .collect(Collectors.toMap(
-                output -> new SubscriptionId(output.getSubscribeId()),
+                output -> new SubscriptionId(output.getSubscriptionId()),
                 output -> output
             ));
     }

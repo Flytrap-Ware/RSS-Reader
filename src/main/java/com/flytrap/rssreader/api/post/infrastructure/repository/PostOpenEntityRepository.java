@@ -12,11 +12,11 @@ public interface PostOpenEntityRepository extends JpaRepository<OpenEntity, Long
 
     boolean existsByMemberIdAndPostId(Long memberId, Long postId);
 
-    @Query("select p.subscribe.id as subscribeId, count(o.postId) as postCount "
+    @Query("select p.subscriptionId as subscribeId, count(o.postId) as postCount "
             + "from OpenEntity o "
             + "inner join PostEntity p on o.postId = p.id "
-            + "where o.memberId = :id and p.subscribe.id in :subscribes "
-            + "group by p.subscribe.id")
+            + "where o.memberId = :id and p.subscriptionId in :subscribes "
+            + "group by p.subscriptionId")
     List<OpenPostCountOutput> countOpens(@Param("id") long id, @Param("subscribes") List<Long> subscribes);
 
     void deleteByMemberIdAndPostId(long memberId, Long postId);

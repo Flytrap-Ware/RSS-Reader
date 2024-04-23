@@ -43,7 +43,7 @@ public class PostReadServiceTest {
                 .thenReturn(post);
 
             // Then
-            Post result = postReadService.getPost(accountId, postId);
+            Post result = postReadService.viewPost(accountId, postId);
             assertNotNull(result);
         }
 
@@ -59,7 +59,7 @@ public class PostReadServiceTest {
                 .thenThrow(new NoSuchDomainException(Post.class));
 
             // Then
-            assertThrows(NoSuchDomainException.class, () -> postReadService.getPost(accountId, postId));
+            assertThrows(NoSuchDomainException.class, () -> postReadService.viewPost(accountId, postId));
         }
     }
 

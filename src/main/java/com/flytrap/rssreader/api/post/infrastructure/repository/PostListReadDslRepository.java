@@ -8,8 +8,8 @@ import static com.flytrap.rssreader.api.post.infrastructure.entity.QOpenEntity.o
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QPostEntity.postEntity;
 import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QSubscribeEntity.subscribeEntity;
 
-import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
+import com.flytrap.rssreader.api.post.infrastructure.output.PostSummaryOutput;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -31,7 +31,7 @@ public class PostListReadDslRepository implements PostListReadRepository {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public Optional<Post> findById(Long postId) {
+    public Optional<PostSummaryOutput> findById(Long postId) {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder
@@ -42,7 +42,7 @@ public class PostListReadDslRepository implements PostListReadRepository {
             .fetchOne());
     }
 
-    public List<Post> findAllByAccount(long accountId, PostFilter postFilter,
+    public List<PostSummaryOutput> findAllByAccount(long accountId, PostFilter postFilter,
         Pageable pageable) {
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -54,7 +54,6 @@ public class PostListReadDslRepository implements PostListReadRepository {
         addFilterCondition(builder, postFilter, accountId);
 
         return initFindAllQuery()
-            .join(subscribeEntity).on(postEntity.subscribe.id.eq(subscribeEntity.id))
             .join(folderSubscribeEntity)
             .on(subscribeEntity.id.eq(folderSubscribeEntity.subscribeId))
             .join(folderEntity).on(folderSubscribeEntity.folderId.eq(folderEntity.id))
@@ -66,7 +65,7 @@ public class PostListReadDslRepository implements PostListReadRepository {
             .fetch();
     }
 
-    public List<Post> findAllByFolder(long accountId, long folderId,
+    public List<PostSummaryOutput> findAllByFolder(long accountId, long folderId,
         PostFilter postFilter, Pageable pageable) {
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -76,8 +75,6 @@ public class PostListReadDslRepository implements PostListReadRepository {
         addFilterCondition(builder, postFilter, accountId);
 
         return initFindAllQuery()
-            .join(subscribeEntity)
-            .on(postEntity.subscribe.id.eq(subscribeEntity.id))
             .join(folderSubscribeEntity)
             .on(subscribeEntity.id.eq(folderSubscribeEntity.subscribeId))
             .where(builder)
@@ -87,12 +84,12 @@ public class PostListReadDslRepository implements PostListReadRepository {
             .fetch();
     }
 
-    public List<Post> findAllBySubscription(long accountId, long subscribeId,
+    public List<PostSummaryOutput> findAllBySubscription(long accountId, long subscribeId,
         PostFilter postFilter, Pageable pageable) {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder
-            .and(postEntity.subscribe.id.eq(subscribeId));
+            .and(postEntity.subscriptionId.eq(subscribeId));
 
         addFilterCondition(builder, postFilter, accountId);
 
@@ -104,7 +101,7 @@ public class PostListReadDslRepository implements PostListReadRepository {
             .fetch();
     }
 
-    public List<Post> findAllBookmarked(long accountId, PostFilter postFilter,
+    public List<PostSummaryOutput> findAllBookmarked(long accountId, PostFilter postFilter,
         Pageable pageable) {
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -121,23 +118,24 @@ public class PostListReadDslRepository implements PostListReadRepository {
             .fetch();
     }
 
-    private JPAQuery<Post> initFindAllQuery() {
+    private JPAQuery<PostSummaryOutput> initFindAllQuery() {
         return queryFactory
             .selectDistinct(
-                Projections.constructor(Post.class,
+                Projections.constructor(PostSummaryOutput.class,
                     postEntity.id,
-                    postEntity.subscribe.id,
+                    postEntity.subscriptionId,
                     postEntity.guid,
                     postEntity.title,
                     postEntity.thumbnailUrl,
                     postEntity.description,
                     postEntity.pubDate,
-                    postEntity.subscribe.title,
+                    subscribeEntity.title,
                     Expressions.booleanTemplate("{0} is not null", openEntity.id),
                     Expressions.booleanTemplate("{0} is not null", bookmarkEntity.id)
                 )
             )
             .from(postEntity)
+            .join(subscribeEntity).on(postEntity.subscriptionId.eq(subscribeEntity.id))
             .leftJoin(openEntity).on(postEntity.id.eq(openEntity.postId))
             .leftJoin(bookmarkEntity).on(postEntity.id.eq(bookmarkEntity.postId));
     }

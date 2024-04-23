@@ -99,7 +99,7 @@ public class FixtureFactory {
                 .guid(PostEntityFields.guid)
                 .title(PostEntityFields.title)
                 .description(PostEntityFields.description)
-                .subscribe(PostEntityFields.subscribe)
+                .subscriptionId(PostEntityFields.subscribe.getId())
                 .build();
     }
 

@@ -23,7 +23,7 @@ public class BookmarkService {
             throw new DuplicateDomainException(Bookmark.class);
         }
 
-        return bookmarkRepository.save(BookmarkEntity.create(member.id(), post.getId().id())).toDomain();
+        return bookmarkRepository.save(BookmarkEntity.create(member.id(), post.getId().value())).toDomain();
     }
 
     public void removeBookmark(AccountSession member, Long postId) {
@@ -32,7 +32,7 @@ public class BookmarkService {
     }
 
     public boolean existBookmark(AccountSession member, Post post) {
-        return bookmarkRepository.existsByMemberIdAndPostId(member.id(), post.getId().id());
+        return bookmarkRepository.existsByMemberIdAndPostId(member.id(), post.getId().value());
     }
 
 }
