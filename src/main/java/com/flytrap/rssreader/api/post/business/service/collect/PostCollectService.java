@@ -74,7 +74,7 @@ public class PostCollectService {
                 post = existingPostsMap.get(itemData.guid());
                 post.updateBy(itemData);
             } else {
-                post = PostEntity.from(itemData, subscribe);
+                post = PostEntity.from(itemData, subscribe.getId());
                 newPosts.add(post);
             }
             collectedPosts.add(post);

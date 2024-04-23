@@ -1,18 +1,28 @@
 package com.flytrap.rssreader.api.post.infrastructure.entity;
 
-import com.flytrap.rssreader.api.post.domain.Bookmark;
-import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
-import com.flytrap.rssreader.api.post.domain.PostId;
+import com.flytrap.rssreader.api.post.domain.Bookmark;
 import com.flytrap.rssreader.api.post.domain.Open;
+import com.flytrap.rssreader.api.post.domain.Post;
+import com.flytrap.rssreader.api.post.domain.PostAggregate;
+import com.flytrap.rssreader.api.post.domain.PostId;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.time.Instant;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -40,32 +50,31 @@ public class PostEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Instant pubDate;
 
-    @ManyToOne
-    @JoinColumn(name = "subscribe_id")
-    private SubscribeEntity subscribe;
+    @Column(nullable = false)
+    private Long subscriptionId;
 
     // TODO: React 추가 하기
 
     @Builder
     protected PostEntity(Long id, String guid, String title, String thumbnailUrl, String description, Instant pubDate,
-                         SubscribeEntity subscribe) {
+                         Long subscriptionId) {
         this.id = id;
         this.guid = guid;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
         this.description = description;
         this.pubDate = pubDate;
-        this.subscribe = subscribe;
+        this.subscriptionId = subscriptionId;
     }
 
-    public static PostEntity from(RssPostsData.RssItemData itemData, SubscribeEntity subscribe) {
+    public static PostEntity from(RssPostsData.RssItemData itemData, Long subscriptionId) {
         return PostEntity.builder()
                 .guid(itemData.guid())
                 .title(itemData.title())
                 .thumbnailUrl(itemData.thumbnailUrl())
                 .description(itemData.description())
                 .pubDate(itemData.pubDate())
-                .subscribe(subscribe)
+                .subscriptionId(subscriptionId)
                 .build();
     }
 
@@ -75,10 +84,15 @@ public class PostEntity {
         this.description = itemData.description();
     }
 
-    public Post toDomain(Open open, Bookmark bookmark) {
+    public Post toDomain(Open open, Bookmark bookmark, SubscribeEntity subscription) {
+
+        if (!Objects.equals(subscription.getId(), subscriptionId)) {
+            throw new RuntimeException("정합성 일치하지 않음.");
+        }
+
         return Post.builder()
                 .id(new PostId(id))
-                .subscribeTitle(subscribe.getTitle())
+                .subscribeTitle(subscription.getTitle())
                 .guid(guid)
                 .title(title)
                 .thumbnailUrl(thumbnailUrl)
@@ -87,6 +101,20 @@ public class PostEntity {
                 .open(open)
                 .bookmark(bookmark)
                 .build();
+    }
+
+    public PostAggregate toAggregate(Open open, Bookmark bookmark) {
+        return PostAggregate.builder()
+            .id(new PostId(id))
+            .subscriptionId(new SubscriptionId(subscriptionId))
+            .guid(guid)
+            .title(title)
+            .thumbnailUrl(thumbnailUrl)
+            .description(description)
+            .pubDate(pubDate)
+            .open(open)
+            .bookmark(bookmark)
+            .build();
     }
 
 }
