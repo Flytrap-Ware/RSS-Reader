@@ -38,9 +38,4 @@ public class PostOpenService {
                 ));
     }
 
-    @Transactional
-    public void deleteRead(long memberId, Long postId) {
-        postOpenEntityRepository.deleteByMemberIdAndPostId(memberId, postId);
-    }
-
 }
