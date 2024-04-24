@@ -5,9 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.flytrap.rssreader.api.member.domain.AccountId;
+import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventPublisher;
 import com.flytrap.rssreader.api.post.domain.Post;
+import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.infrastructure.implementation.PostReader;
+import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
+import com.flytrap.rssreader.api.subscribe.infrastructure.implement.SubscriptionReader;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -26,6 +31,12 @@ public class PostReadServiceTest {
     @Mock
     PostReader postReader;
 
+    @Mock
+    SubscriptionReader subscriptionReader;
+
+    @Mock
+    PostOpenEventPublisher postOpenEventPublisher;
+
     @Nested
     @DisplayName("Post 조회하기")
     class GetPost {
@@ -36,11 +47,17 @@ public class PostReadServiceTest {
             // Given
             AccountId accountId = new AccountId(1L);
             PostId postId = new PostId(1L);
-            Post post = Post.builder().id(postId).build();
+            SubscriptionId subscriptionId = new SubscriptionId(1L);
+            PostAggregate postAggregate = PostAggregate.builder()
+                .id(postId).subscriptionId(subscriptionId).build();
+            Subscribe subscription = Subscribe.builder()
+                .id(subscriptionId.value()).build();
 
             // When
-            when(postReader.read(postId, accountId))
-                .thenReturn(post);
+            when(postReader.readAggregate(postId, accountId))
+                .thenReturn(postAggregate);
+            when(subscriptionReader.read(subscriptionId))
+                .thenReturn(subscription);
 
             // Then
             Post result = postReadService.viewPost(accountId, postId);
@@ -55,12 +72,14 @@ public class PostReadServiceTest {
             PostId postId = new PostId(1L);
 
             // When
-            when(postReader.read(postId, accountId))
-                .thenThrow(new NoSuchDomainException(Post.class));
+            when(postReader.readAggregate(postId, accountId))
+                .thenThrow(new NoSuchDomainException(PostAggregate.class));
 
             // Then
-            assertThrows(NoSuchDomainException.class, () -> postReadService.viewPost(accountId, postId));
+            assertThrows(NoSuchDomainException.class,
+                () -> postReadService.viewPost(accountId, postId));
         }
+
     }
 
 }

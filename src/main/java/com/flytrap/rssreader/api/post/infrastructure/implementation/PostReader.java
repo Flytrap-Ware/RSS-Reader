@@ -46,11 +46,10 @@ public class PostReader {
         SubscribeEntity subscribeEntity = subscriptionEntityJpaRepository.findById(
                 postEntity.getId())
             .orElseThrow(() -> new NoSuchDomainException(Subscribe.class));
-        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(accountId.value(),
-            postId.value());
+        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(
+            accountId.value(), postId.value());
         boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(
-            accountId.value(),
-            postId.value());
+            accountId.value(), postId.value());
 
         return postEntity.toDomain(Open.from(isRead), Bookmark.from(isBookmark), subscribeEntity);
     }
@@ -58,14 +57,13 @@ public class PostReader {
     @Transactional(readOnly = true)
     public PostAggregate readAggregate(PostId postId, AccountId accountId) {
 
-        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(accountId.value(),
-            postId.value());
+        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(
+            accountId.value(), postId.value());
         boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(
-            accountId.value(),
-            postId.value());
+            accountId.value(), postId.value());
 
         return postEntityJpaRepository.findById(postId.value())
-            .orElseThrow(() -> new NoSuchDomainException(Post.class))
+            .orElseThrow(() -> new NoSuchDomainException(PostAggregate.class))
             .toAggregate(Open.from(isRead), Bookmark.from(isBookmark));
     }
 

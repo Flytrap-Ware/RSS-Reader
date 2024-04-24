@@ -12,7 +12,7 @@ public record PostResponse(
         String description,
         Instant pubDate,
         String subscribeTitle,
-        boolean read,
+        boolean open,
         boolean bookmark
 ) {
 

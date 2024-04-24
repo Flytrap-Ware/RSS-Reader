@@ -1,7 +1,10 @@
 package com.flytrap.rssreader.api.post.business.event.postOpen;
 
-import com.flytrap.rssreader.global.event.EventHolder;
-import lombok.Getter;
+import com.flytrap.rssreader.api.member.domain.AccountId;
+import com.flytrap.rssreader.api.post.domain.PostAggregate;
 
-public record PostOpenEvent(@Getter PostOpenEventParam value) implements EventHolder<PostOpenEventParam> {
+public record PostOpenEvent(
+    PostAggregate postAggregate,
+    AccountId accountId
+)  {
 }

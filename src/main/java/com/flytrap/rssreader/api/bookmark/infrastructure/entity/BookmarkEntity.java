@@ -1,6 +1,8 @@
 package com.flytrap.rssreader.api.bookmark.infrastructure.entity;
 
 import com.flytrap.rssreader.api.bookmark.domain.Bookmark;
+import com.flytrap.rssreader.api.member.domain.AccountId;
+import com.flytrap.rssreader.api.post.domain.PostId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,10 +46,10 @@ public class BookmarkEntity {
             .build();
     }
 
-    public static BookmarkEntity create(Long memberId, Long postId) {
+    public static BookmarkEntity create(AccountId accountId, PostId postId) {
         return BookmarkEntity.builder()
-            .memberId(memberId)
-            .postId(postId)
+            .memberId(accountId.value())
+            .postId(postId.value())
             .build();
     }
 

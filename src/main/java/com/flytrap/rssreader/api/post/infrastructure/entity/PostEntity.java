@@ -78,6 +78,18 @@ public class PostEntity {
                 .build();
     }
 
+    public static PostEntity from(PostAggregate postAggregate) {
+        return PostEntity.builder()
+            .id(postAggregate.getId().value())
+            .guid(postAggregate.getGuid())
+            .title(postAggregate.getTitle())
+            .thumbnailUrl(postAggregate.getThumbnailUrl())
+            .description(postAggregate.getDescription())
+            .pubDate(postAggregate.getPubDate())
+            .subscriptionId(postAggregate.getSubscriptionId().value())
+            .build();
+    }
+
     public void updateBy(RssPostsData.RssItemData itemData) {
         this.title = itemData.title();
         this.thumbnailUrl = itemData.thumbnailUrl();

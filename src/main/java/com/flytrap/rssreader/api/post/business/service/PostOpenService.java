@@ -1,33 +1,20 @@
 package com.flytrap.rssreader.api.post.business.service;
 
-import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventParam;
 import com.flytrap.rssreader.api.post.infrastructure.output.OpenPostCountOutput;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenEntityRepository;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class PostOpenService {
 
     private final PostOpenEntityRepository postOpenEntityRepository;
-
-    @Transactional
-    public void open(PostOpenEventParam value) {
-
-        if (postOpenEntityRepository.existsByMemberIdAndPostId(value.memberId(), value.postId())) {
-            return;
-        }
-
-        postOpenEntityRepository.save(value.toEntity());
-    }
-
 
     // TODO: Folder쪽으로 옮기기
     @Transactional(readOnly = true)

@@ -38,12 +38,20 @@ public class PostAggregate implements NewDefaultDomain {
         this.bookmark = bookmark;
     }
 
+    public boolean isOpened() {
+        return this.open.flag();
+    }
+
     public void markAsOpened() {
         this.open = Open.MARKED;
     }
 
     public void unmarkAsOpened() {
         this.open = Open.UNMARKED;
+    }
+
+    public boolean isBookmarked() {
+        return this.bookmark.flag();
     }
 
     public void markAsBookmarked() {
