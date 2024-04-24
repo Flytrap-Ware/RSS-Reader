@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.infrastructure.implementation;
 
-import com.flytrap.rssreader.api.bookmark.infrastructure.repository.BookmarkEntityJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJpaRepository;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.domain.Bookmark;

@@ -22,4 +22,18 @@ public class PostUpdateService {
         postUpdater.update(postAggregate, accountId);
     }
 
+    public void markAsBookmark(AccountId accountId, PostId postId) {
+        PostAggregate postAggregate = postReader.readAggregate(postId, accountId);
+        postAggregate.markAsBookmarked();
+
+        postUpdater.update(postAggregate, accountId);
+    }
+
+    public void unmarkAsBookmark(AccountId accountId, PostId postId) {
+        PostAggregate postAggregate = postReader.readAggregate(postId, accountId);
+        postAggregate.unmarkAsBookmarked();
+
+        postUpdater.update(postAggregate, accountId);
+    }
+
 }
