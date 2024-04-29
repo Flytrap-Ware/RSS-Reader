@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "release-test" ]
+    branches: [ "release" ]
 
 env:
   working-directory: .
