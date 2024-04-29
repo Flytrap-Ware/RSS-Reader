@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "release-test" ]
+    branches: [ "release" ]
 
 env:
   working-directory: .
@@ -77,7 +77,7 @@ jobs:
             username: ubuntu
             key: ${{ secrets.AWS_KEY }}
             source: "./deploy.sh"
-            target: "/home/ubuntu/"
+            target: "/home/ubuntu/RSS-Reader"
 
       - name: 원격 SSH 명령 실행
         uses: appleboy/ssh-action@master
@@ -89,6 +89,8 @@ jobs:
             cd RSS-Reader/
             chmod +x ./run.sh
             ./run.sh
+            chmod +x ./deploy.sh
+            ./deploy.sh
 
       - name: 보안 그룹에서 Github Actions IP 제거
         run: |
