@@ -1,4 +1,4 @@
-package com.flytrap.rssreader.api.post.business.event.postOpen;
+package com.flytrap.rssreader.api.post.business.event;
 
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.infrastructure.implementation.PostUpdater;
