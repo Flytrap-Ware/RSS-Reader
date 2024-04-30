@@ -5,14 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.flytrap.rssreader.api.member.domain.AccountId;
-import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventPublisher;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.infrastructure.implementation.PostReader;
+import com.flytrap.rssreader.api.post.infrastructure.implementation.PostCommand;
 import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.implement.SubscriptionReader;
+import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,13 +29,13 @@ public class PostReadServiceTest {
     PostReadService postReadService;
 
     @Mock
-    PostReader postReader;
+    PostCommand postCommand;
 
     @Mock
     SubscriptionReader subscriptionReader;
 
     @Mock
-    PostOpenEventPublisher postOpenEventPublisher;
+    GlobalEventPublisher globalEventPublisher;
 
     @Nested
     @DisplayName("Post 조회하기")
@@ -54,7 +54,7 @@ public class PostReadServiceTest {
                 .id(subscriptionId.value()).build();
 
             // When
-            when(postReader.readAggregate(postId, accountId))
+            when(postCommand.readAggregate(postId, accountId))
                 .thenReturn(postAggregate);
             when(subscriptionReader.read(subscriptionId))
                 .thenReturn(subscription);
@@ -72,7 +72,7 @@ public class PostReadServiceTest {
             PostId postId = new PostId(1L);
 
             // When
-            when(postReader.readAggregate(postId, accountId))
+            when(postCommand.readAggregate(postId, accountId))
                 .thenThrow(new NoSuchDomainException(PostAggregate.class));
 
             // Then

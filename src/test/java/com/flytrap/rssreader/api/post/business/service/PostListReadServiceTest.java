@@ -7,12 +7,12 @@ import static org.mockito.Mockito.when;
 import com.flytrap.rssreader.api.folder.domain.AccessibleFolder;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderReader;
+import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.infrastructure.implementation.PostReader;
+import com.flytrap.rssreader.api.post.infrastructure.implementation.PostQuery;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -31,10 +31,10 @@ class PostListReadServiceTest {
     PostListReadService postListReadService;
 
     @Mock
-    PostReader postReader;
+    PostQuery postQuery;
 
     @Mock
-    FolderReader folderReader;
+    FolderQuery folderQuery;
 
     @Nested
     @DisplayName("Folder별 Post 목록 조회하기")
@@ -66,9 +66,9 @@ class PostListReadServiceTest {
             );
 
             // When
-            when(folderReader.readAccessible(folderId, accountId))
+            when(folderQuery.readAccessible(folderId, accountId))
                 .thenReturn(accessibleFolder);
-            when(postReader.readAllByFolder(accountId, folderId, postFilter, pageable))
+            when(postQuery.readAllByFolder(accountId, folderId, postFilter, pageable))
                 .thenReturn(posts);
             List<Post> result = postListReadService.getPostsByFolder(accountId, folderId, postFilter, pageable);
 
@@ -89,7 +89,7 @@ class PostListReadServiceTest {
                 .build();
 
             // When
-            when(folderReader.readAccessible(folderId, accountId))
+            when(folderQuery.readAccessible(folderId, accountId))
                 .thenThrow(new ForbiddenAccessFolderException(folder));
 
             // Then

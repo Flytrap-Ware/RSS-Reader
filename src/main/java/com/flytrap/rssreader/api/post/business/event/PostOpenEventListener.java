@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.post.business.event;
 
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
-import com.flytrap.rssreader.api.post.infrastructure.implementation.PostUpdater;
+import com.flytrap.rssreader.api.post.infrastructure.implementation.PostCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PostOpenEventListener {
 
-    private final PostUpdater postUpdater;
+    private final PostCommand postCommand;
 
     @Async
     @EventListener(PostOpenEvent.class)
@@ -19,6 +19,6 @@ public class PostOpenEventListener {
         PostAggregate postAggregate = event.postAggregate();
         postAggregate.markAsOpened();
 
-        postUpdater.update(postAggregate, event.accountId());
+        postCommand.update(postAggregate, event.accountId());
     }
 }

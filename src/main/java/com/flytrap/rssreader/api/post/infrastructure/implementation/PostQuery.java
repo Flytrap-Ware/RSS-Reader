@@ -1,17 +1,16 @@
 package com.flytrap.rssreader.api.post.infrastructure.implementation;
 
-import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJpaRepository;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.domain.Bookmark;
+import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.domain.Post;
-import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSubscribeCountOutput;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSummaryOutput;
+import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostListReadRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenEntityRepository;
@@ -30,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class PostReader {
+public class PostQuery {
 
     private final PostEntityJpaRepository postEntityJpaRepository;
     private final BookmarkEntityJpaRepository bookmarkEntityJpaRepository;
@@ -52,19 +51,6 @@ public class PostReader {
             accountId.value(), postId.value());
 
         return postEntity.toDomain(Open.from(isRead), Bookmark.from(isBookmark), subscribeEntity);
-    }
-
-    @Transactional(readOnly = true)
-    public PostAggregate readAggregate(PostId postId, AccountId accountId) {
-
-        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(
-            accountId.value(), postId.value());
-        boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(
-            accountId.value(), postId.value());
-
-        return postEntityJpaRepository.findById(postId.value())
-            .orElseThrow(() -> new NoSuchDomainException(PostAggregate.class))
-            .toAggregate(Open.from(isRead), Bookmark.from(isBookmark));
     }
 
     @Transactional(readOnly = true)

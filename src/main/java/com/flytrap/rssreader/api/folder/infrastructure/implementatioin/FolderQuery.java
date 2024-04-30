@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FolderReader {
+public class FolderQuery {
 
     private final FolderEntityJpaRepository folderEntityJpaRepository;
     private final SharedFolderJpaRepository sharedFolderJpaRepository;
