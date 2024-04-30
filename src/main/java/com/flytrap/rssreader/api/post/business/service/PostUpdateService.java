@@ -17,21 +17,21 @@ public class PostUpdateService {
         PostAggregate postAggregate = postCommand.readAggregate(postId, accountId);
         postAggregate.unmarkAsOpened();
 
-        postCommand.update(postAggregate, accountId);
+        postCommand.updateOnlyOpen(postAggregate, accountId);
     }
 
     public void markAsBookmark(AccountId accountId, PostId postId) {
         PostAggregate postAggregate = postCommand.readAggregate(postId, accountId);
         postAggregate.markAsBookmarked();
 
-        postCommand.update(postAggregate, accountId);
+        postCommand.updateOnlyOpen(postAggregate, accountId);
     }
 
     public void unmarkAsBookmark(AccountId accountId, PostId postId) {
         PostAggregate postAggregate = postCommand.readAggregate(postId, accountId);
         postAggregate.unmarkAsBookmarked();
 
-        postCommand.update(postAggregate, accountId);
+        postCommand.updateOnlyBookmark(postAggregate, accountId);
     }
 
 }

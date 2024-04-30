@@ -1,14 +1,13 @@
 package com.flytrap.rssreader.api.post.infrastructure.implementation;
 
+import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.domain.Bookmark;
 import com.flytrap.rssreader.api.post.domain.Open;
+import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.infrastructure.entity.BookmarkEntity;
-import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJpaRepository;
-import com.flytrap.rssreader.api.member.domain.AccountId;
-import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.infrastructure.entity.OpenEntity;
-import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
+import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenEntityRepository;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
@@ -38,10 +37,7 @@ public class PostCommand {
     }
 
     @Transactional
-    public void update(PostAggregate postAggregate, AccountId accountId) {
-        PostEntity postEntity = PostEntity.from(postAggregate);
-        postEntityJpaRepository.save(postEntity);
-
+    public void updateOnlyOpen(PostAggregate postAggregate, AccountId accountId) {
         boolean existOpenInDB = postOpenEntityRepository
             .existsByMemberIdAndPostId(accountId.value(), postAggregate.getId().value());
         if (existOpenInDB && !postAggregate.isOpened()) {
@@ -51,7 +47,10 @@ public class PostCommand {
             OpenEntity openEntity = OpenEntity.from(accountId, postAggregate.getId());
             postOpenEntityRepository.save(openEntity);
         }
+    }
 
+    @Transactional
+    public void updateOnlyBookmark(PostAggregate postAggregate, AccountId accountId) {
         boolean existBookmarkInDB = bookmarkEntityJpaRepository
             .existsByMemberIdAndPostId(accountId.value(), postAggregate.getId().value());
         if (existBookmarkInDB && !postAggregate.isBookmarked()) {

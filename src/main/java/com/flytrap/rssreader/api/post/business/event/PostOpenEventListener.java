@@ -19,6 +19,6 @@ public class PostOpenEventListener {
         PostAggregate postAggregate = event.postAggregate();
         postAggregate.markAsOpened();
 
-        postCommand.update(postAggregate, event.accountId());
+        postCommand.updateOnlyOpen(postAggregate, event.accountId());
     }
 }
