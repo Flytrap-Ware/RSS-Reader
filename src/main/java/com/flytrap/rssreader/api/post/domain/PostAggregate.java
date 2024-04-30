@@ -2,6 +2,7 @@ package com.flytrap.rssreader.api.post.domain;
 
 import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
+import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import com.flytrap.rssreader.global.model.Domain;
 import com.flytrap.rssreader.global.model.NewDefaultDomain;
 import java.time.Instant;
@@ -64,7 +65,7 @@ public class PostAggregate implements NewDefaultDomain {
 
     public Post toDomain(Subscribe subscription) {
         if (!Objects.equals(subscription.getId(), subscriptionId.value())) {
-            throw new RuntimeException("정합성 일치하지 않음.");
+            throw new InconsistentDomainException(PostAggregate.class);
         }
 
         return Post.builder()
