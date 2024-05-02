@@ -1,6 +1,10 @@
 package com.flytrap.rssreader.api.folder.infrastructure.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "folder_member")
-public class SharedFolderEntity { // TODO: rename folder member entity
+public class FolderMemberEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +23,14 @@ public class SharedFolderEntity { // TODO: rename folder member entity
     private Long memberId;
 
     @Builder
-    protected SharedFolderEntity(Long id, Long folderId, Long memberId) {
+    protected FolderMemberEntity(Long id, Long folderId, Long memberId) {
         this.id = id;
         this.folderId = folderId;
         this.memberId = memberId;
     }
 
-    public static SharedFolderEntity of(Long id, long inviteeId) {
-        return SharedFolderEntity.builder()
+    public static FolderMemberEntity of(Long id, long inviteeId) {
+        return FolderMemberEntity.builder()
                 .folderId(id)
                 .memberId(inviteeId)
                 .build();

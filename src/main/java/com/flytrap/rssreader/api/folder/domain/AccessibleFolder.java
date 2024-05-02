@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.folder.domain;
 
+import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
 import com.flytrap.rssreader.global.model.Domain;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,32 +9,59 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Domain(name = "folder")
+@Domain(name = "accessibleFolder")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccessibleFolder {
-    private Long id;
+
+    private FolderId id;
     private String name;
-    private Long memberId;
+    private FolderMemberId ownerId;
     private SharedStatus sharedStatus;
-    private Boolean isDeleted;
-    private final List<FolderSubscribe> subscribes = new ArrayList<>();
 
     @Builder
-    protected AccessibleFolder(Long id, String name, Long memberId, Boolean isShared, Boolean isDeleted) {
+    protected AccessibleFolder(FolderId id, String name, FolderMemberId ownerId,
+        SharedStatus sharedStatus) {
         this.id = id;
         this.name = name;
-        this.memberId = memberId;
-        this.sharedStatus = SharedStatus.from(isShared);
-        this.isDeleted = isDeleted;
+        this.ownerId = ownerId;
+        this.sharedStatus = sharedStatus;
     }
 
     public static AccessibleFolder from(Folder folder) {
         return AccessibleFolder.builder()
-            .id(folder.getId())
+            .id(new FolderId(folder.getId()))
             .name(folder.getName())
-            .memberId(folder.getMemberId())
-            .isShared(folder.isShared())
-            .isDeleted(folder.isDeleted())
+            .ownerId(new FolderMemberId(folder.getMemberId()))
+            .sharedStatus(SharedStatus.from(folder.isShared()))
+            .build();
+    }
+
+    public boolean isPrivate() {
+        return sharedStatus == SharedStatus.PRIVATE;
+    }
+
+    public boolean isShared() {
+        return sharedStatus == SharedStatus.SHARED;
+    }
+
+    public PrivateFolder toPrivateFolder(List<FolderSubscription> folderSubscriptions) {
+        return PrivateFolder.builder()
+            .id(id)
+            .name(name)
+            .ownerId(ownerId)
+            .subscriptions(folderSubscriptions)
+            .build();
+    }
+
+    public SharedFolder toSharedFolder(List<FolderSubscription> folderSubscriptions,
+        List<SharedMember> sharedMembers) {
+
+        return SharedFolder.builder()
+            .id(id)
+            .name(name)
+            .ownerId(ownerId)
+            .subscriptions(folderSubscriptions)
+            .sharedMembers(sharedMembers)
             .build();
     }
 }
