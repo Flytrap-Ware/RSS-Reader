@@ -6,8 +6,12 @@ import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
 import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderSubscribe;
+import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
 import com.flytrap.rssreader.api.folder.presentation.controller.swagger.FolderUpdateControllerApi;
+import com.flytrap.rssreader.api.folder.presentation.dto.CreateFolderRequest;
+import com.flytrap.rssreader.api.folder.presentation.dto.CreateFolderResponse;
 import com.flytrap.rssreader.api.folder.presentation.dto.FolderRequest;
+import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.facade.OpenCheckFacade;
 import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
 import com.flytrap.rssreader.api.subscribe.business.service.SubscribeService;
@@ -32,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/folders")
 public class FolderUpdateController implements FolderUpdateControllerApi {
 
-    private final FolderUpdateService folderService;
+    private final FolderUpdateService folderUpdateService;
     private final FolderVerifyService folderVerifyService;
     private final SubscribeService subscribeService;
     private final FolderSubscribeService folderSubscribeService;
@@ -40,13 +44,15 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     private final PostCollectService postCollectService;
 
     @PostMapping
-    public ApplicationResponse<FolderRequest.Response> createFolder(
-            @Valid @RequestBody FolderRequest.CreateRequest request,
-            @Login AccountSession member) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApplicationResponse<CreateFolderResponse> createNewFolder(
+            @Valid @RequestBody CreateFolderRequest request,
+            @Login AccountSession accountSession) {
 
-        Folder newFolder = folderService.createNewFolder(request, member.id());
+        MyOwnFolder newFolder = folderUpdateService
+            .createNewFolder(new AccountId(accountSession.id()), request.name());
 
-        return new ApplicationResponse<>(FolderRequest.Response.from(newFolder));
+        return new ApplicationResponse<>(CreateFolderResponse.from(newFolder));
     }
 
     @PatchMapping("/{folderId}")
@@ -56,7 +62,7 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
             @Login AccountSession member) {
 
         Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
-        Folder updatedFolder = folderService.updateFolder(request, verifiedFolder, member.id());
+        Folder updatedFolder = folderUpdateService.updateFolder(request, verifiedFolder, member.id());
 
         return new ApplicationResponse<>(FolderRequest.Response.from(updatedFolder));
     }
@@ -68,7 +74,7 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
             @Login AccountSession member) {
 
         Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
-        Folder folder = folderService.deleteFolder(verifiedFolder, member.id());
+        Folder folder = folderUpdateService.deleteFolder(verifiedFolder, member.id());
         folderSubscribeService.unsubscribeAllByFolder(folder);
 
         return new ApplicationResponse<>("폴더가 삭제되었습니다 : " + folder.getName());

@@ -1,9 +1,11 @@
 package com.flytrap.rssreader.api.folder.presentation.controller.swagger;
 
-import com.flytrap.rssreader.api.folder.presentation.dto.FolderRequest;
-import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
+import com.flytrap.rssreader.api.folder.presentation.dto.CreateFolderRequest;
+import com.flytrap.rssreader.api.folder.presentation.dto.CreateFolderResponse;
+import com.flytrap.rssreader.api.folder.presentation.dto.FolderRequest;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest;
+import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface FolderUpdateControllerApi {
 
-    // TODO: Swaager 어노테이션 붙여주세요.
-    ApplicationResponse<FolderRequest.Response> createFolder(
-        @Valid @RequestBody FolderRequest.CreateRequest request,
+    @Operation(summary = "새로운 폴더 추가하기", description = "새로운 폴더를 추가한다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "블로그 추가 성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = CreateFolderResponse.class))),
+    })
+    ApplicationResponse<CreateFolderResponse> createNewFolder(
+        @Valid @RequestBody CreateFolderRequest request,
         @Login AccountSession member);
 
     // TODO: Swaager 어노테이션 붙여주세요.

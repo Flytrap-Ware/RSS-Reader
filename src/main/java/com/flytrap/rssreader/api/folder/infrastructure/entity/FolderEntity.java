@@ -1,6 +1,9 @@
 package com.flytrap.rssreader.api.folder.infrastructure.entity;
 
 import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.domain.FolderCreate;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
+import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,8 +47,24 @@ public class FolderEntity {
                 .build();
     }
 
+    public static FolderEntity from(FolderCreate folderCreate) {
+        return FolderEntity.builder()
+            .name(folderCreate.getName())
+            .memberId(folderCreate.getOwnerId().value())
+            .isShared(folderCreate.getSharedStatus().isShared())
+            .isDeleted(folderCreate.isDeleted())
+            .build();
+    }
+
     public Folder toDomain() {
         return Folder.of(id, name, memberId, isShared, isDeleted);
+    }
+
+    public MyOwnFolder toMyOwnFolder() {
+        return MyOwnFolder.builder()
+            .id(new FolderId(id))
+            .name(name)
+            .build();
     }
 
 }

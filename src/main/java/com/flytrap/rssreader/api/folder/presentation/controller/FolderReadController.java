@@ -40,6 +40,7 @@ public class FolderReadController implements FolderReadControllerApi {
         return new ApplicationResponse<>(MyFoldersResponse.from(accessibleFolders));
     }
 
+    // TODO: Subscription으로 이동
     @GetMapping("/{folderId}/rss")
     public ApplicationResponse<SubscribeRequest.ResponseList> read( // TODO: 폴더에 구독된 블로그 목록 불러오기 API인데 이름 변경했으면 좋겠어요.
             @PathVariable Long folderId,
