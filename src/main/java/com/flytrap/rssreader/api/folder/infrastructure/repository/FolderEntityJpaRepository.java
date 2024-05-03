@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface FolderEntityJpaRepository extends JpaRepository<FolderEntity, Long> {
 
     Optional<FolderEntity> findByIdAndIsDeletedFalse(Long id);
+    Optional<FolderEntity> findByIdAndMemberIdAndIsDeletedFalse(Long id, Long accountId);
     List<FolderEntity> findAllByMemberIdAndIsDeletedFalse(Long memberId);
 }

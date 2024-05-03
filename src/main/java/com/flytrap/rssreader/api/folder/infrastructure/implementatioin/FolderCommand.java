@@ -13,8 +13,13 @@ public class FolderCommand {
 
     private final FolderEntityJpaRepository folderEntityJpaRepository;
 
-    public MyOwnFolder save(FolderCreate folderCreate) {
+    public MyOwnFolder create(FolderCreate folderCreate) {
         return folderEntityJpaRepository.save(FolderEntity.from(folderCreate))
+            .toMyOwnFolder();
+    }
+
+    public MyOwnFolder update(MyOwnFolder myOwnFolder) {
+        return folderEntityJpaRepository.save(FolderEntity.from(myOwnFolder))
             .toMyOwnFolder();
     }
 

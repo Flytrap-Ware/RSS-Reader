@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.folder.domain;
 
+import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.global.model.Domain;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,11 +10,22 @@ import lombok.Getter;
 public class MyOwnFolder {
 
     private final FolderId id;
-    private final String name;
+    private String name;
+    private final AccountId ownerId;
+    private final SharedStatus sharedStatus;
+    private final boolean isDeleted;
 
     @Builder
-    protected MyOwnFolder(FolderId id, String name) {
+    protected MyOwnFolder(FolderId id, String name, AccountId ownerId, SharedStatus sharedStatus,
+        boolean isDeleted) {
         this.id = id;
+        this.name = name;
+        this.ownerId = ownerId;
+        this.sharedStatus = sharedStatus;
+        this.isDeleted = isDeleted;
+    }
+
+    public void changeName(String name) {
         this.name = name;
     }
 }

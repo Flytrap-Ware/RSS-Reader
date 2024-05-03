@@ -3,6 +3,7 @@ package com.flytrap.rssreader.api.folder.infrastructure.implementatioin;
 import com.flytrap.rssreader.api.folder.domain.AccessibleFolder;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
+import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
 import com.flytrap.rssreader.api.folder.domain.PrivateFolder;
 import com.flytrap.rssreader.api.folder.domain.SharedFolder;
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
@@ -45,6 +46,14 @@ public class FolderQuery {
         }
 
         return AccessibleFolder.from(folder);
+    }
+
+    @Transactional(readOnly = true)
+    public MyOwnFolder readMyOwn(FolderId folderId, AccountId accountId) {
+        return folderEntityJpaRepository
+            .findByIdAndMemberIdAndIsDeletedFalse(folderId.value(), accountId.value())
+            .orElseThrow(() -> new NoSuchDomainException(Folder.class))
+            .toMyOwnFolder();
     }
 
     @Transactional(readOnly = true)

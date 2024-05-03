@@ -5,12 +5,12 @@ import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
 import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
 import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
 import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.domain.FolderSubscribe;
 import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
 import com.flytrap.rssreader.api.folder.presentation.controller.swagger.FolderUpdateControllerApi;
-import com.flytrap.rssreader.api.folder.presentation.dto.CreateFolderRequest;
-import com.flytrap.rssreader.api.folder.presentation.dto.CreateFolderResponse;
-import com.flytrap.rssreader.api.folder.presentation.dto.FolderRequest;
+import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateRequest;
+import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateResponse;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.facade.OpenCheckFacade;
 import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
@@ -45,26 +45,27 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApplicationResponse<CreateFolderResponse> createNewFolder(
-            @Valid @RequestBody CreateFolderRequest request,
+    public ApplicationResponse<FolderUpdateResponse> createNewFolder(
+            @Valid @RequestBody FolderUpdateRequest request,
             @Login AccountSession accountSession) {
 
         MyOwnFolder newFolder = folderUpdateService
             .createNewFolder(new AccountId(accountSession.id()), request.name());
 
-        return new ApplicationResponse<>(CreateFolderResponse.from(newFolder));
+        return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
 
     @PatchMapping("/{folderId}")
-    public ApplicationResponse<FolderRequest.Response> updateFolder(
-            @Valid @RequestBody FolderRequest.CreateRequest request,
+    @ResponseStatus(HttpStatus.OK)
+    public ApplicationResponse<FolderUpdateResponse> updateFolder(
+            @Valid @RequestBody FolderUpdateRequest request,
             @PathVariable Long folderId,
-            @Login AccountSession member) {
+            @Login AccountSession accountSession) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
-        Folder updatedFolder = folderUpdateService.updateFolder(request, verifiedFolder, member.id());
+        MyOwnFolder newFolder = folderUpdateService
+            .updateFolder(new AccountId(accountSession.id()), new FolderId(folderId), request.name());
 
-        return new ApplicationResponse<>(FolderRequest.Response.from(updatedFolder));
+        return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -4,6 +4,8 @@ import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
+import com.flytrap.rssreader.api.folder.domain.SharedStatus;
+import com.flytrap.rssreader.api.member.domain.AccountId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -56,6 +58,16 @@ public class FolderEntity {
             .build();
     }
 
+    public static FolderEntity from(MyOwnFolder myOwnFolder) {
+        return FolderEntity.builder()
+            .id(myOwnFolder.getId().value())
+            .name(myOwnFolder.getName())
+            .memberId(myOwnFolder.getOwnerId().value())
+            .isShared(myOwnFolder.getSharedStatus().isShared())
+            .isDeleted(myOwnFolder.isDeleted())
+            .build();
+    }
+
     public Folder toDomain() {
         return Folder.of(id, name, memberId, isShared, isDeleted);
     }
@@ -64,6 +76,9 @@ public class FolderEntity {
         return MyOwnFolder.builder()
             .id(new FolderId(id))
             .name(name)
+            .ownerId(new AccountId(memberId))
+            .sharedStatus(SharedStatus.from(isShared))
+            .isDeleted(isDeleted)
             .build();
     }
 
