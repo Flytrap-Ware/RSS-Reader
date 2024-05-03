@@ -22,26 +22,22 @@ public class Folder implements DefaultDomain {
     private String name;
     private Long memberId;
     private SharedStatus sharedStatus;
-    private Boolean isDeleted;
     private final List<FolderSubscribe> subscribes = new ArrayList<>();
 
     @Builder
-    protected Folder(Long id, String name, Long memberId, Boolean isShared, Boolean isDeleted) {
+    protected Folder(Long id, String name, Long memberId, Boolean isShared) {
         this.id = id;
         this.name = name;
         this.memberId = memberId;
         this.sharedStatus = SharedStatus.from(isShared);
-        this.isDeleted = isDeleted;
     }
 
-    public static Folder of(Long id, String name, Long memberId, Boolean isShared,
-            Boolean isDeleted) {
+    public static Folder of(Long id, String name, Long memberId, Boolean isShared) {
         return Folder.builder()
                 .id(id)
                 .name(name)
                 .memberId(memberId)
                 .isShared(isShared)
-                .isDeleted(isDeleted)
                 .build();
     }
 
@@ -50,7 +46,6 @@ public class Folder implements DefaultDomain {
                 .name(name)
                 .memberId(member)
                 .isShared(false)
-                .isDeleted(false)
                 .build();
     }
 
@@ -58,16 +53,8 @@ public class Folder implements DefaultDomain {
         this.name = name;
     }
 
-    public void delete() {
-        this.isDeleted = true;
-    }
-
     public boolean isShared() {
         return sharedStatus == SharedStatus.SHARED;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
     }
 
     public void toShare() {

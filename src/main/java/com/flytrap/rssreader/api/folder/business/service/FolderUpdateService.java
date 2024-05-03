@@ -11,7 +11,6 @@ import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJp
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +29,6 @@ public class FolderUpdateService {
         return folderCommand.create(folderCreate);
     }
 
-    @Transactional
     public MyOwnFolder updateFolder(AccountId accountId, FolderId folderId, String folderName) {
         MyOwnFolder myOwnFolder = folderQuery.readMyOwn(folderId, accountId);
         myOwnFolder.changeName(folderName);
@@ -38,11 +36,9 @@ public class FolderUpdateService {
         return folderCommand.update(myOwnFolder);
     }
 
-    @Transactional
-    public Folder deleteFolder(Folder folder, long id) {
-        folder.delete();
-
-        return repository.save(FolderEntity.from(folder)).toDomain();
+    public void deleteFolder(AccountId accountId, FolderId folderId) {
+        MyOwnFolder myOwnFolder = folderQuery.readMyOwn(folderId, accountId);
+        folderCommand.delete(myOwnFolder);
     }
 
     public void shareFolder(Folder folder) {

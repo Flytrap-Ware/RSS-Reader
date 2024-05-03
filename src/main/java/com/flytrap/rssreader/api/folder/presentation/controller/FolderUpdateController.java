@@ -70,15 +70,13 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{folderId}")
-    public ApplicationResponse<String> deleteFolder(
+    public ApplicationResponse<Void> deleteFolder(
             @PathVariable Long folderId,
-            @Login AccountSession member) {
+            @Login AccountSession accountSession) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
-        Folder folder = folderUpdateService.deleteFolder(verifiedFolder, member.id());
-        folderSubscribeService.unsubscribeAllByFolder(folder);
+        folderUpdateService.deleteFolder(new AccountId(accountSession.id()), new FolderId(folderId));
 
-        return new ApplicationResponse<>("폴더가 삭제되었습니다 : " + folder.getName());
+        return new ApplicationResponse<>(null);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

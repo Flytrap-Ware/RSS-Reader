@@ -35,8 +35,11 @@ public interface FolderUpdateControllerApi {
         @PathVariable Long folderId,
         @Login AccountSession member);
 
-    // TODO: Swaager 어노테이션 붙여주세요.
-    ApplicationResponse<String> deleteFolder(
+    @Operation(summary = "폴더 제거하기", description = "폴더를 제거한다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "폴더 제거 성공",  content = @Content(mediaType = "application/json")),
+    })
+    ApplicationResponse<Void> deleteFolder(
         @PathVariable Long folderId,
         @Login AccountSession member);
 

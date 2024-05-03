@@ -45,7 +45,7 @@ public class FolderEntity {
                 .name(folder.getName())
                 .memberId(folder.getMemberId())
                 .isShared(folder.isShared())
-                .isDeleted(folder.getIsDeleted())
+                .isDeleted(false)
                 .build();
     }
 
@@ -54,7 +54,7 @@ public class FolderEntity {
             .name(folderCreate.getName())
             .memberId(folderCreate.getOwnerId().value())
             .isShared(folderCreate.getSharedStatus().isShared())
-            .isDeleted(folderCreate.isDeleted())
+            .isDeleted(false)
             .build();
     }
 
@@ -64,12 +64,22 @@ public class FolderEntity {
             .name(myOwnFolder.getName())
             .memberId(myOwnFolder.getOwnerId().value())
             .isShared(myOwnFolder.getSharedStatus().isShared())
-            .isDeleted(myOwnFolder.isDeleted())
+            .isDeleted(false)
+            .build();
+    }
+
+    public static FolderEntity fromForDelete(MyOwnFolder myOwnFolder) {
+        return FolderEntity.builder()
+            .id(myOwnFolder.getId().value())
+            .name(myOwnFolder.getName())
+            .memberId(myOwnFolder.getOwnerId().value())
+            .isShared(myOwnFolder.getSharedStatus().isShared())
+            .isDeleted(true)
             .build();
     }
 
     public Folder toDomain() {
-        return Folder.of(id, name, memberId, isShared, isDeleted);
+        return Folder.of(id, name, memberId, isShared);
     }
 
     public MyOwnFolder toMyOwnFolder() {
@@ -78,7 +88,6 @@ public class FolderEntity {
             .name(name)
             .ownerId(new AccountId(memberId))
             .sharedStatus(SharedStatus.from(isShared))
-            .isDeleted(isDeleted)
             .build();
     }
 
