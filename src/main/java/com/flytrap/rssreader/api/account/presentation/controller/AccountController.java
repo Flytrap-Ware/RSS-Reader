@@ -4,6 +4,7 @@ import com.flytrap.rssreader.api.account.business.service.AccountService;
 import com.flytrap.rssreader.api.account.domain.AccountName;
 import com.flytrap.rssreader.api.account.presentation.controller.swagger.AccountControllerApi;
 import com.flytrap.rssreader.api.account.presentation.dto.NameSearchRequest;
+import com.flytrap.rssreader.api.account.presentation.dto.NameSearchResponse;
 import com.flytrap.rssreader.api.account.presentation.dto.response.AccountSummary;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,11 @@ public class AccountController implements AccountControllerApi {
     private final AccountService memberService;
 
     @GetMapping
-    public ApplicationResponse<NameSearchRequest.Result> searchAccountByName(NameSearchRequest nameSearch) {
+    public ApplicationResponse<NameSearchResponse> searchAccountByName(NameSearchRequest nameSearch) {
         List<AccountSummary> memberSummaries = memberService.get(new AccountName(nameSearch.name()))
                 .stream().map(AccountSummary::from)
                 .toList();
-        return new ApplicationResponse<>(new NameSearchRequest.Result(memberSummaries));
+        return new ApplicationResponse<>(new NameSearchResponse(memberSummaries));
     }
 
 }
