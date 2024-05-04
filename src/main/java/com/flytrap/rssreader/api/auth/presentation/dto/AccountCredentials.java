@@ -9,9 +9,9 @@ import java.io.Serializable;
  * 로그인 후 Session에 저장되는 Member DTO입니다.
  * @param id
  */
-public record SessionAccount(AccountId id) implements Serializable {
+public record AccountCredentials(AccountId id) implements Serializable {
 
-    public static SessionAccount from(Account member) {
-        return new SessionAccount(member.getId());
+    public static AccountCredentials from(Account member) {
+        return new AccountCredentials(member.getId());
     }
 }

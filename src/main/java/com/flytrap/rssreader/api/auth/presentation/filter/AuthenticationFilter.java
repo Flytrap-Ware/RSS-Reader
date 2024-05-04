@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.auth.presentation.filter;
 
 import com.flytrap.rssreader.global.properties.AuthProperties;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.global.presentation.resolver.AuthorizationContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,8 +31,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         HttpSession session = request.getSession(false);
 
-        SessionAccount attribute = (session != null)
-                ? (SessionAccount) session.getAttribute(authProperties.sessionId())
+        AccountCredentials attribute = (session != null)
+                ? (AccountCredentials) session.getAttribute(authProperties.sessionId())
                 : null;
         context.setLoginMember(attribute);
 

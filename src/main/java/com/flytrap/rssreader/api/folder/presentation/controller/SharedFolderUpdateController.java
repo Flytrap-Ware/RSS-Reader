@@ -12,7 +12,7 @@ import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.account.presentation.dto.response.AccountSummary;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.InviteFolderMemberRequest;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class SharedFolderUpdateController implements SharedFolderUpdateControlle
     @PostMapping("/{folderId}/members")
     public ApplicationResponse<AccountSummary> inviteMember(
             @PathVariable Long folderId,
-            @Login SessionAccount loginMember,
+            @Login AccountCredentials loginMember,
             @RequestBody InviteFolderMemberRequest request
     ) throws AuthenticationException {
 
@@ -51,7 +51,7 @@ public class SharedFolderUpdateController implements SharedFolderUpdateControlle
     @DeleteMapping("/{folderId}/members/me")
     public ApplicationResponse<String> leaveFolder(
             @PathVariable Long folderId,
-            @Login SessionAccount member
+            @Login AccountCredentials member
     ) {
         Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id().value());
         
@@ -69,7 +69,7 @@ public class SharedFolderUpdateController implements SharedFolderUpdateControlle
     public ApplicationResponse<String> deleteMember(
             @PathVariable Long folderId,
             @PathVariable Long inviteeId,
-            @Login SessionAccount member
+            @Login AccountCredentials member
     ) throws AuthenticationException {
         Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id().value());
 

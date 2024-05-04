@@ -8,7 +8,7 @@ import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertListResponse;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertRequest;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -32,7 +32,7 @@ public class AlertController implements AlertControllerApi {
     @GetMapping("/{folderId}/alerts")
     public ApplicationResponse<AlertListResponse> getAlerts(
         @PathVariable Long folderId,
-        @Login SessionAccount member
+        @Login AccountCredentials member
     ) {
         Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         List<Alert> alerts = alertService.getAlertListByFolder(folderId);
@@ -44,7 +44,7 @@ public class AlertController implements AlertControllerApi {
     public ApplicationResponse<AlertResponse> registerAlert(
         @PathVariable Long folderId,
         @Valid @RequestBody AlertRequest request,
-        @Login SessionAccount member) {
+        @Login AccountCredentials member) {
 
         Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         Alert alert = alertService.registerAlert(verifiedFolder.getId(), member.id().value(), request.webhookUrl());
@@ -55,7 +55,7 @@ public class AlertController implements AlertControllerApi {
     public ApplicationResponse<String> removeAlert(
         @PathVariable Long folderId,
         @PathVariable Long alertId,
-        @Login SessionAccount member) {
+        @Login AccountCredentials member) {
 
         folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         alertService.removeAlert(alertId);
