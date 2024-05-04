@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AccountCommandImplementation {
 
-    private final AccountEntityJpaRepository memberEntityJpaRepository;
+    private final AccountJpaRepository memberEntityJpaRepository;
 
     public Account create(Account account) {
         return memberEntityJpaRepository.save(AccountEntity.from(account)).toDomain();

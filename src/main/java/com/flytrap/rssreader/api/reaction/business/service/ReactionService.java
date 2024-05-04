@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.reaction.business.service;
 
 import com.flytrap.rssreader.api.account.infrastructure.entity.AccountEntity;
-import com.flytrap.rssreader.api.account.infrastructure.repository.AccountEntityJpaRepository;
+import com.flytrap.rssreader.api.account.infrastructure.repository.AccountJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
 import com.flytrap.rssreader.api.reaction.infrastructure.entity.ReactionEntity;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReactionService {
 
     private final PostEntityJpaRepository postRepository;
-    private final AccountEntityJpaRepository memberRepository;
+    private final AccountJpaRepository memberRepository;
     private final ReactionEntityJpaRepository reactionRepository;
 
     @Transactional

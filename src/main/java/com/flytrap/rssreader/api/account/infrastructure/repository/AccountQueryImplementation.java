@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountQueryImplementation {
 
-    private final AccountEntityJpaRepository memberEntityJpaRepository;
+    private final AccountJpaRepository memberEntityJpaRepository;
 
     public Account save(Account account) {
         return memberEntityJpaRepository.save(AccountEntity.from(account)).toDomain();
