@@ -5,7 +5,7 @@ import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.properties.AdminProperties;
 import com.flytrap.rssreader.global.properties.AuthProperties;
 import com.flytrap.rssreader.api.auth.presentation.dto.Login;
-import com.flytrap.rssreader.api.auth.presentation.dto.SignInResponse;
+import com.flytrap.rssreader.api.auth.presentation.dto.LoginResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import jakarta.servlet.http.HttpSession;
 import javax.security.sasl.AuthenticationException;
@@ -27,9 +27,9 @@ public class AdminController implements AdminControllerApi {
     private final AdminProperties properties;
     private final AuthProperties authProperties;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApplicationResponse<SignInResponse> getAdminProperties(@RequestBody Login request, HttpSession session)
+    public ApplicationResponse<LoginResponse> getAdminProperties(@RequestBody Login request, HttpSession session)
             throws AuthenticationException {
 
         if (request.code().equals(properties.code())) {
@@ -37,7 +37,7 @@ public class AdminController implements AdminControllerApi {
             log.info("🙌 admin login success");
 
             return new ApplicationResponse<>(
-                new SignInResponse(
+                new LoginResponse(
                     properties.memberId(),
                     properties.memberName(),
                     properties.memberProfile()
