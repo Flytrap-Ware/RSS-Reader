@@ -15,7 +15,9 @@ public class NoSuchDomainException extends ApplicationException {
         );
     }
 
-    public NoSuchDomainException(Class<? extends DefaultDomain> domainClass) {
+    // TODO: DefaultDomain이 통합되면 파라미터 타입 Class<? extends DefaultDomain>으로 변경하기
+    public NoSuchDomainException(Class<?> domainClass) {
         super(domainClass);
     }
+
 }

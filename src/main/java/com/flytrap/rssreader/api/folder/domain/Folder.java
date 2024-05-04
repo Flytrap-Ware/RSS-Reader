@@ -2,16 +2,16 @@ package com.flytrap.rssreader.api.folder.domain;
 
 import com.flytrap.rssreader.api.post.infrastructure.output.OpenPostCountOutput;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSubscribeCountOutput;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.global.model.DefaultDomain;
 import com.flytrap.rssreader.global.model.Domain;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Getter
 @Domain(name = "folder")
@@ -78,8 +78,8 @@ public class Folder implements DefaultDomain {
         this.sharedStatus = SharedStatus.PRIVATE;
     }
 
-    public boolean isOwner(long id) {
-        return this.memberId == id;
+    public boolean isOwner(long accountId) { // TODO: 여기서 AccountId를 파라미터로 받기
+        return this.memberId == accountId;
     }
 
     public void addSubscribe(FolderSubscribe subscribe) {
@@ -101,11 +101,11 @@ public class Folder implements DefaultDomain {
                 .toList();
     }
 
-    public void addUnreadCountsBySubscribes(Map<Long, PostSubscribeCountOutput> countsPost, Map<Long, OpenPostCountOutput> countsOpen) {
+    public void addUnreadCountsBySubscribes(Map<SubscriptionId, PostSubscribeCountOutput> countsPost, Map<SubscriptionId, OpenPostCountOutput> countsOpen) {
         for (FolderSubscribe subscribe : subscribes) {
 
-            PostSubscribeCountOutput subscribePostCount = countsPost.get(subscribe.getId());
-            OpenPostCountOutput openPostCount = countsOpen.get(subscribe.getId());
+            PostSubscribeCountOutput subscribePostCount = countsPost.get(new SubscriptionId(subscribe.getId()));
+            OpenPostCountOutput openPostCount = countsOpen.get(new SubscriptionId(subscribe.getId()));
             int totalCount = 0;
             int openCount = 0;
 

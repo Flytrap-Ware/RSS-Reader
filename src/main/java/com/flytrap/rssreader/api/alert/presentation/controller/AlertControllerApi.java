@@ -3,7 +3,7 @@ package com.flytrap.rssreader.api.alert.presentation.controller;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertRequest;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,7 +24,7 @@ public interface AlertControllerApi {
     ApplicationResponse<AlertResponse> registerAlert(
         @Parameter(description = "웹 훅을 등록할 Folder의 Id") @PathVariable Long folderId,
         @Parameter(description = "등록할 웹 훅 URL") @Valid @RequestBody AlertRequest request,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login SessionMember member);
+        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession member);
 
     @Operation(summary = "알림 웹 훅 삭제하기", description = "등록된 알림 웹 훅을 삭제한다.")
     @ApiResponses(value = {
@@ -33,6 +33,6 @@ public interface AlertControllerApi {
     ApplicationResponse<String> removeAlert(
         @Parameter(description = "웹 훅을 삭제할 Folder의 Id") @PathVariable Long folderId,
         @Parameter(description = "삭제할 웹 훅의 Id") @PathVariable Long alertId,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login SessionMember member);
+        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession member);
 
 }

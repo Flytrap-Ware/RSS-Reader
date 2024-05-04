@@ -61,7 +61,7 @@ public class PostCollectService {
     }
 
     private List<PostEntity> generateCollectedPostsForUpsert(RssPostsData postData, SubscribeEntity subscribe) {
-        List<PostEntity> existingPosts = postRepository.findAllBySubscribe(subscribe);
+        List<PostEntity> existingPosts = postRepository.findAllBySubscriptionId(subscribe.getId());
 
         Map<String, PostEntity> existingPostsMap = convertListToHashSet(existingPosts);
         List<PostEntity> collectedPosts = new ArrayList<>();
@@ -74,7 +74,7 @@ public class PostCollectService {
                 post = existingPostsMap.get(itemData.guid());
                 post.updateBy(itemData);
             } else {
-                post = PostEntity.from(itemData, subscribe);
+                post = PostEntity.from(itemData, subscribe.getId());
                 newPosts.add(post);
             }
             collectedPosts.add(post);

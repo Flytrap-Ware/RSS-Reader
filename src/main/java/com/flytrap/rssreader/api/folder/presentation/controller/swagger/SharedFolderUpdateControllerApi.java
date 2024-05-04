@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.member.presentation.dto.response.MemberSummary;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.model.ErrorResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.InviteMemberRequest;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +29,7 @@ public interface SharedFolderUpdateControllerApi {
     })
     ApplicationResponse<MemberSummary> inviteMember(
         @Parameter(description = "회원을 초대할 폴더의 ID") @PathVariable Long folderId,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login SessionMember loginMember,
+        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession loginMember,
         @Parameter(description = "초대할 회원의 ID") @RequestBody InviteMemberRequest request
     ) throws AuthenticationException;
 
@@ -39,7 +39,7 @@ public interface SharedFolderUpdateControllerApi {
     })
     ApplicationResponse<String> leaveFolder(
         @Parameter(description = "떠나고자 하는 폴더의 ID") @PathVariable Long folderId,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login SessionMember member
+        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession member
     );
 
     @Operation(summary = "공유 폴더에 포함된 한 회원 추방하기", description = "공유 폴더에 포함된 한 회원 추방한다. 폴더 관리자만 추방할 수 있다.")
@@ -51,6 +51,6 @@ public interface SharedFolderUpdateControllerApi {
     ApplicationResponse<String> deleteMember(
         @Parameter(description = "추방이 일어날 폴더의 ID") @PathVariable Long folderId,
         @Parameter(description = "현재 폴더에서 추방시킬 회원의 ID") @PathVariable Long inviteeId,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login SessionMember member
+        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession member
     ) throws AuthenticationException;
 }

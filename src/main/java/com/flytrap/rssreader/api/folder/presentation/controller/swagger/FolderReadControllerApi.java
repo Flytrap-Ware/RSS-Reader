@@ -2,7 +2,7 @@ package com.flytrap.rssreader.api.folder.presentation.controller.swagger;
 
 import com.flytrap.rssreader.api.folder.presentation.dto.Folders;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,11 +20,11 @@ public interface FolderReadControllerApi {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Folders.class))),
     })
     ApplicationResponse<Folders> getFolders(
-            @Parameter(description = "현재 로그인한 회원 정보") @Login SessionMember member
+            @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession member
     );
 
     // TODO: Swaager 어노테이션 붙여주세요.
     ApplicationResponse<SubscribeRequest.ResponseList> read(
             @PathVariable Long folderId,
-            @Login SessionMember member);
+            @Login AccountSession member);
 }

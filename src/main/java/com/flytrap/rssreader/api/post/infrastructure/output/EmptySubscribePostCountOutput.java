@@ -3,7 +3,7 @@ package com.flytrap.rssreader.api.post.infrastructure.output;
 public class EmptySubscribePostCountOutput implements PostSubscribeCountOutput {
 
     @Override
-    public long getSubscribeId() {
+    public long getSubscriptionId() {
         return 0;
     }
 
