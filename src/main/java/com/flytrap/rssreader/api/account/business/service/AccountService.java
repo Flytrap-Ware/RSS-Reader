@@ -29,7 +29,6 @@ public class AccountService {
     @Transactional
     public Account signIn(UserResource userResource) {
         return accountImplementation.findByProviderKey(userResource.getId())
-                .map(AccountEntity::toDomain)
                 .orElseGet(() -> signUp(userResource.toDomainForInsert()));
     }
 
@@ -49,7 +48,6 @@ public class AccountService {
      */
     public List<Account> get(AccountName name) {
         return accountImplementation.findAllByName(name).stream()
-                .map(AccountEntity::toDomain)
                 .toList();
     }
 
@@ -59,10 +57,9 @@ public class AccountService {
      * @return Account domain
      * @throws NoSuchDomainException
      */
-    public Account get(AccountId inviteeId) {
-        return accountImplementation.findById(inviteeId)
+    public Account get(AccountId id) {
+        return accountImplementation.findById(id)
                 .orElseThrow(() -> new NoSuchDomainException(Account.class))
-                .toDomain();
     }
 
     /**
@@ -72,7 +69,6 @@ public class AccountService {
      */
     public List<Account> getAll(Collection<AccountId> ids) {
         return accountImplementation.findAllById(ids).stream()
-                .map(AccountEntity::toDomain)
                 .toList();
     }
 }
