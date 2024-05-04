@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.auth.infrastructure.external.provider;
 
 import com.flytrap.rssreader.api.auth.infrastructure.external.dto.AccessToken;
-import com.flytrap.rssreader.api.auth.infrastructure.external.dto.UserResource;
+import com.flytrap.rssreader.api.auth.infrastructure.external.dto.OAuthUserResource;
 import reactor.core.publisher.Mono;
 
 public interface AuthProvider {
@@ -18,6 +18,6 @@ public interface AuthProvider {
      * @param accessToken
      * @return UserResource
      */
-    Mono<UserResource> requestUserResource(AccessToken accessToken);
+    Mono<OAuthUserResource> requestUserResource(AccessToken accessToken);
 
 }

@@ -13,7 +13,7 @@ import com.flytrap.rssreader.fixture.FixtureFields.RssItemResourceFields;
 import com.flytrap.rssreader.fixture.FixtureFields.SubscribeEntityFields;
 import com.flytrap.rssreader.fixture.FixtureFields.UserResourceFields;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData.RssItemData;
-import com.flytrap.rssreader.api.auth.infrastructure.external.dto.UserResource;
+import com.flytrap.rssreader.api.auth.infrastructure.external.dto.OAuthUserResource;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ import java.util.Optional;
 public class FixtureFactory {
 
     // Account
-    public static UserResource generateUserResource() {
-        return UserResource.builder()
+    public static OAuthUserResource generateUserResource() {
+        return OAuthUserResource.builder()
                 .id(UserResourceFields.id)
                 .email(UserResourceFields.email)
                 .login(UserResourceFields.login)
