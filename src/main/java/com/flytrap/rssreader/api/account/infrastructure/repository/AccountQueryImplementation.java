@@ -17,10 +17,6 @@ public class AccountQueryImplementation {
 
     private final AccountJpaRepository memberEntityJpaRepository;
 
-    public Account save(Account account) {
-        return memberEntityJpaRepository.save(AccountEntity.from(account)).toDomain();
-    }
-
     public Optional<Account> readByProviderKey(Long oauthPk) {
         return memberEntityJpaRepository.findByProviderKey(oauthPk).map(AccountEntity::toDomain);
     }

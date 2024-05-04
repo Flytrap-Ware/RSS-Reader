@@ -2,6 +2,7 @@ package com.flytrap.rssreader.api.account.business.service;
 
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.account.domain.AuthProvider;
+import com.flytrap.rssreader.api.account.infrastructure.repository.AccountCommandImplementation;
 import com.flytrap.rssreader.api.account.infrastructure.repository.AccountQueryImplementation;
 import com.flytrap.rssreader.fixture.FixtureFactory;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,8 @@ class AccountServiceTest {
 
     @Mock
     AccountQueryImplementation accountQueryImplementation;
+    @Mock
+    AccountCommandImplementation accountCommandImplementation;
     @InjectMocks
     AccountService accountService;
 
@@ -39,7 +42,7 @@ class AccountServiceTest {
 
         //then
         verify(accountQueryImplementation).readByProviderKey(anyLong());
-        verify(accountQueryImplementation, never()).save(any());
+        verify(accountCommandImplementation, never()).create(any());
 
         assertThat(account).isNotNull();
         assertThat(account.getId().value()).isEqualTo(1L);
@@ -51,7 +54,7 @@ class AccountServiceTest {
     void signin_new() {
         //given
         when(accountQueryImplementation.readByProviderKey(anyLong())).thenReturn(Optional.empty());
-        when(accountQueryImplementation.save(any()))
+        when(accountCommandImplementation.create(any()))
                 .thenReturn(FixtureFactory.generateAccount());
 
         OAuthUserResourceMock userResource = new OAuthUserResourceMock(1L, "test@gmail.com", "name", "https://avatarUrl.jpg");
@@ -61,7 +64,7 @@ class AccountServiceTest {
 
         //then
         verify(accountQueryImplementation).readByProviderKey(anyLong());
-        verify(accountQueryImplementation).save(any(Account.class));
+        verify(accountCommandImplementation).create(any(Account.class));
 
         assertThat(account).isNotNull();
         assertThat(account.getId().value()).isEqualTo(1L);
