@@ -21,6 +21,6 @@ public interface PostReadControllerApi {
     })
     ApplicationResponse<PostResponse> getPost(
             @PathVariable Long postId,
-            @Login AccountCredentials member);
+            @Login AccountCredentials accountCredentials);
 
 }

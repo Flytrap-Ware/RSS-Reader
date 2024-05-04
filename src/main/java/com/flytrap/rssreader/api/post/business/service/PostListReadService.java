@@ -9,8 +9,6 @@ import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.infrastructure.implementation.PostQuery;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import java.util.List;
-import com.flytrap.rssreader.api.post.infrastructure.output.PostSummaryOutput;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

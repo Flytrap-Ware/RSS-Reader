@@ -3,9 +3,9 @@ package com.flytrap.rssreader.api.auth.business.service;
 import com.flytrap.rssreader.api.account.business.service.AccountService;
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.auth.infrastructure.external.provider.AuthProvider;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.global.properties.AuthProperties;
 import com.flytrap.rssreader.api.auth.presentation.dto.Login;
-import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class AuthService {
     }
 
     public void login(Account account, HttpSession session) {
-        session.setAttribute(authProperties.sessionId(), AccountSession.from(account));
+        session.setAttribute(authProperties.sessionId(), AccountCredentials.from(account));
     }
 
     public void signOut(HttpSession session) {

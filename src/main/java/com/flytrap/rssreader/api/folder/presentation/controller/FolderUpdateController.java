@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.folder.presentation.controller;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
 import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
 import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
@@ -47,10 +47,10 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse<FolderUpdateResponse> createNewFolder(
             @Valid @RequestBody FolderUpdateRequest request,
-            @Login SessionAccount accountSession) {
+            @Login AccountCredentials accountCredentials) {
 
         MyOwnFolder newFolder = folderUpdateService
-            .createNewFolder(new AccountId(accountSession.id().value()), request.name());
+            .createNewFolder(new AccountId(accountCredentials.id().value()), request.name());
 
         return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
@@ -60,10 +60,10 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     public ApplicationResponse<FolderUpdateResponse> updateFolder(
             @Valid @RequestBody FolderUpdateRequest request,
             @PathVariable Long folderId,
-            @Login SessionAccount accountSession) {
+            @Login AccountCredentials accountCredentials) {
 
         MyOwnFolder newFolder = folderUpdateService
-            .updateFolder(new AccountId(accountSession.id().value()), new FolderId(folderId), request.name());
+            .updateFolder(new AccountId(accountCredentials.id().value()), new FolderId(folderId), request.name());
 
         return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
@@ -72,9 +72,9 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     @DeleteMapping("/{folderId}")
     public ApplicationResponse<Void> deleteFolder(
             @PathVariable Long folderId,
-            @Login SessionAccount accountSession) {
+            @Login AccountCredentials accountCredentials) {
 
-        folderUpdateService.deleteFolder(new AccountId(accountSession.id().value()), new FolderId(folderId));
+        folderUpdateService.deleteFolder(new AccountId(accountCredentials.id().value()), new FolderId(folderId));
 
         return new ApplicationResponse<>(null);
     }
@@ -84,7 +84,7 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     public ApplicationResponse<SubscribeRequest.Response> subscribe(
             @PathVariable Long folderId,
             @Valid @RequestBody SubscribeRequest.CreateRequest request,
-            @Login SessionAccount member) {
+            @Login AccountCredentials member) {
 
         Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         Subscribe subscribe = subscribeService.subscribe(request);
@@ -105,7 +105,7 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     public ApplicationResponse<Void> unsubscribe(
             @PathVariable Long folderId,
             @PathVariable Long subscribeId,
-            @Login SessionAccount member) {
+            @Login AccountCredentials member) {
 
         Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id().value());
         folderSubscribeService.folderUnsubscribe(subscribeId,

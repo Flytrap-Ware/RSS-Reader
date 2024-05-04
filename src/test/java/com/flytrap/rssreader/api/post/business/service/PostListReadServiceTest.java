@@ -86,7 +86,7 @@ class PostListReadServiceTest {
             PostFilter postFilter = new PostFilter(false, null, null, null);
             Pageable pageable = Pageable.ofSize(10);
             Folder folder = Folder.builder()
-                .id(folderId.value()).isShared(false).isDeleted(false)
+                .id(folderId.value()).isShared(false)
                 .build();
 
             // When

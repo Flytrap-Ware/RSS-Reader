@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.folder.presentation.controller;
 
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.business.service.FolderReadService;
 import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
 import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
@@ -10,7 +11,6 @@ import com.flytrap.rssreader.api.folder.presentation.dto.MyFoldersResponse;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import com.flytrap.rssreader.api.subscribe.business.service.SubscribeService;
@@ -33,7 +33,7 @@ public class FolderReadController implements FolderReadControllerApi {
     private final FolderReadService folderReadService;
 
     @GetMapping
-    public ApplicationResponse<MyFoldersResponse> getMyFolders(@Login SessionAccount accountSession) {
+    public ApplicationResponse<MyFoldersResponse> getMyFolders(@Login AccountCredentials accountSession) {
 
         AccessibleFolders accessibleFolders = folderReadService.getMyFolders(new AccountId(accountSession.id().value()));
 
@@ -44,7 +44,7 @@ public class FolderReadController implements FolderReadControllerApi {
     @GetMapping("/{folderId}/rss")
     public ApplicationResponse<SubscribeRequest.ResponseList> read( // TODO: 폴더에 구독된 블로그 목록 불러오기 API인데 이름 변경했으면 좋겠어요.
             @PathVariable Long folderId,
-            @Login SessionAccount member) {
+            @Login AccountCredentials member) {
 
         Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id().value());
         List<Long> list = folderSubscribeService.getFolderSubscribeId(verifiedFolder.getId());

@@ -1,9 +1,9 @@
 package com.flytrap.rssreader.api.folder.presentation.controller.swagger;
 
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateRequest;
 import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
@@ -25,7 +25,7 @@ public interface FolderUpdateControllerApi {
     })
     ApplicationResponse<FolderUpdateResponse> createNewFolder(
         @Valid @RequestBody FolderUpdateRequest request,
-        @Login SessionAccount member);
+        @Login AccountCredentials accountCredentials);
 
     @Operation(summary = "폴더 정보 변경하기", description = "폴더의 정보를 변경한다.")
     @ApiResponses(value = {
@@ -34,7 +34,7 @@ public interface FolderUpdateControllerApi {
     ApplicationResponse<FolderUpdateResponse> updateFolder(
         @Valid @RequestBody FolderUpdateRequest request,
         @PathVariable Long folderId,
-        @Login SessionAccount member);
+        @Login AccountCredentials accountCredentials);
 
     @Operation(summary = "폴더 제거하기", description = "폴더를 제거한다.")
     @ApiResponses(value = {
@@ -42,7 +42,7 @@ public interface FolderUpdateControllerApi {
     })
     ApplicationResponse<Void> deleteFolder(
         @PathVariable Long folderId,
-        @Login SessionAccount member);
+        @Login AccountCredentials accountCredentials);
 
     @Operation(summary = "폴더에 블로그 추가하기(블로그 구독하기)", description = "이미 추가된 폴더에 블로그를 새로 추가한다.")
     @ApiResponses(value = {
@@ -51,5 +51,5 @@ public interface FolderUpdateControllerApi {
     ApplicationResponse<SubscribeRequest.Response> subscribe(
         @Parameter(description = "블로그를 추가할 폴더의 ID") @PathVariable Long folderId,
         @Parameter(description = "추가할 블로그의 주소") @Valid @RequestBody SubscribeRequest.CreateRequest request,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login SessionAccount member);
+        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials accountCredentials);
 }

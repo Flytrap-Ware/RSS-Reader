@@ -27,7 +27,7 @@ public class AuthController implements AuthControllerApi {
                                                       HttpSession session) {
 
         Account account = authService.doAuthentication(request);
-        authService.signIn(account, session);
+        authService.login(account, session);
         return new ApplicationResponse<>(SignInResponse.from(account));
     }
 

@@ -29,7 +29,7 @@ public class SharedFolderUpdateService { // todo : rename to folderMemberService
         }
 
         folderMemberJpaRepository.save(
-                FolderMemberEntity.of(folder.getId(), inviteeId));
+                FolderMemberEntity.of(folder.getId(), inviteeId.value()));
     }
 
     @Transactional(readOnly = true)

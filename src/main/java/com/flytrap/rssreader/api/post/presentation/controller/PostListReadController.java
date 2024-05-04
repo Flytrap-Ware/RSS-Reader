@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.presentation.controller;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionAccount;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.service.PostListReadService;
@@ -30,10 +30,10 @@ public class PostListReadController implements PostListReadControllerApi {
     public ApplicationResponse<PostResponse.PostListResponse> getPostsByAccount(
         PostFilter postFilter, // TODO: filter 가 request 부터 repository까지 계속 전달됨
         @PageableDefault(page = 0, size = 15) Pageable pageable,
-        @Login SessionAccount accountSession) {
+        @Login AccountCredentials accountCredentials) {
 
         List<PostResponse> posts = postListReadService.getPostsByAccount(
-                new AccountId(accountSession.id().value()), postFilter, pageable)
+                new AccountId(accountCredentials.id().value()), postFilter, pageable)
             .stream()
             .map(PostResponse::from)
             .toList();
@@ -47,10 +47,10 @@ public class PostListReadController implements PostListReadControllerApi {
         @PathVariable Long folderId,
         PostFilter postFilter, // TODO: filter 가 request 부터 repository까지 계속 전달됨
         @PageableDefault(page = 0, size = 15) Pageable pageable,
-        @Login SessionAccount accountSession) {
+        @Login AccountCredentials accountCredentials) {
 
         List<PostResponse> posts = postListReadService.getPostsByFolder(
-                new AccountId(accountSession.id().value()), new FolderId(folderId), postFilter, pageable)
+                new AccountId(accountCredentials.id().value()), new FolderId(folderId), postFilter, pageable)
             .stream()
             .map(PostResponse::from)
             .toList();
@@ -65,10 +65,10 @@ public class PostListReadController implements PostListReadControllerApi {
         PostFilter postFilter, // TODO: filter 가 request 부터 repository까지 계속 전달됨
         @PageableDefault(page = 0, size = 15) Pageable pageable,
         // TODO: pageable 도 마찬가지. service 에서 만들면 됨
-        @Login SessionAccount accountSession) {
+        @Login AccountCredentials accountCredentials) {
 
         List<PostResponse> posts = postListReadService.getPostsBySubscription(
-                new AccountId(accountSession.id().value()), new SubscriptionId(subscriptionId),
+                new AccountId(accountCredentials.id().value()), new SubscriptionId(subscriptionId),
                 postFilter, pageable)
             .stream()
             .map(PostResponse::from)
@@ -82,11 +82,11 @@ public class PostListReadController implements PostListReadControllerApi {
     public ApplicationResponse<PostResponse.PostListResponse> getBookmarkedPosts(
         PostFilter postFilter,
         @PageableDefault(page = 0, size = 15) Pageable pageable,
-        @Login SessionAccount accountSession
+        @Login AccountCredentials accountCredentials
     ) {
 
         List<PostResponse> posts = postListReadService.getBookmarkedPosts(
-                new AccountId(accountSession.id().value()), postFilter, pageable)
+                new AccountId(accountCredentials.id().value()), postFilter, pageable)
             .stream()
             .map(PostResponse::from)
             .toList();

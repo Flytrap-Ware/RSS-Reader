@@ -5,8 +5,6 @@ import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.properties.AdminProperties;
 import com.flytrap.rssreader.global.properties.AuthProperties;
 import com.flytrap.rssreader.api.auth.presentation.dto.Login;
-import com.flytrap.rssreader.api.auth.presentation.dto.LoginResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.api.auth.presentation.dto.SignInResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import jakarta.servlet.http.HttpSession;

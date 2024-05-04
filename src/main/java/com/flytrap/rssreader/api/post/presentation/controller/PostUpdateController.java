@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.presentation.controller;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.service.PostUpdateService;
 import com.flytrap.rssreader.api.post.domain.PostId;
@@ -30,9 +30,9 @@ public class PostUpdateController implements PostUpdateControllerApi {
     @DeleteMapping("posts/{postId}/read")
     public ApplicationResponse<Void> unmarkAsOpened(
         @PathVariable Long postId,
-        @Login AccountSession accountSession
+        @Login AccountCredentials accountCredentials
     ) {
-        postUpdateService.unmarkAsOpen(new AccountId(accountSession.id()), new PostId(postId));
+        postUpdateService.unmarkAsOpen(new AccountId(accountCredentials.id().value()), new PostId(postId));
 
         return new ApplicationResponse<>(null);
     }
@@ -41,22 +41,22 @@ public class PostUpdateController implements PostUpdateControllerApi {
     @PostMapping("/posts/{postId}/bookmarks")
     public ApplicationResponse<BookmarkResponse> markAsBookmark(
         @PathVariable Long postId,
-        @Login AccountSession accountSession
+        @Login AccountCredentials accountCredentials
     ) {
         postUpdateService
-            .markAsBookmark(new AccountId(accountSession.id()), new PostId(postId));
+            .markAsBookmark(new AccountId(accountCredentials.id().value()), new PostId(postId));
 
-        return new ApplicationResponse<>(new BookmarkResponse(accountSession.id(), postId));
+        return new ApplicationResponse<>(new BookmarkResponse(accountCredentials.id().value(), postId));
     }
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/posts/{postId}/bookmarks")
     public ApplicationResponse<String> unmarkAsBookmark(
         @PathVariable Long postId,
-        @Login AccountSession accountSession
+        @Login AccountCredentials accountCredentials
     ) {
         postUpdateService
-            .unmarkAsBookmark(new AccountId(accountSession.id()), new PostId(postId));
+            .unmarkAsBookmark(new AccountId(accountCredentials.id().value()), new PostId(postId));
 
         return new ApplicationResponse<>(DELETE_BOOKMARK_MESSAGE + postId);
     }

@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.presentation.controller.swagger;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.post.presentation.dto.response.BookmarkResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
@@ -20,7 +20,7 @@ public interface PostUpdateControllerApi {
     })
     ApplicationResponse<BookmarkResponse> markAsBookmark(
         @Parameter(description = "북마크에 추가할 게시글 ID") @PathVariable Long postId,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession member
+        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials member
     );
 
     @Operation(summary = "북마크 제거", description = "이미 추가된 북마크 하나를 북마크에서 제거한다.")
@@ -29,6 +29,6 @@ public interface PostUpdateControllerApi {
     })
     ApplicationResponse<String> unmarkAsBookmark(
         @Parameter(description = "북마크를 제거할 게시글 ID") @PathVariable Long postId,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession member
+        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials member
     );
 }
