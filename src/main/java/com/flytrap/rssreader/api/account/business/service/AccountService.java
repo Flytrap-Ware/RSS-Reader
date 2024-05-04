@@ -6,7 +6,7 @@ import com.flytrap.rssreader.api.account.domain.AccountName;
 import com.flytrap.rssreader.api.account.infrastructure.repository.AccountCommandImplementation;
 import com.flytrap.rssreader.api.account.infrastructure.repository.AccountQueryImplementation;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
-import com.flytrap.rssreader.api.auth.infrastructure.external.dto.OAuthUserResource;
+import com.flytrap.rssreader.api.auth.infrastructure.external.dto.UserResource;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,13 +24,13 @@ public class AccountService {
     /**
      * Member 정보를 반환합니다.
      * User resource가 Member 테이블에 존재하지 않으면 새로 가입 후 Member 정보를 반환합니다.
-     * @param OAuthUserResource
+     * @param userResource
      * @return Account domain
      */
     @Transactional
-    public Account signIn(OAuthUserResource OAuthUserResource) {
-        return accountQueryImplementation.readByProviderKey(OAuthUserResource.getId())
-                .orElseGet(() -> signUp(OAuthUserResource.toDomainForInsert()));
+    public Account signIn(UserResource userResource) {
+        return accountQueryImplementation.readByProviderKey(userResource.getId())
+                .orElseGet(() -> signUp(userResource.newAccount()));
     }
 
     /**

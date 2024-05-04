@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class OAuthUserResource {
+public class UserResource {
 
     private Long id;
     private String email;
@@ -17,14 +17,14 @@ public class OAuthUserResource {
     private @JsonProperty("avatar_url") String avatarUrl;
 
     @Builder
-    protected OAuthUserResource(Long id, String email, String login, String avatarUrl) {
+    protected UserResource(Long id, String email, String login, String avatarUrl) {
         this.id = id;
         this.email = email;
         this.login = login;
         this.avatarUrl = avatarUrl;
     }
 
-    public Account toDomainForInsert() {
+    public Account newAccount() {
         return Account.newAccount(login, email, avatarUrl, id, AuthProvider.GITHUB);
     }
 

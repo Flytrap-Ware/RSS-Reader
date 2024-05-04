@@ -32,7 +32,7 @@ class AccountServiceTest {
         when(accountQueryImplementation.readByProviderKey(anyLong()))
                 .thenReturn(Optional.of(FixtureFactory.generateAccount()));
 
-        OAuthOAuthUserResourceMock userResource = new OAuthOAuthUserResourceMock(1L, "test@test.com", "name", "test.com");
+        OAuthUserResourceMock userResource = new OAuthUserResourceMock(1L, "test@test.com", "name", "test.com");
 
         //when
         var account = accountService.signIn(userResource);
@@ -54,7 +54,7 @@ class AccountServiceTest {
         when(accountQueryImplementation.save(any()))
                 .thenReturn(FixtureFactory.generateAccount());
 
-        OAuthOAuthUserResourceMock userResource = new OAuthOAuthUserResourceMock(1L, "test@gmail.com", "name", "https://avatarUrl.jpg");
+        OAuthUserResourceMock userResource = new OAuthUserResourceMock(1L, "test@gmail.com", "name", "https://avatarUrl.jpg");
 
         //when
         var account = accountService.signIn(userResource);
