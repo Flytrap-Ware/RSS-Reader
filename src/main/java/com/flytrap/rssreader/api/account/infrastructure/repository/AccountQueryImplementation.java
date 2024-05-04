@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class AccountImplementation {
+public class AccountQueryImplementation {
 
     private final AccountEntityJpaRepository memberEntityJpaRepository;
 
@@ -21,20 +21,20 @@ public class AccountImplementation {
         return memberEntityJpaRepository.save(AccountEntity.from(account)).toDomain();
     }
 
-    public Optional<Account> findByProviderKey(Long oauthPk) {
+    public Optional<Account> readByProviderKey(Long oauthPk) {
         return memberEntityJpaRepository.findByProviderKey(oauthPk).map(AccountEntity::toDomain);
     }
 
-    public List<Account> findAllByName(AccountName name) {
+    public List<Account> readAllByName(AccountName name) {
         return memberEntityJpaRepository.findAllByName(name.value())
                 .stream().map(AccountEntity::toDomain).toList();
     }
 
-    public Optional<Account> findById(AccountId id) {
+    public Optional<Account> readById(AccountId id) {
         return memberEntityJpaRepository.findById(id.value()).map(AccountEntity::toDomain);
     }
 
-    public List<Account> findAllById(Collection<AccountId> ids) {
+    public List<Account> readAllById(Collection<AccountId> ids) {
         List<Long> accountIds =  ids.stream().map(AccountId::value).toList();
         return memberEntityJpaRepository.findAllById(accountIds)
                 .stream().map(AccountEntity::toDomain).toList();

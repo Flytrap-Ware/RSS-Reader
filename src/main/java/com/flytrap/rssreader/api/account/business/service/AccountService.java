@@ -3,8 +3,8 @@ package com.flytrap.rssreader.api.account.business.service;
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.account.domain.AccountName;
-import com.flytrap.rssreader.api.account.infrastructure.entity.AccountEntity;
-import com.flytrap.rssreader.api.account.infrastructure.repository.AccountImplementation;
+import com.flytrap.rssreader.api.account.infrastructure.repository.AccountCommandImplementation;
+import com.flytrap.rssreader.api.account.infrastructure.repository.AccountQueryImplementation;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import com.flytrap.rssreader.api.auth.infrastructure.external.dto.UserResource;
 import jakarta.transaction.Transactional;
@@ -18,7 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final AccountImplementation accountImplementation;
+    private final AccountQueryImplementation accountQueryImplementation;
+    private final AccountCommandImplementation accountCommandImplementation;
 
     /**
      * Member 정보를 반환합니다.
@@ -28,7 +29,7 @@ public class AccountService {
      */
     @Transactional
     public Account signIn(UserResource userResource) {
-        return accountImplementation.findByProviderKey(userResource.getId())
+        return accountQueryImplementation.readByProviderKey(userResource.getId())
                 .orElseGet(() -> signUp(userResource.toDomainForInsert()));
     }
 
@@ -38,7 +39,7 @@ public class AccountService {
      * @return saved account
      */
     private Account signUp(Account account) {
-        return accountImplementation.save(account);
+        return accountCommandImplementation.create(account);
     }
 
     /**
@@ -47,7 +48,7 @@ public class AccountService {
      * @return Account domain list
      */
     public List<Account> get(AccountName name) {
-        return accountImplementation.findAllByName(name).stream()
+        return accountQueryImplementation.readAllByName(name).stream()
                 .toList();
     }
 
@@ -58,7 +59,7 @@ public class AccountService {
      * @throws NoSuchDomainException
      */
     public Account get(AccountId id) {
-        return accountImplementation.findById(id)
+        return accountQueryImplementation.readById(id)
                 .orElseThrow(() -> new NoSuchDomainException(Account.class));
     }
 
@@ -68,7 +69,7 @@ public class AccountService {
      * @return Account domain list
      */
     public List<Account> getAll(Collection<AccountId> ids) {
-        return accountImplementation.findAllById(ids).stream()
+        return accountQueryImplementation.readAllById(ids).stream()
                 .toList();
     }
 }
