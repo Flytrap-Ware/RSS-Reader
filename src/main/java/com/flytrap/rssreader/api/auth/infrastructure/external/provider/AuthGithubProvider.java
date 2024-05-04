@@ -2,7 +2,7 @@ package com.flytrap.rssreader.api.auth.infrastructure.external.provider;
 
 import com.flytrap.rssreader.api.auth.infrastructure.external.dto.AccessToken;
 import com.flytrap.rssreader.api.auth.infrastructure.external.dto.UserEmailResource;
-import com.flytrap.rssreader.api.auth.infrastructure.external.dto.UserResource;
+import com.flytrap.rssreader.api.auth.infrastructure.external.dto.OAuthUserResource;
 import com.flytrap.rssreader.global.properties.OauthProperties;
 import java.util.List;
 import java.util.Objects;
@@ -46,7 +46,7 @@ public record AuthGithubProvider(
     }
 
     @Override
-    public Mono<UserResource> requestUserResource(AccessToken accessToken) {
+    public Mono<OAuthUserResource> requestUserResource(AccessToken accessToken) {
 
         Mono<List<UserEmailResource>> userEmailResource = getEmailResource(accessToken);
 
@@ -62,7 +62,7 @@ public record AuthGithubProvider(
                     clientResponse.bodyToMono(String.class)
                         .map(body -> new Exception(
                             "exception"))) // TODO 외부 API 오류시 처리
-            .bodyToMono(UserResource.class)
+            .bodyToMono(OAuthUserResource.class)
             .publishOn(Schedulers.boundedElastic())
             .map(userResource -> {
                 Objects.requireNonNull(userEmailResource.block()).stream()
