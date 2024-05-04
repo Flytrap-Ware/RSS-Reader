@@ -30,7 +30,7 @@ class AccountServiceTest {
     void signin_success() {
         //given
         when(accountImplementation.findByProviderKey(anyLong()))
-                .thenReturn(Optional.of(FixtureFactory.generateAccountEntity()));
+                .thenReturn(Optional.of(FixtureFactory.generateAccount()));
 
         UserResourceMock userResource = new UserResourceMock(1L, "test@test.com", "name", "test.com");
 
@@ -52,7 +52,7 @@ class AccountServiceTest {
         //given
         when(accountImplementation.findByProviderKey(anyLong())).thenReturn(Optional.empty());
         when(accountImplementation.save(any()))
-                .thenReturn(FixtureFactory.generateAccountEntity());
+                .thenReturn(FixtureFactory.generateAccount());
 
         UserResourceMock userResource = new UserResourceMock(1L, "test@gmail.com", "name", "https://avatarUrl.jpg");
 

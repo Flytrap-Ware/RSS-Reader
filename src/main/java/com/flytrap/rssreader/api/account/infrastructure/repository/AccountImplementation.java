@@ -17,24 +17,26 @@ public class AccountImplementation {
 
     private final AccountEntityJpaRepository memberEntityJpaRepository;
 
-    public AccountEntity save(Account account) {
-        return memberEntityJpaRepository.save(AccountEntity.from(account));
+    public Account save(Account account) {
+        return memberEntityJpaRepository.save(AccountEntity.from(account)).toDomain();
     }
 
-    public Optional<AccountEntity> findByProviderKey(Long oauthPk) {
-        return memberEntityJpaRepository.findByProviderKey(oauthPk);
+    public Optional<Account> findByProviderKey(Long oauthPk) {
+        return memberEntityJpaRepository.findByProviderKey(oauthPk).map(AccountEntity::toDomain);
     }
 
-    public List<AccountEntity> findAllByName(AccountName name) {
-        return memberEntityJpaRepository.findAllByName(name.value());
+    public List<Account> findAllByName(AccountName name) {
+        return memberEntityJpaRepository.findAllByName(name.value())
+                .stream().map(AccountEntity::toDomain).toList();
     }
 
-    public Optional<AccountEntity> findById(AccountId id) {
-        return memberEntityJpaRepository.findById(id.value());
+    public Optional<Account> findById(AccountId id) {
+        return memberEntityJpaRepository.findById(id.value()).map(AccountEntity::toDomain);
     }
 
-    public List<AccountEntity> findAllById(Collection<AccountId> ids) {
+    public List<Account> findAllById(Collection<AccountId> ids) {
         List<Long> accountIds =  ids.stream().map(AccountId::value).toList();
-        return memberEntityJpaRepository.findAllById(accountIds);
+        return memberEntityJpaRepository.findAllById(accountIds)
+                .stream().map(AccountEntity::toDomain).toList();
     }
 }
