@@ -53,7 +53,6 @@ public class Account implements DefaultDomain {
                 .profile(profile)
                 .providerKey(oauthPk)
                 .authProvider(authProvider)
-                .createdAt(Instant.now())
                 .build();
     }
 

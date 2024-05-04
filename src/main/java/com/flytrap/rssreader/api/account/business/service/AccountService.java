@@ -38,7 +38,7 @@ public class AccountService {
      * @return saved account
      */
     private Account signUp(Account account) {
-        return accountImplementation.save(account).toDomain();
+        return accountImplementation.save(account);
     }
 
     /**
@@ -59,7 +59,7 @@ public class AccountService {
      */
     public Account get(AccountId id) {
         return accountImplementation.findById(id)
-                .orElseThrow(() -> new NoSuchDomainException(Account.class))
+                .orElseThrow(() -> new NoSuchDomainException(Account.class));
     }
 
     /**
