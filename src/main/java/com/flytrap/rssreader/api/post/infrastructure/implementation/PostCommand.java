@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.infrastructure.implementation;
 
-import com.flytrap.rssreader.api.member.domain.AccountId;
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.post.domain.Bookmark;
 import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.domain.PostAggregate;

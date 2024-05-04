@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.folder.presentation.controller;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
 import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
@@ -11,7 +12,6 @@ import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
 import com.flytrap.rssreader.api.folder.presentation.controller.swagger.FolderUpdateControllerApi;
 import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateRequest;
 import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateResponse;
-import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.facade.OpenCheckFacade;
 import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
 import com.flytrap.rssreader.api.subscribe.business.service.SubscribeService;

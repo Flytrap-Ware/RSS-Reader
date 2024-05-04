@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.infrastructure.entity;
 
-import com.flytrap.rssreader.api.member.domain.AccountId;
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

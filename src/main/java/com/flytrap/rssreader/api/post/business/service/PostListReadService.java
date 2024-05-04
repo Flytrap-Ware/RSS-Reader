@@ -1,9 +1,9 @@
 package com.flytrap.rssreader.api.post.business.service;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.AccessibleFolder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
-import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.infrastructure.implementation.PostQuery;

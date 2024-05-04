@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.folder.infrastructure.implementatioin;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.AccessibleFolder;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
@@ -10,7 +11,6 @@ import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityDslRepository;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderMemberJpaRepository;
-import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.implement.FolderSubscriptionQuery;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;

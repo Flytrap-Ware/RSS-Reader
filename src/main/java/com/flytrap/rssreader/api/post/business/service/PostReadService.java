@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.business.service;
 
-import com.flytrap.rssreader.api.member.domain.AccountId;
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.event.PostOpenEvent;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
@@ -19,7 +19,6 @@ public class PostReadService {
     private final PostCommand postCommand;
     private final SubscriptionReader subscriptionReader;
     private final GlobalEventPublisher globalEventPublisher;
-
 
     public Post viewPost(AccountId accountId, PostId postId) {
 

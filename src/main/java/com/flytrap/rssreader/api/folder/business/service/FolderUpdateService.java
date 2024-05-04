@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.folder.business.service;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
@@ -8,7 +9,6 @@ import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
-import com.flytrap.rssreader.api.member.domain.AccountId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
