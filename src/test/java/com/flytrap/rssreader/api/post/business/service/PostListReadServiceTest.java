@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import com.flytrap.rssreader.api.folder.domain.AccessibleFolder;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
+import com.flytrap.rssreader.api.folder.domain.SharedStatus;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
 import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.domain.Post;
@@ -50,7 +51,7 @@ class PostListReadServiceTest {
             int pageSize = 10;
             Pageable pageable = Pageable.ofSize(pageSize);
             AccessibleFolder accessibleFolder = AccessibleFolder.builder()
-                .id(folderId.value()).isShared(false).isDeleted(false)
+                .id(folderId).sharedStatus(SharedStatus.PRIVATE)
                 .build();
             List<Post> posts = List.of(
                 Post.builder().id(new PostId(1L)).build(),

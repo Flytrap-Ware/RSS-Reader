@@ -1,6 +1,11 @@
 package com.flytrap.rssreader.api.folder.infrastructure.entity;
 
 import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.domain.FolderCreate;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
+import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
+import com.flytrap.rssreader.api.folder.domain.SharedStatus;
+import com.flytrap.rssreader.api.member.domain.AccountId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -40,12 +45,50 @@ public class FolderEntity {
                 .name(folder.getName())
                 .memberId(folder.getMemberId())
                 .isShared(folder.isShared())
-                .isDeleted(folder.getIsDeleted())
+                .isDeleted(false)
                 .build();
     }
 
+    public static FolderEntity from(FolderCreate folderCreate) {
+        return FolderEntity.builder()
+            .name(folderCreate.getName())
+            .memberId(folderCreate.getOwnerId().value())
+            .isShared(folderCreate.getSharedStatus().isShared())
+            .isDeleted(false)
+            .build();
+    }
+
+    public static FolderEntity from(MyOwnFolder myOwnFolder) {
+        return FolderEntity.builder()
+            .id(myOwnFolder.getId().value())
+            .name(myOwnFolder.getName())
+            .memberId(myOwnFolder.getOwnerId().value())
+            .isShared(myOwnFolder.getSharedStatus().isShared())
+            .isDeleted(false)
+            .build();
+    }
+
+    public static FolderEntity fromForDelete(MyOwnFolder myOwnFolder) {
+        return FolderEntity.builder()
+            .id(myOwnFolder.getId().value())
+            .name(myOwnFolder.getName())
+            .memberId(myOwnFolder.getOwnerId().value())
+            .isShared(myOwnFolder.getSharedStatus().isShared())
+            .isDeleted(true)
+            .build();
+    }
+
     public Folder toDomain() {
-        return Folder.of(id, name, memberId, isShared, isDeleted);
+        return Folder.of(id, name, memberId, isShared);
+    }
+
+    public MyOwnFolder toMyOwnFolder() {
+        return MyOwnFolder.builder()
+            .id(new FolderId(id))
+            .name(name)
+            .ownerId(new AccountId(memberId))
+            .sharedStatus(SharedStatus.from(isShared))
+            .build();
     }
 
 }

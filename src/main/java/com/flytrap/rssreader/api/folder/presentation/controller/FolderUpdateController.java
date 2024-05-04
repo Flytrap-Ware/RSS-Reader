@@ -5,9 +5,13 @@ import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
 import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
 import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
 import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.domain.FolderSubscribe;
+import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
 import com.flytrap.rssreader.api.folder.presentation.controller.swagger.FolderUpdateControllerApi;
-import com.flytrap.rssreader.api.folder.presentation.dto.FolderRequest;
+import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateRequest;
+import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateResponse;
+import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.facade.OpenCheckFacade;
 import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
 import com.flytrap.rssreader.api.subscribe.business.service.SubscribeService;
@@ -32,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/folders")
 public class FolderUpdateController implements FolderUpdateControllerApi {
 
-    private final FolderUpdateService folderService;
+    private final FolderUpdateService folderUpdateService;
     private final FolderVerifyService folderVerifyService;
     private final SubscribeService subscribeService;
     private final FolderSubscribeService folderSubscribeService;
@@ -40,38 +44,39 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
     private final PostCollectService postCollectService;
 
     @PostMapping
-    public ApplicationResponse<FolderRequest.Response> createFolder(
-            @Valid @RequestBody FolderRequest.CreateRequest request,
-            @Login AccountSession member) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApplicationResponse<FolderUpdateResponse> createNewFolder(
+            @Valid @RequestBody FolderUpdateRequest request,
+            @Login AccountSession accountSession) {
 
-        Folder newFolder = folderService.createNewFolder(request, member.id());
+        MyOwnFolder newFolder = folderUpdateService
+            .createNewFolder(new AccountId(accountSession.id()), request.name());
 
-        return new ApplicationResponse<>(FolderRequest.Response.from(newFolder));
+        return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
 
     @PatchMapping("/{folderId}")
-    public ApplicationResponse<FolderRequest.Response> updateFolder(
-            @Valid @RequestBody FolderRequest.CreateRequest request,
+    @ResponseStatus(HttpStatus.OK)
+    public ApplicationResponse<FolderUpdateResponse> updateFolder(
+            @Valid @RequestBody FolderUpdateRequest request,
             @PathVariable Long folderId,
-            @Login AccountSession member) {
+            @Login AccountSession accountSession) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
-        Folder updatedFolder = folderService.updateFolder(request, verifiedFolder, member.id());
+        MyOwnFolder newFolder = folderUpdateService
+            .updateFolder(new AccountId(accountSession.id()), new FolderId(folderId), request.name());
 
-        return new ApplicationResponse<>(FolderRequest.Response.from(updatedFolder));
+        return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{folderId}")
-    public ApplicationResponse<String> deleteFolder(
+    public ApplicationResponse<Void> deleteFolder(
             @PathVariable Long folderId,
-            @Login AccountSession member) {
+            @Login AccountSession accountSession) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
-        Folder folder = folderService.deleteFolder(verifiedFolder, member.id());
-        folderSubscribeService.unsubscribeAllByFolder(folder);
+        folderUpdateService.deleteFolder(new AccountId(accountSession.id()), new FolderId(folderId));
 
-        return new ApplicationResponse<>("폴더가 삭제되었습니다 : " + folder.getName());
+        return new ApplicationResponse<>(null);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

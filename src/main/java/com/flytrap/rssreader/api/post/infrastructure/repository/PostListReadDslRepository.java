@@ -1,11 +1,11 @@
 package com.flytrap.rssreader.api.post.infrastructure.repository;
 
 import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderEntity.folderEntity;
-import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderSubscribeEntity.folderSubscribeEntity;
-import static com.flytrap.rssreader.api.folder.infrastructure.entity.QSharedFolderEntity.sharedFolderEntity;
+import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QBookmarkEntity.bookmarkEntity;
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QOpenEntity.openEntity;
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QPostEntity.postEntity;
+import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QFolderSubscribeEntity.folderSubscribeEntity;
 import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QSubscribeEntity.subscribeEntity;
 
 import com.flytrap.rssreader.api.post.domain.PostFilter;
@@ -49,7 +49,7 @@ public class PostListReadDslRepository implements PostListReadRepository {
         builder
             .and(folderEntity.isDeleted.eq(false))
             .and(folderEntity.memberId.eq(accountId))
-            .or(sharedFolderEntity.memberId.eq(accountId));
+            .or(folderMemberEntity.memberId.eq(accountId));
 
         addFilterCondition(builder, postFilter, accountId);
 
@@ -57,7 +57,7 @@ public class PostListReadDslRepository implements PostListReadRepository {
             .join(folderSubscribeEntity)
             .on(subscribeEntity.id.eq(folderSubscribeEntity.subscribeId))
             .join(folderEntity).on(folderSubscribeEntity.folderId.eq(folderEntity.id))
-            .leftJoin(sharedFolderEntity).on(folderEntity.id.eq(sharedFolderEntity.folderId))
+            .leftJoin(folderMemberEntity).on(folderEntity.id.eq(folderMemberEntity.folderId))
             .where(builder)
             .orderBy(postEntity.pubDate.desc())
             .offset(pageable.getOffset())

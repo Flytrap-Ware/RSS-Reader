@@ -15,7 +15,6 @@ public enum BlogPlatform {
     private final String signatureUrl;
 
     public static BlogPlatform parseLink(String url) {
-
         return Arrays.stream(BlogPlatform.values())
                 .filter(blogPlatform -> url.contains(blogPlatform.getSignatureUrl()))
                 .findFirst()

@@ -1,8 +1,8 @@
 package com.flytrap.rssreader.api.folder.business.service;
 
 import com.flytrap.rssreader.api.folder.domain.Folder;
-import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderSubscribeEntity;
-import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderSubscribeEntityJpaRepository;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.FolderSubscribeEntity;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.FolderSubscriptionEntityJpaRepository;
 import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FolderSubscribeService {
 
-    private final FolderSubscribeEntityJpaRepository folderSubscribeRepository;
+    private final FolderSubscriptionEntityJpaRepository folderSubscribeRepository;
 
     @Transactional
     public void folderSubscribe(Subscribe subscribe, Long folderId) {

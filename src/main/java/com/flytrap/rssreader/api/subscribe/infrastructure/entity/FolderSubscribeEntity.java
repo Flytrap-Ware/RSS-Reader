@@ -1,7 +1,12 @@
-package com.flytrap.rssreader.api.folder.infrastructure.entity;
+package com.flytrap.rssreader.api.subscribe.infrastructure.entity;
 
 import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +44,8 @@ public class FolderSubscribeEntity {
             .subscribeId(subscribe.getId())
             .folderId(folderId)
             .description("") // FolderSubscribe에서 description은 회원이 수정할 수 있는 설명값.
-                             // 아직 해당 기능이 구현되지 않았으므로 빈 문자열을 전달해 준다.
+            // 아직 해당 기능이 구현되지 않았으므로 빈 문자열을 전달해 준다.
             .build();
     }
 }
+

@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.folder.presentation.controller.swagger;
 
-import com.flytrap.rssreader.api.folder.presentation.dto.Folders;
+import com.flytrap.rssreader.api.folder.presentation.dto.MyFoldersResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountSession;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest;
@@ -17,9 +17,9 @@ public interface FolderReadControllerApi {
 
     @Operation(summary = "폴더 목록 불러오기", description = "현재 회원이 생성한 폴더 목록을 반환한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Folders.class))),
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MyFoldersResponse.class))),
     })
-    ApplicationResponse<Folders> getFolders(
+    ApplicationResponse<MyFoldersResponse> getMyFolders(
             @Parameter(description = "현재 로그인한 회원 정보") @Login AccountSession member
     );
 

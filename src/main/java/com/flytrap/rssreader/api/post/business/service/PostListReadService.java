@@ -33,7 +33,7 @@ public class PostListReadService {
 
         AccessibleFolder accessibleFolder = folderQuery.readAccessible(folderId, accountId);
 
-        return postQuery.readAllByFolder(accountId, new FolderId(accessibleFolder.getId()),
+        return postQuery.readAllByFolder(accountId, accessibleFolder.getId(),
             postFilter, pageable);
     }
 

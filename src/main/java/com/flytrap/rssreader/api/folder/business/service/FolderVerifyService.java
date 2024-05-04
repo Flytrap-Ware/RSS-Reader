@@ -2,7 +2,7 @@ package com.flytrap.rssreader.api.folder.business.service;
 
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
-import com.flytrap.rssreader.api.folder.infrastructure.repository.SharedFolderJpaRepository;
+import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderMemberJpaRepository;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import com.flytrap.rssreader.global.exception.domain.NotBelongToMemberException;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FolderVerifyService {
 
     private final FolderEntityJpaRepository repository;
-    private final SharedFolderJpaRepository sharedFolderJpaRepository;
+    private final FolderMemberJpaRepository folderMemberJpaRepository;
 
     @Transactional(readOnly = true)
     public Folder getVerifiedOwnedFolder(Long folderId, long memberId) {
@@ -40,7 +40,7 @@ public class FolderVerifyService {
     }
 
     private boolean isSharedFolder(Long folderId, long memberId) {
-        return sharedFolderJpaRepository.existsByFolderIdAndMemberId(folderId, memberId);
+        return folderMemberJpaRepository.existsByFolderIdAndMemberId(folderId, memberId);
     }
 
 }
