@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.folder.presentation.controller.swagger;
 
-import com.flytrap.rssreader.api.account.presentation.dto.response.AccountSummary;
+import com.flytrap.rssreader.api.account.presentation.dto.AccountSummaryResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.model.ErrorResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.InviteFolderMemberRequest;
@@ -23,11 +23,11 @@ public interface SharedFolderUpdateControllerApi {
 
     @Operation(summary = "폴더에 회원 초대", description = "폴더에 회원을 한명 초대한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountSummary.class))),
+        @ApiResponse(responseCode = "201", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountSummaryResponse.class))),
         @ApiResponse(responseCode = "400", description = "실패: 이미 초대되어 있을 때",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "401", description = "실패: 초대 권한이 없을 때",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
     })
-    ApplicationResponse<AccountSummary> inviteMember(
+    ApplicationResponse<AccountSummaryResponse> inviteMember(
         @Parameter(description = "회원을 초대할 폴더의 ID") @PathVariable Long folderId,
         @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials loginMember,
         @Parameter(description = "초대할 회원의 ID") @RequestBody InviteFolderMemberRequest request

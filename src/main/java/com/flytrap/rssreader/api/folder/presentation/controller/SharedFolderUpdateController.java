@@ -9,7 +9,7 @@ import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.presentation.controller.swagger.SharedFolderUpdateControllerApi;
 import com.flytrap.rssreader.api.account.business.service.AccountService;
 import com.flytrap.rssreader.api.account.domain.Account;
-import com.flytrap.rssreader.api.account.presentation.dto.response.AccountSummary;
+import com.flytrap.rssreader.api.account.presentation.dto.AccountSummaryResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.InviteFolderMemberRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
@@ -33,7 +33,7 @@ public class SharedFolderUpdateController implements SharedFolderUpdateControlle
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{folderId}/members")
-    public ApplicationResponse<AccountSummary> inviteMember(
+    public ApplicationResponse<AccountSummaryResponse> inviteMember(
             @PathVariable Long folderId,
             @Login AccountCredentials loginMember,
             @RequestBody InviteFolderMemberRequest request
@@ -44,7 +44,7 @@ public class SharedFolderUpdateController implements SharedFolderUpdateControlle
         sharedFolderUpdateService.invite(verifiedFolder, member.getId());
         folderUpdateService.shareFolder(verifiedFolder);
 
-        return new ApplicationResponse<>(AccountSummary.from(member));
+        return new ApplicationResponse<>(AccountSummaryResponse.from(member));
     }
 
     // 공유 폴더에 사람 나가기 (내가 스스로 나간다)
