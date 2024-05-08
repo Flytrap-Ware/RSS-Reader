@@ -1,4 +1,4 @@
-package com.flytrap.rssreader.api.batch.tasklet;
+package com.flytrap.rssreader.global.batch.tasklet;
 
 import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
 import lombok.RequiredArgsConstructor;
