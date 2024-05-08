@@ -23,4 +23,13 @@ public class BatchConfig {
                 .end()
                 .build();
     }
+
+    @Bean
+    public Job statJob(Step statStep) {
+        return new JobBuilder("statJob", jobRepository)
+                .incrementer(new RunIdIncrementer())
+                .flow(statStep)
+                .end()
+                .build();
+    }
 }
