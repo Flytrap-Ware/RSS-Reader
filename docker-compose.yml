@@ -1,3 +1,4 @@
+#docker-compose.yml
 version: "3"
 
 services:
@@ -12,10 +13,7 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-    depends_on:
-      - was-dev
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-
 
   certbot:
     image: certbot/certbot
@@ -25,11 +23,17 @@ services:
       - ./data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
-  was-dev:
+  blue:
     image: ghcr.io/flytraphub/rss-reader:release
     ports:
       - "8080:8080"
-    container_name: was-dev
+    container_name: blue
+
+  green:
+    image: ghcr.io/flytraphub/rss-reader:release
+    ports:
+      - "8080:8080"
+    container_name: green
 
   redis:
     image: redis:latest

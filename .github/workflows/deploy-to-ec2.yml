@@ -2,11 +2,11 @@ name: Build and Deploy
 
 on:
   push:
-    branches: ["release"]
+    branches: [ "release" ]
 
 env:
   working-directory: .
-  AWS_REGION: ap-northeast-2                   
+  AWS_REGION: ap-northeast-2
   AWS_SG_NAME: FlytrapDevelopment
   AWS_SG_ID: sg-0895e77b2da12a6c9
 
@@ -15,72 +15,83 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Get Public IP
-      id: publicip
-      run: |
-        response=$(curl -s canhazip.com)
-        echo "ip=$response" >> "$GITHUB_OUTPUT"
+      - name: Get Public IP
+        id: publicip
+        run: |
+          response=$(curl -s canhazip.com)
+          echo "ip=$response" >> "$GITHUB_OUTPUT"
 
-    - name: Checkout Repository and Submodules
-      uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.G_TOKEN }}
-        submodules: true
+      - name: Checkout Repository and Submodules
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.G_TOKEN }}
+          submodules: true
 
-    - name: JDK 17 설정
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        server-id: github 
-        settings-path: ${{ github.workspace }} 
+      - name: JDK 17 설정
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          server-id: github
+          settings-path: ${{ github.workspace }}
 
-    - name: Gradle로 빌드
-      run: |
-        git submodule update --init --recursive
-        chmod +x gradlew
-        ./gradlew clean build
-        
-    - name: AWS 자격 증명 설정
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
-         aws-region: ${{env.AWS_REGION}}
+      - name: Gradle로 빌드
+        run: |
+          git submodule update --init --recursive
+          chmod +x gradlew
+          ./gradlew clean build
 
-    - name: 보안 그룹에 Github Actions IP 추가
-      run: |
-        aws ec2 authorize-security-group-ingress --group-id ${{ env.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.publicip.outputs.ip }}/32
+      - name: AWS 자격 증명 설정
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{env.AWS_REGION}}
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ghcr.io/flytraphub/rss-reader:release
+      - name: 보안 그룹에 Github Actions IP 추가
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ env.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.publicip.outputs.ip }}/32
 
-    - name: 원격 SSH 명령 실행
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.AWS_HOST }}
-        username: ubuntu
-        key: ${{ secrets.AWS_KEY }}
-        script: |
-          cd RSS-Reader/
-          chmod +x ./run.sh
-          ./run.sh
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: 보안 그룹에서 Github Actions IP 제거
-      run: |
-         aws ec2 revoke-security-group-ingress  --group-id ${{ env.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.publicip.outputs.ip }}/32
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/flytraphub/rss-reader:release
+
+      - name: deploy.sh 복사
+        uses: appleboy/scp-action@master
+        with:
+            host: ${{ secrets.AWS_HOST }}
+            username: ubuntu
+            key: ${{ secrets.AWS_KEY }}
+            source: "./deploy.sh"
+            target: "/home/ubuntu/RSS-Reader"
+
+      - name: 원격 SSH 명령 실행
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.AWS_KEY }}
+          script: |
+            cd RSS-Reader/
+            chmod +x ./run.sh
+            ./run.sh
+            chmod +x ./deploy.sh
+            ./deploy.sh
+
+      - name: 보안 그룹에서 Github Actions IP 제거
+        run: |
+          aws ec2 revoke-security-group-ingress  --group-id ${{ env.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.publicip.outputs.ip }}/32
