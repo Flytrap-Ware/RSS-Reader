@@ -4,12 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.flytrap.rssreader.api.folder.domain.AccessibleFolder;
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.folder.domain.SharedStatus;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
-import com.flytrap.rssreader.api.member.domain.AccountId;
+import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidation;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.domain.PostId;
@@ -35,6 +34,9 @@ class PostListReadServiceTest {
     PostQuery postQuery;
 
     @Mock
+    FolderValidation folderValidation;
+
+    @Mock
     FolderQuery folderQuery;
 
     @Nested
@@ -50,9 +52,6 @@ class PostListReadServiceTest {
             PostFilter postFilter = new PostFilter(false, null, null, null);
             int pageSize = 10;
             Pageable pageable = Pageable.ofSize(pageSize);
-            AccessibleFolder accessibleFolder = AccessibleFolder.builder()
-                .id(folderId).sharedStatus(SharedStatus.PRIVATE)
-                .build();
             List<Post> posts = List.of(
                 Post.builder().id(new PostId(1L)).build(),
                 Post.builder().id(new PostId(2L)).build(),
@@ -67,8 +66,8 @@ class PostListReadServiceTest {
             );
 
             // When
-            when(folderQuery.readAccessible(folderId, accountId))
-                .thenReturn(accessibleFolder);
+            when(folderValidation.isAccessibleFolder(folderId, accountId))
+                .thenReturn(true);
             when(postQuery.readAllByFolder(accountId, folderId, postFilter, pageable))
                 .thenReturn(posts);
             List<Post> result = postListReadService.getPostsByFolder(accountId, folderId, postFilter, pageable);
@@ -90,8 +89,8 @@ class PostListReadServiceTest {
                 .build();
 
             // When
-            when(folderQuery.readAccessible(folderId, accountId))
-                .thenThrow(new ForbiddenAccessFolderException(folder));
+            when(folderValidation.isAccessibleFolder(folderId, accountId))
+                .thenReturn(false);
 
             // Then
             assertThrows(ForbiddenAccessFolderException.class, () -> {

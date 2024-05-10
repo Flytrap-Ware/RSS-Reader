@@ -1,20 +1,15 @@
 package com.flytrap.rssreader.api.folder.business.service;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.AccessibleFolders;
 import com.flytrap.rssreader.api.folder.domain.Folder;
-import com.flytrap.rssreader.api.folder.domain.PrivateFolder;
-import com.flytrap.rssreader.api.folder.domain.SharedFolder;
-import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
+import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
-import com.flytrap.rssreader.api.member.domain.AccountId;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,31 +20,17 @@ public class FolderReadService {
 
     @Transactional(readOnly = true)
     public AccessibleFolders getMyFolders(AccountId accountId) {
-        List<PrivateFolder> privateFolders = folderQuery.readAllPrivateFolders(accountId);
-        List<SharedFolder> sharedFolders = folderQuery.readAllSharedFolders(accountId);
+        List<FolderDomain> folders = folderQuery.readAllByAccount(accountId);
 
-        return new AccessibleFolders(privateFolders, sharedFolders);
+        return new AccessibleFolders(
+            folders.stream().filter(FolderDomain::isPrivate).toList(),
+            folders.stream().filter(FolderDomain::isShared).toList()
+        );
     }
 
     // TODO: 제거하기
     @Transactional(readOnly = true)
     public Folder findById(long id) {
         return repository.findByIdAndIsDeletedFalse(id).orElseThrow().toDomain();
-    }
-
-    // TODO: 제거하기
-    @Transactional(readOnly = true)
-    public List<Folder> findAllByMemberId(long memberId) {
-        return repository.findAllByMemberIdAndIsDeletedFalse(memberId).stream()
-                .map(FolderEntity::toDomain)
-                .collect(Collectors.toList());
-    }
-
-    // TODO: 제거하기
-    @Transactional(readOnly = true)
-    public List<Folder> findAllByIds(Collection<Long> ids) {
-        return repository.findAllById(ids).stream()
-                .map(FolderEntity::toDomain)
-                .toList();
     }
 }

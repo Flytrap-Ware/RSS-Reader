@@ -28,7 +28,7 @@ public class AccountService {
      * @return Account domain
      */
     @Transactional
-    public Account signIn(UserResource userResource) {
+    public Account login(UserResource userResource) {
         return accountQueryImplementation.readByProviderKey(userResource.getId())
                 .orElseGet(() -> signUp(userResource.newAccount()));
     }
@@ -54,7 +54,7 @@ public class AccountService {
 
     /**
      * id로 회원을 검색합니다.
-     * @param invitee Account id
+     * @param id Account id
      * @return Account domain
      * @throws NoSuchDomainException
      */
@@ -65,7 +65,7 @@ public class AccountService {
 
     /**
      * id 목록으로 회원을 검색합니다.
-     * @param AccountId list
+     * @param ids list
      * @return Account domain list
      */
     public List<Account> getAll(Collection<AccountId> ids) {

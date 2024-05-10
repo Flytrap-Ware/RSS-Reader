@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.post.presentation.controller;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
-import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.service.PostUpdateService;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostUpdateControllerApi;

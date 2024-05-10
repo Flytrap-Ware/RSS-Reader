@@ -1,14 +1,11 @@
 package com.flytrap.rssreader.api.folder.infrastructure.repository;
 
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FolderEntityJpaRepository extends JpaRepository<FolderEntity, Long> {
 
     Optional<FolderEntity> findByIdAndIsDeletedFalse(Long id);
-    Optional<FolderEntity> findByIdAndMemberIdAndIsDeletedFalse(Long id, Long accountId);
-    List<FolderEntity> findAllByMemberIdAndIsDeletedFalse(Long memberId);
+    boolean existsByIdAndMemberIdAndIsDeletedFalse(Long id, Long memberId);
 }

@@ -1,8 +1,7 @@
 package com.flytrap.rssreader.api.folder.presentation.dto;
 
 import com.flytrap.rssreader.api.folder.domain.AccessibleFolders;
-import com.flytrap.rssreader.api.folder.domain.PrivateFolder;
-import com.flytrap.rssreader.api.folder.domain.SharedFolder;
+import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.domain.SharedMember;
 import com.flytrap.rssreader.api.folder.domain.SharedStatus;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
@@ -34,23 +33,13 @@ public record MyFoldersResponse(
         List<FolderSubscriptionSummary> blogs,
         List<SharedMemberSummary> invitedMembers
     ) {
-        public static MyFolderSummary from(PrivateFolder privateFolder) {
+        public static MyFolderSummary from(FolderDomain folder) {
             return new MyFolderSummary(
-                privateFolder.getId().value(),
-                privateFolder.getName(),
-                privateFolder.getSubscriptions().stream()
+                folder.getId().value(),
+                folder.getName(),
+                folder.getSubscriptions().stream()
                     .map(FolderSubscriptionSummary::from).toList(),
-                List.of()
-            );
-        }
-
-        public static MyFolderSummary from(SharedFolder sharedFolder) {
-            return new MyFolderSummary(
-                sharedFolder.getId().value(),
-                sharedFolder.getName(),
-                sharedFolder.getSubscriptions().stream()
-                    .map(FolderSubscriptionSummary::from).toList(),
-                sharedFolder.getSharedMembers().stream()
+                folder.getSharedMembers().stream()
                     .map(SharedMemberSummary::from).toList()
             );
         }

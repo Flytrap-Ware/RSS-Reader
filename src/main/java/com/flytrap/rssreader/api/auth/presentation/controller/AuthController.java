@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.auth.presentation.controller.swagger.AuthContro
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.Login;
-import com.flytrap.rssreader.api.auth.presentation.dto.SignInResponse;
+import com.flytrap.rssreader.api.auth.presentation.dto.LoginResponse;
 import com.flytrap.rssreader.api.auth.business.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +22,19 @@ public class AuthController implements AuthControllerApi {
 
     private final AuthService authService;
 
-    @PostMapping("/signin")
-    public ApplicationResponse<SignInResponse> signIn(@RequestBody Login request,
+    @PostMapping("/login")
+    public ApplicationResponse<LoginResponse> login(@RequestBody Login request,
                                                       HttpSession session) {
 
         Account account = authService.doAuthentication(request);
         authService.login(account, session);
-        return new ApplicationResponse<>(SignInResponse.from(account));
+        return new ApplicationResponse<>(LoginResponse.from(account));
     }
 
     @Override
-    @PostMapping("/signout")
+    @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ApplicationResponse<Void> signOut(HttpSession session) {
+    public ApplicationResponse<Void> logout(HttpSession session) {
 
         authService.signOut(session);
         return new ApplicationResponse<>(null);

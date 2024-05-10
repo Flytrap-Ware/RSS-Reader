@@ -21,7 +21,7 @@ public class AuthService {
     public Account doAuthentication(Login request) {
         return authProvider.requestAccessToken(request.code())
                 .flatMap(authProvider::requestUserResource)
-                .map(memberService::signIn)
+                .map(memberService::login)
                 .block();
     }
 

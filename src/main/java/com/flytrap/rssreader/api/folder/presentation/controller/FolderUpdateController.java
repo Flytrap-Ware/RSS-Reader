@@ -1,17 +1,17 @@
 package com.flytrap.rssreader.api.folder.presentation.controller;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
 import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
 import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
 import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.domain.FolderSubscribe;
-import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
 import com.flytrap.rssreader.api.folder.presentation.controller.swagger.FolderUpdateControllerApi;
 import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateRequest;
 import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateResponse;
-import com.flytrap.rssreader.api.member.domain.AccountId;
 import com.flytrap.rssreader.api.post.business.facade.OpenCheckFacade;
 import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
 import com.flytrap.rssreader.api.subscribe.business.service.SubscribeService;
@@ -49,7 +49,7 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
             @Valid @RequestBody FolderUpdateRequest request,
             @Login AccountCredentials accountCredentials) {
 
-        MyOwnFolder newFolder = folderUpdateService
+        FolderAggregate newFolder = folderUpdateService
             .createNewFolder(new AccountId(accountCredentials.id().value()), request.name());
 
         return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
@@ -62,10 +62,10 @@ public class FolderUpdateController implements FolderUpdateControllerApi {
             @PathVariable Long folderId,
             @Login AccountCredentials accountCredentials) {
 
-        MyOwnFolder newFolder = folderUpdateService
+        FolderAggregate folder = folderUpdateService
             .updateFolder(new AccountId(accountCredentials.id().value()), new FolderId(folderId), request.name());
 
-        return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
+        return new ApplicationResponse<>(FolderUpdateResponse.from(folder));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
