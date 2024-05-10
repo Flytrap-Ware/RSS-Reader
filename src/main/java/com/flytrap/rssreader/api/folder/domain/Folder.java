@@ -49,10 +49,6 @@ public class Folder implements DefaultDomain {
                 .build();
     }
 
-    public void updateName(String name) {
-        this.name = name;
-    }
-
     public boolean isShared() {
         return sharedStatus == SharedStatus.SHARED;
     }
@@ -71,10 +67,6 @@ public class Folder implements DefaultDomain {
 
     public void addSubscribe(FolderSubscribe subscribe) {
         this.subscribes.add(subscribe);
-    }
-
-    public void addAllSubscribes(List<FolderSubscribe> subscribes) {
-        this.subscribes.addAll(subscribes);
     }
 
     @Override
@@ -101,11 +93,5 @@ public class Folder implements DefaultDomain {
 
             subscribe.addUnreadCount(totalCount, openCount);
         }
-    }
-
-    public int getUnreadCount() {
-        return subscribes.stream()
-                .mapToInt(FolderSubscribe::getUnreadCount)
-                .sum();
     }
 }

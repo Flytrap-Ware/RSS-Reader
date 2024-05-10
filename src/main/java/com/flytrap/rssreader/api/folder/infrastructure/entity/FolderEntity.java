@@ -2,16 +2,20 @@ package com.flytrap.rssreader.api.folder.infrastructure.entity;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
+import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
+import com.flytrap.rssreader.api.folder.domain.SharedMember;
 import com.flytrap.rssreader.api.folder.domain.SharedStatus;
+import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -63,22 +67,22 @@ public class FolderEntity {
             .build();
     }
 
-    public static FolderEntity from(MyOwnFolder myOwnFolder) {
+    public static FolderEntity from(FolderAggregate folderAggregate) {
         return FolderEntity.builder()
-            .id(myOwnFolder.getId().value())
-            .name(myOwnFolder.getName())
-            .memberId(myOwnFolder.getOwnerId().value())
-            .isShared(myOwnFolder.getSharedStatus().isShared())
+            .id(folderAggregate.getId().value())
+            .name(folderAggregate.getName())
+            .memberId(folderAggregate.getOwnerId().value())
+            .isShared(folderAggregate.getSharedStatus().isShared())
             .isDeleted(false)
             .build();
     }
 
-    public static FolderEntity fromForDelete(MyOwnFolder myOwnFolder) {
+    public static FolderEntity fromForDelete(FolderAggregate folderAggregate) {
         return FolderEntity.builder()
-            .id(myOwnFolder.getId().value())
-            .name(myOwnFolder.getName())
-            .memberId(myOwnFolder.getOwnerId().value())
-            .isShared(myOwnFolder.getSharedStatus().isShared())
+            .id(folderAggregate.getId().value())
+            .name(folderAggregate.getName())
+            .memberId(folderAggregate.getOwnerId().value())
+            .isShared(folderAggregate.getSharedStatus().isShared())
             .isDeleted(true)
             .build();
     }
@@ -87,8 +91,19 @@ public class FolderEntity {
         return Folder.of(id, name, memberId, isShared);
     }
 
-    public MyOwnFolder toMyOwnFolder() {
-        return MyOwnFolder.builder()
+    public FolderDomain toReadonly(List<FolderSubscription> folderSubscriptions, List<SharedMember> sharedMembers) {
+        return FolderDomain.builder()
+            .id(new FolderId(id))
+            .name(name)
+            .ownerId(new AccountId(memberId))
+            .sharedStatus(SharedStatus.from(isShared))
+            .subscriptions(folderSubscriptions)
+            .sharedMembers(sharedMembers)
+            .build();
+    }
+
+    public FolderAggregate toAggregate() {
+        return FolderAggregate.builder()
             .id(new FolderId(id))
             .name(name)
             .ownerId(new AccountId(memberId))

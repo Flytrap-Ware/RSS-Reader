@@ -2,12 +2,12 @@ package com.flytrap.rssreader.api.folder.business.service;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
+import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.folder.domain.MyOwnFolder;
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
-import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
+import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidation;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 public class FolderUpdateService {
 
     private final FolderEntityJpaRepository repository;
-    private final FolderQuery folderQuery;
+    private final FolderValidation folderValidation;
     private final FolderCommand folderCommand;
 
-    public MyOwnFolder createNewFolder(AccountId accountId, String folderName) {
+    public FolderAggregate createNewFolder(AccountId accountId, String folderName) {
         FolderCreate folderCreate = FolderCreate.builder()
             .name(folderName)
             .ownerId(accountId)
@@ -29,18 +29,26 @@ public class FolderUpdateService {
         return folderCommand.create(folderCreate);
     }
 
-    public MyOwnFolder updateFolder(AccountId accountId, FolderId folderId, String folderName) {
-        MyOwnFolder myOwnFolder = folderQuery.readMyOwn(folderId, accountId);
-        myOwnFolder.changeName(folderName);
+    public FolderAggregate updateFolder(AccountId accountId, FolderId folderId, String folderName) {
+        if (!folderValidation.isMyOwnFolder(folderId, accountId))
+            throw new IllegalArgumentException("폴더 수정 권한 없음"); // TODO: 예외 만들기
 
-        return folderCommand.update(myOwnFolder);
+        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+        folderAggregate.changeName(folderName);
+
+        return folderCommand.update(folderAggregate);
     }
 
     public void deleteFolder(AccountId accountId, FolderId folderId) {
-        MyOwnFolder myOwnFolder = folderQuery.readMyOwn(folderId, accountId);
-        folderCommand.delete(myOwnFolder);
+        if (!folderValidation.isMyOwnFolder(folderId, accountId))
+            throw new IllegalArgumentException("폴더 수정 권한 없음"); // TODO: 예외 만들기
+
+        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+
+        folderCommand.delete(folderAggregate);
     }
 
+    // TODO: 제거하기
     public void shareFolder(Folder folder) {
         if (!folder.isShared()) {
             folder.toShare();
@@ -48,6 +56,7 @@ public class FolderUpdateService {
         }
     }
 
+    // TODO: 제거하기
     public void makePrivate(Folder folder) {
         if (folder.isShared()) {
             folder.toPrivate();

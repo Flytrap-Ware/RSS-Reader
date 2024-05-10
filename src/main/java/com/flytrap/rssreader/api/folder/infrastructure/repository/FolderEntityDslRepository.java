@@ -25,7 +25,8 @@ public class FolderEntityDslRepository {
             .leftJoin(folderMemberEntity)
             .on(folderEntity.id.eq(folderMemberEntity.folderId))
             .where(folderEntity.memberId.eq(accountId)
-                .or(folderMemberEntity.memberId.eq(accountId)))
+                .or(folderMemberEntity.memberId.eq(accountId))
+                .and(folderEntity.isDeleted.eq(false)))
             .fetch();
     }
 }
