@@ -35,15 +35,6 @@ public class SubscribeService {
             .toExistingSubscribeDomain();
     }
 
-    @Transactional
-    public void unsubscribe(Long subscribeId) {
-        subscribeRepository.delete(findByIdSubscribed(subscribeId));
-    }
-
-    private SubscribeEntity findByIdSubscribed(Long subscribedId) {
-        return subscribeRepository.findById(subscribedId).orElseThrow();
-    }
-
     public List<Subscribe> read(Collection<Long> subscribeIds) {
         return subscribeRepository.findAllById(subscribeIds).stream()
                 .map(SubscribeEntity::toExistingSubscribeDomain)

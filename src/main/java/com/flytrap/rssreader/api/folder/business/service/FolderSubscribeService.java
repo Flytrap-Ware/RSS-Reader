@@ -28,19 +28,6 @@ public class FolderSubscribeService {
         folderSubscribeRepository.deleteBySubscribeIdAndFolderId(subscribeId, folderId);
     }
 
-    @Transactional
-    public void unsubscribeAllByFolder(Folder folder) {
-        folderSubscribeRepository.deleteAllByFolderId(folder.getId());
-    }
-
-    @Transactional(readOnly = true)
-    public List<Long> getFolderSubscribeId(Long folderId) {
-        return folderSubscribeRepository.findAllByFolderId(folderId)
-                .stream()
-                .map(FolderSubscribeEntity::getId)
-                .toList();
-    }
-
     @Transactional(readOnly = true)
     public Map<Folder, List<Long>> getFolderSubscribeIds(List<? extends Folder> folders) {
         List<Long> folderIds = folders.stream()
