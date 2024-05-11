@@ -5,7 +5,6 @@ import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
-import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscribeEntityJpaRepository;
 import java.time.Instant;
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostCollectService {
+public class PostCollectService { // TODO: infra system으로 내리기. Service에서 Entity를 참조하고 있기 때문
 
     private final SubscribeCollectionPriorityQueue collectionQueue;
     private final SubscribeEntityJpaRepository subscribeRepository;
@@ -54,13 +53,13 @@ public class PostCollectService {
         }
     }
 
-    public void addNewSubscribeForCollect(Subscribe subscribe) {
-        if (subscribe.isNewSubscribe()) {
-            collectionQueue.add(SubscribeEntity.from(subscribe), CollectPriority.HIGH);
-        }
+    // TODO: Service에서 Entity를 참조하고 있음. 개선하기
+    public void enqueueHighPrioritySubscription(SubscribeEntity subscribeEntity) {
+        collectionQueue.add(subscribeEntity, CollectPriority.HIGH);
     }
 
-    private List<PostEntity> generateCollectedPostsForUpsert(RssPostsData postData, SubscribeEntity subscribe) {
+    private List<PostEntity> generateCollectedPostsForUpsert(RssPostsData postData,
+        SubscribeEntity subscribe) {
         List<PostEntity> existingPosts = postRepository.findAllBySubscriptionId(subscribe.getId());
 
         Map<String, PostEntity> existingPostsMap = convertListToHashSet(existingPosts);
@@ -80,8 +79,9 @@ public class PostCollectService {
             collectedPosts.add(post);
         }
 
-        if (!newPosts.isEmpty())
+        if (!newPosts.isEmpty()) {
             newPostAlertEventPublisher.publishNewPostAlertEvent(subscribe, newPosts);
+        }
 
         return collectedPosts;
     }

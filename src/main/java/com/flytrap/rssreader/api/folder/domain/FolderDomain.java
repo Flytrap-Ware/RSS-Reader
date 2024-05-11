@@ -2,7 +2,7 @@ package com.flytrap.rssreader.api.folder.domain;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
-import com.flytrap.rssreader.global.model.DefaultDomain;
+import com.flytrap.rssreader.global.model.NewDefaultDomain;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 @Getter
-public class FolderDomain implements DefaultDomain {
+public class FolderDomain implements NewDefaultDomain {
     private final FolderId id;
     private final String name;
     private final AccountId ownerId;

@@ -18,7 +18,8 @@ public class ForbiddenAccessFolderException extends ApplicationException {
         );
     }
 
-    public ForbiddenAccessFolderException(Class<? extends DefaultDomain> domainClass) {
+    public ForbiddenAccessFolderException(Class<?> domainClass) {
         super(domainClass);
     }
+
 }

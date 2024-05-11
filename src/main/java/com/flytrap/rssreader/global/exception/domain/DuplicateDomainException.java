@@ -15,7 +15,7 @@ public class DuplicateDomainException extends ApplicationException {
         );
     }
 
-    public DuplicateDomainException(Class<? extends DefaultDomain> domainClass) {
+    public DuplicateDomainException(Class<?> domainClass) {
         super(domainClass);
     }
 }

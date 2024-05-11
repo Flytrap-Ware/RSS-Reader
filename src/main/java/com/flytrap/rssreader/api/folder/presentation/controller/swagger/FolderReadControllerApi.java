@@ -3,7 +3,6 @@ package com.flytrap.rssreader.api.folder.presentation.controller.swagger;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.presentation.dto.MyFoldersResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
-import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.web.bind.annotation.PathVariable;
 
 public interface FolderReadControllerApi {
 
@@ -23,8 +21,4 @@ public interface FolderReadControllerApi {
             @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials member
     );
 
-    // TODO: Swaager 어노테이션 붙여주세요.
-    ApplicationResponse<SubscribeRequest.ResponseList> read(
-            @PathVariable Long folderId,
-            @Login AccountCredentials member);
 }

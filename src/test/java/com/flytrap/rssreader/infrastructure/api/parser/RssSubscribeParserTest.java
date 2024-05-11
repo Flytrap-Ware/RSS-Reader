@@ -27,7 +27,7 @@ class RssSubscribeParserTest {
         RssSubscribeParser rssSubscribeParser = new RssSubscribeParser();
 
         // when
-        Optional<RssSubscribeData> result = rssSubscribeParser.parseRssDocuments(createRequest);
+        Optional<RssSubscribeData> result = rssSubscribeParser.parseRssDocuments(rssUrl);
         BlogPlatform blogPlatform = BlogPlatform.parseLink(createRequest.blogUrl());
 
         // then
