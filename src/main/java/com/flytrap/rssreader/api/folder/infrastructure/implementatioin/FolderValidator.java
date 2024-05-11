@@ -6,20 +6,24 @@ import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJp
 import com.flytrap.rssreader.api.shared_member.infrastructure.repository.SharedMemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class FolderValidation {
+public class FolderValidator {
 
     private final FolderEntityJpaRepository folderJpaRepository;
     private final SharedMemberJpaRepository sharedMemberJpaRepository;
 
+    @Transactional(readOnly = true)
     public boolean isAccessibleFolder(FolderId folderId, AccountId accountId) {
-        return folderJpaRepository.existsByIdAndMemberIdAndIsDeletedFalse(folderId.value(),
-            accountId.value()) || sharedMemberJpaRepository.existsByFolderIdAndMemberId(
-            folderId.value(), accountId.value());
+        return folderJpaRepository
+            .existsByIdAndMemberIdAndIsDeletedFalse(folderId.value(), accountId.value())
+            || sharedMemberJpaRepository
+            .existsByFolderIdAndMemberId(folderId.value(), accountId.value());
     }
 
+    @Transactional(readOnly = true)
     public boolean isMyOwnFolder(FolderId folderId, AccountId accountId) {
         return folderJpaRepository.existsByIdAndMemberIdAndIsDeletedFalse(folderId.value(),
             accountId.value());

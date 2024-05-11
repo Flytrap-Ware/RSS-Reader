@@ -1,36 +1,18 @@
 package com.flytrap.rssreader.api.folder.business.service;
 
-import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.shared_member.infrastructure.entity.FolderMemberEntity;
 import com.flytrap.rssreader.api.shared_member.infrastructure.repository.SharedMemberJpaRepository;
+import javax.security.sasl.AuthenticationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.security.sasl.AuthenticationException;
 
 @Service
 @RequiredArgsConstructor
 public class SharedFolderUpdateService { // todo : rename to folderMemberService
 
     private final SharedMemberJpaRepository sharedMemberJpaRepository;
-
-    @Transactional
-    public void invite(Folder folder, AccountId inviteeId) throws AuthenticationException {
-
-        if (folder.isOwner(inviteeId.value())) {
-            throw new AuthenticationException("폴더의 소유자에게는 폴더를 공유할 수 없습니다.");
-        }
-
-        if (isExists(folder, inviteeId.value())) {
-            throw new DuplicateKeyException("이미 초대된 폴더입니다.");
-        }
-
-        sharedMemberJpaRepository.save(
-                FolderMemberEntity.of(folder.getId(), inviteeId.value()));
-    }
 
     @Transactional(readOnly = true)
     public boolean isExists(Folder folder, long inviteeId) {

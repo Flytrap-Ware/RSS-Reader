@@ -27,7 +27,7 @@ public class SharedFolderUpdateController implements SharedFolderUpdateControlle
     private final FolderVerifyService folderVerifyService;
 
     // 공유 폴더에 사람 나가기 (내가 스스로 나간다)
-    @DeleteMapping("/{folderId}/members/me")
+    @DeleteMapping("/{folderId}/members/me-delete")
     public ApplicationResponse<String> leaveFolder(
             @PathVariable Long folderId,
             @Login AccountCredentials member
@@ -44,7 +44,7 @@ public class SharedFolderUpdateController implements SharedFolderUpdateControlle
     }
 
     //공유 폴더에 사람 삭제하기 (만든 사람만)
-    @DeleteMapping("/{folderId}/members/{inviteeId}")
+    @DeleteMapping("/{folderId}/members/{inviteeId}-delete")
     public ApplicationResponse<String> deleteMember(
             @PathVariable Long folderId,
             @PathVariable Long inviteeId,

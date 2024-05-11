@@ -8,7 +8,6 @@ import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
-import com.flytrap.rssreader.api.post.infrastructure.output.PostSubscribeCountOutput;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSummaryOutput;
 import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
@@ -20,8 +19,6 @@ import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscribeEntityJpaRepository;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -84,30 +81,4 @@ public class PostQuery {
             .stream().map(PostSummaryOutput::toDomain).toList();
     }
 
-    // TODO: Folder 리팩토링 때 다시 봐야함
-    @Transactional(readOnly = true)
-    public Map<SubscriptionId, PostSubscribeCountOutput> countPostsInSubscription(
-        SubscriptionId subscriptionId) {
-
-        return postEntityJpaRepository.countBySubscriptions(List.of(subscriptionId.value()))
-            .stream()
-            .collect(Collectors.toMap(
-                output -> new SubscriptionId(output.getSubscriptionId()),
-                output -> output
-            ));
-    }
-
-    // TODO: Folder 리팩토링 때 다시 봐야함
-    @Transactional(readOnly = true)
-    public Map<SubscriptionId, PostSubscribeCountOutput> countPostsInSubscriptions(
-        List<SubscriptionId> subscriptionIds) {
-
-        return postEntityJpaRepository.countBySubscriptions(
-                subscriptionIds.stream().map(SubscriptionId::value).toList())
-            .stream()
-            .collect(Collectors.toMap(
-                output -> new SubscriptionId(output.getSubscriptionId()),
-                output -> output
-            ));
-    }
 }

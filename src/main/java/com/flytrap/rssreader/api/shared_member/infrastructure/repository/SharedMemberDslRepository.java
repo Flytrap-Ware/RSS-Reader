@@ -25,8 +25,9 @@ public class SharedMemberDslRepository {
             .selectDistinct(
                 Projections.constructor(SharedMemberOutput.class,
                     folderMemberEntity.id,
-                        accountEntity.name,
-                        accountEntity.profile
+                    accountEntity.id,
+                    accountEntity.name,
+                    accountEntity.profile
                 )
             ).from(folderMemberEntity)
             .join(accountEntity)

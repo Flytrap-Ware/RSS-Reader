@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class AccountCommandImplementation {
+public class AccountCommand {
 
     private final AccountJpaRepository memberEntityJpaRepository;
 

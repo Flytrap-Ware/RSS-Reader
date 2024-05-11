@@ -1,7 +1,11 @@
 package com.flytrap.rssreader.api.shared_member.presentation.contoller;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.account.presentation.dto.AccountSummaryResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
+import com.flytrap.rssreader.api.shared_member.business.service.SharedMemberService;
+import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.shared_member.presentation.contoller.swagger.SharedMemberControllerApi;
 import com.flytrap.rssreader.api.shared_member.presentation.dto.InviteMemberRequest;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SharedMemberController implements SharedMemberControllerApi {
 
+    private final SharedMemberService sharedMemberService;
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/folders/{folderId}/members")
     public ApplicationResponse<AccountSummaryResponse> inviteMemberToFolder(
@@ -27,7 +33,13 @@ public class SharedMemberController implements SharedMemberControllerApi {
         @Valid @RequestBody InviteMemberRequest request,
         @Login AccountCredentials accountCredentials
     ) {
-        return null;
+        SharedMember sharedMember = sharedMemberService.inviteMemberToFolder(
+            new FolderId(folderId),
+            accountCredentials.id(),
+            new AccountId(request.inviteeId())
+        );
+
+        return new ApplicationResponse<>(AccountSummaryResponse.from(sharedMember));
     }
 
     @DeleteMapping("/api/folders/{folderId}/members/me")
