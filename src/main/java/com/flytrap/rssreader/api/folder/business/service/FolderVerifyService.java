@@ -5,7 +5,6 @@ import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJp
 import com.flytrap.rssreader.api.shared_member.infrastructure.repository.SharedMemberJpaRepository;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
-import com.flytrap.rssreader.global.exception.domain.NotBelongToMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,17 +15,6 @@ public class FolderVerifyService {
 
     private final FolderEntityJpaRepository repository;
     private final SharedMemberJpaRepository sharedMemberJpaRepository;
-
-    @Transactional(readOnly = true)
-    public Folder getVerifiedOwnedFolder(Long folderId, long memberId) {
-        Folder folder = repository.findByIdAndIsDeletedFalse(folderId)
-                .orElseThrow(() -> new NoSuchDomainException(Folder.class)).toDomain();
-
-        if (!folder.isOwner(memberId))
-            throw new NotBelongToMemberException(folder);
-
-        return folder;
-    }
 
     @Transactional(readOnly = true)
     public Folder getVerifiedAccessableFolder(Long folderId, long memberId) {

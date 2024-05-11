@@ -1,14 +1,11 @@
 package com.flytrap.rssreader.api.folder.business.service;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
-import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
-import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FolderUpdateService {
 
-    private final FolderEntityJpaRepository repository;
     private final FolderValidator folderValidator;
     private final FolderCommand folderCommand;
 
@@ -48,11 +44,4 @@ public class FolderUpdateService {
         folderCommand.delete(folderAggregate);
     }
 
-    // TODO: 제거하기
-    public void makePrivate(Folder folder) {
-        if (folder.isShared()) {
-            folder.toPrivate();
-            repository.save(FolderEntity.from(folder));
-        }
-    }
 }

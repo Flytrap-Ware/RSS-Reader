@@ -37,14 +37,6 @@ public class Folder implements DefaultDomain {
                 .build();
     }
 
-    public boolean isShared() {
-        return sharedStatus == SharedStatus.SHARED;
-    }
-
-    public void toPrivate() {
-        this.sharedStatus = SharedStatus.PRIVATE;
-    }
-
     public boolean isOwner(long accountId) { // TODO: 여기서 AccountId를 파라미터로 받기
         return this.memberId == accountId;
     }

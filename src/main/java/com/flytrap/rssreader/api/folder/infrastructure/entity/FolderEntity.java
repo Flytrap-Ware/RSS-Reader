@@ -48,16 +48,6 @@ public class FolderEntity {
         this.isDeleted = isDeleted;
     }
 
-    public static FolderEntity from(Folder folder) {
-        return FolderEntity.builder()
-                .id(folder.getId())
-                .name(folder.getName())
-                .memberId(folder.getMemberId())
-                .isShared(folder.isShared())
-                .isDeleted(false)
-                .build();
-    }
-
     public static FolderEntity from(FolderCreate folderCreate) {
         return FolderEntity.builder()
             .name(folderCreate.getName())

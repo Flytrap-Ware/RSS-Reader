@@ -64,4 +64,22 @@ public class SharedMemberService {
             folderCommand.update(folderAggregate);
         }
     }
+
+    public void removeMemberFromFolder(
+        FolderId folderId, AccountId accountId, AccountId inviteeId
+    ) {
+        if (!folderValidator.isMyOwnFolder(folderId, accountId))
+            throw new IllegalArgumentException("폴더의 주인이 아닙니다."); // TODO: 예외 만들기
+
+        if (folderValidator.isMyOwnFolder(folderId, inviteeId))
+            throw new IllegalArgumentException("자신을 추방할 수 없습니다."); // TODO: 예외 추가하기
+
+        sharedMemberCommand.deleteBy(folderId, inviteeId);
+
+        if (sharedMemberValidator.hasNoSharedMembersByFolder(folderId)) {
+            FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+            folderAggregate.toPrivate();
+            folderCommand.update(folderAggregate);
+        }
+    }
 }

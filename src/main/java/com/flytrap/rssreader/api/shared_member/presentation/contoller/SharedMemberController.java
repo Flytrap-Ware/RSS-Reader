@@ -59,6 +59,12 @@ public class SharedMemberController implements SharedMemberControllerApi {
         @PathVariable Long folderId, @PathVariable Long inviteeId,
         @Login AccountCredentials accountCredentials
     ) {
-        return null;
+        sharedMemberService.removeMemberFromFolder(
+            new FolderId(folderId),
+            accountCredentials.id(),
+            new AccountId(inviteeId)
+        );
+
+        return ApplicationResponse.success();
     }
 }
