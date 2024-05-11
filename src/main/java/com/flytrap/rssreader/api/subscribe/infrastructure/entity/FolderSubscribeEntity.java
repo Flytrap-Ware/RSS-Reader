@@ -1,12 +1,15 @@
 package com.flytrap.rssreader.api.subscribe.infrastructure.entity;
 
-import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
+import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
+import com.flytrap.rssreader.api.subscribe.domain.FolderSubscriptionId;
+import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,23 +32,28 @@ public class FolderSubscribeEntity {
     private Long subscribeId;
 
     @Column(length = 2500, nullable = false)
-    private String description;
+    private String description; // TODO: RssResource로 옮기기, null 허용하기
 
     @Builder
-    public FolderSubscribeEntity(Long id, Long folderId, Long subscribeId, String description) {
+    protected FolderSubscribeEntity(Long id, Long folderId, Long subscribeId, String description) {
         this.id = id;
         this.folderId = folderId;
         this.subscribeId = subscribeId;
         this.description = description;
     }
 
-    public static FolderSubscribeEntity from(Subscribe subscribe, Long folderId) {
-        return FolderSubscribeEntity.builder()
-            .subscribeId(subscribe.getId())
-            .folderId(folderId)
-            .description("") // FolderSubscribe에서 description은 회원이 수정할 수 있는 설명값.
-            // 아직 해당 기능이 구현되지 않았으므로 빈 문자열을 전달해 준다.
+    public FolderSubscription toReadOnly(SubscribeEntity rssSourceEntity) {
+        if (!Objects.equals(rssSourceEntity.getId(), subscribeId)) {
+            throw new InconsistentDomainException(this.getClass());
+        }
+
+        return FolderSubscription.builder()
+            .id(new FolderSubscriptionId(id))
+            .url(rssSourceEntity.getUrl())
+            .title(rssSourceEntity.getTitle())
+            .platform(rssSourceEntity.getPlatform())
             .build();
     }
+
 }
 

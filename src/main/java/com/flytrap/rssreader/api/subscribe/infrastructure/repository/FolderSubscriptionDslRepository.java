@@ -19,6 +19,18 @@ public class FolderSubscriptionDslRepository {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
+    public boolean existsByUrl(long folderId, String url) {
+        Integer fetchOne = queryFactory
+            .selectOne()
+            .from(folderSubscribeEntity)
+            .join(subscribeEntity)
+            .on(folderSubscribeEntity.subscribeId.eq(subscribeEntity.id))
+            .where(folderSubscribeEntity.folderId.eq(folderId).and(subscribeEntity.url.eq(url)))
+            .fetchFirst();
+
+        return fetchOne != null;
+    }
+
     public List<FolderSubscriptionOutput> findAllByFolder(long folderId) {
         return queryFactory
             .selectDistinct(

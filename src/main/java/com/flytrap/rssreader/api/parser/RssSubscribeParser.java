@@ -1,8 +1,7 @@
 package com.flytrap.rssreader.api.parser;
 
-import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
-import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest.CreateRequest;
+import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import java.io.IOException;
 import java.util.Optional;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,18 +16,18 @@ import org.xml.sax.SAXException;
 @Component
 public class RssSubscribeParser implements RssDocumentParser {
 
-    public Optional<RssSubscribeData> parseRssDocuments(CreateRequest request) {
-        BlogPlatform blogPlatform = BlogPlatform.parseLink(request.blogUrl());
+    public Optional<RssSubscribeData> parseRssDocuments(String rssUrl) {
+        BlogPlatform blogPlatform = BlogPlatform.parseLink(rssUrl);
 
         try {
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-                .parse(request.blogUrl());
+                .parse(rssUrl);
 
             String rootTagName = document.getDocumentElement().getTagName();
             if (IS_RSS_ROOT_TAG.test(rootTagName)) {
-                return Optional.of(createSubscribeDataFromRss(document, request.blogUrl(), blogPlatform));
+                return Optional.of(createSubscribeDataFromRss(document, rssUrl, blogPlatform));
             } else if (IS_ATOM_ROOT_TAG.test(rootTagName)) {
-                return Optional.of(createSubscribeDataFromAtom(document, request.blogUrl(), blogPlatform));
+                return Optional.of(createSubscribeDataFromAtom(document, rssUrl, blogPlatform));
             } else {
                 throw new ParserConfigurationException();
             }

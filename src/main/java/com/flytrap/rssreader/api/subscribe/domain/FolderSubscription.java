@@ -1,6 +1,7 @@
 package com.flytrap.rssreader.api.subscribe.domain;
 
 import com.flytrap.rssreader.global.model.Domain;
+import com.flytrap.rssreader.global.model.NewDefaultDomain;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.ToString;
 @ToString
 @Domain(name = "folderSubscription")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FolderSubscription {
+public class FolderSubscription implements NewDefaultDomain {
 
     private FolderSubscriptionId id;
     private String title;

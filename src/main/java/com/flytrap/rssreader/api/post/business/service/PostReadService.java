@@ -23,7 +23,7 @@ public class PostReadService {
     public Post viewPost(AccountId accountId, PostId postId) {
 
         PostAggregate postAggregate = postCommand.readAggregate(postId, accountId);
-        Subscribe subscription = subscriptionReader.read(postAggregate.getSubscriptionId());
+        Subscribe subscription = subscriptionReader.read(postAggregate.getSubscriptionId()); // TODO: 도메인 변경하기
 
         globalEventPublisher.publish(new PostOpenEvent(postAggregate, accountId));
 

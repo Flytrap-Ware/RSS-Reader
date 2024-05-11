@@ -4,6 +4,7 @@ import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
 import com.flytrap.rssreader.global.model.Domain;
 import lombok.Getter;
 
+// TODO: 제거하기
 @Getter
 @Domain(name = "folderSubscribe")
 public class FolderSubscribe {
