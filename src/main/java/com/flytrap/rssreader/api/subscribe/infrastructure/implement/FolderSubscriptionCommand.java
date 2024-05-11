@@ -5,6 +5,7 @@ import com.flytrap.rssreader.api.parser.RssSubscribeParser;
 import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
 import com.flytrap.rssreader.api.post.business.event.PostCollectEvent;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
+import com.flytrap.rssreader.api.subscribe.domain.FolderSubscriptionId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.FolderSubscribeEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.FolderSubscriptionEntityJpaRepository;
@@ -55,6 +56,10 @@ public class FolderSubscriptionCommand {
             return folderSubscriptionEntityJpaRepository.save(newFolderSubscribeEntity)
                 .toReadOnly(newRssSourceEntity);
         }
+    }
+
+    public void delete(FolderSubscriptionId folderSubscriptionId) {
+        folderSubscriptionEntityJpaRepository.deleteById(folderSubscriptionId.value());
     }
 
 }

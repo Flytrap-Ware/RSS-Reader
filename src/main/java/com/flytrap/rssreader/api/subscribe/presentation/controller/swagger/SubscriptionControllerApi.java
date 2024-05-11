@@ -17,13 +17,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface SubscriptionControllerApi {
 
-    @Operation(summary = "폴더에 블로그 추가하기(블로그 구독하기)", description = "이미 추가된 폴더에 블로그를 새로 추가한다.")
+    @Operation(summary = "폴더에 구독 추가하기", description = "이미 추가된 폴더에 구독을 새로 추가한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "블로그 추가 성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = SubscriptionResponse.class))),
+        @ApiResponse(responseCode = "201", description = "구독 추가 성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = SubscriptionResponse.class))),
     })
     ApplicationResponse<SubscriptionResponse> addSubscribeToFolder(
         @Parameter(description = "블로그를 추가할 폴더의 ID") @PathVariable Long folderId,
         @Parameter(description = "추가할 블로그의 주소") @Valid @RequestBody AddSubscriptionRequest request,
         @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials accountCredentials);
 
+    @Operation(summary = "폴더에서 구독 제거하기", description = "폴더에 구독되어 있던 구독을 제거한다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "구독 제거 성공",  content = @Content(mediaType = "application/json", schema = @Schema())),
+    })
+    ApplicationResponse<Void> removeSubscriptionToFolder(
+        @PathVariable Long folderId,
+        @PathVariable Long subscriptionId,
+        @Login AccountCredentials accountCredentials
+    );
 }
