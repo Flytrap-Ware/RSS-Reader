@@ -6,7 +6,7 @@ import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.folder.domain.SharedMember;
+import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.folder.domain.SharedStatus;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
 import jakarta.persistence.Column;

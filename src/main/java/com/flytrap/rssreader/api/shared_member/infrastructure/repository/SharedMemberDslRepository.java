@@ -1,29 +1,29 @@
-package com.flytrap.rssreader.api.folder.infrastructure.repository;
+package com.flytrap.rssreader.api.shared_member.infrastructure.repository;
 
-import com.flytrap.rssreader.api.folder.infrastructure.output.FolderMemberOutput;
+import static com.flytrap.rssreader.api.account.infrastructure.entity.QAccountEntity.accountEntity;
+import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
+
+import com.flytrap.rssreader.api.shared_member.infrastructure.output.SharedMemberOutput;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
-import static com.flytrap.rssreader.api.account.infrastructure.entity.QAccountEntity.accountEntity;
-import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
-
 
 @Component
-public class FolderMemberDslRepository {
+public class SharedMemberDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public FolderMemberDslRepository(EntityManager entityManager) {
+    public SharedMemberDslRepository(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public List<FolderMemberOutput> findAllByFolder(long folderId) {
+    public List<SharedMemberOutput> findAllByFolder(long folderId) {
         return queryFactory
             .selectDistinct(
-                Projections.constructor(FolderMemberOutput.class,
+                Projections.constructor(SharedMemberOutput.class,
                     folderMemberEntity.id,
                         accountEntity.name,
                         accountEntity.profile

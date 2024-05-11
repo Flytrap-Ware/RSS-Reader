@@ -1,4 +1,4 @@
-package com.flytrap.rssreader.api.folder.infrastructure.entity;
+package com.flytrap.rssreader.api.shared_member.infrastructure.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

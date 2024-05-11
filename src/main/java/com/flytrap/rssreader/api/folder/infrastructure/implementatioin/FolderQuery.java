@@ -6,6 +6,7 @@ import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityDslRepository;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
+import com.flytrap.rssreader.api.shared_member.infrastructure.implementation.SharedMemberQuery;
 import com.flytrap.rssreader.api.subscribe.infrastructure.implement.FolderSubscriptionQuery;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import java.util.List;
@@ -19,14 +20,14 @@ public class FolderQuery {
     private final FolderEntityJpaRepository folderEntityJpaRepository;
     private final FolderEntityDslRepository folderEntityDslRepository;
     private final FolderSubscriptionQuery folderSubscriptionQuery;
-    private final FolderMemberQuery folderMemberQuery;
+    private final SharedMemberQuery sharedMemberQuery;
 
     public FolderDomain read(FolderId folderId) {
         return folderEntityJpaRepository.findById(folderId.value())
             .orElseThrow(() -> new NoSuchDomainException(Folder.class))
             .toReadonly(
                 folderSubscriptionQuery.readAllByFolder(folderId),
-                folderMemberQuery.readAllByFolder(folderId)
+                sharedMemberQuery.readAllByFolder(folderId)
             );
     }
 
@@ -40,7 +41,7 @@ public class FolderQuery {
                 if (folderEntity.getIsShared()) {
                     return folderEntity.toReadonly(
                         folderSubscriptionQuery.readAllByFolder(folderId),
-                        folderMemberQuery.readAllByFolder(folderId));
+                        sharedMemberQuery.readAllByFolder(folderId));
                 } else {
                     return folderEntity.toReadonly(
                         folderSubscriptionQuery.readAllByFolder(folderId),

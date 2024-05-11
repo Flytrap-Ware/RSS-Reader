@@ -1,10 +1,10 @@
 package com.flytrap.rssreader.api.post.infrastructure.repository;
 
 import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderEntity.folderEntity;
-import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QBookmarkEntity.bookmarkEntity;
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QOpenEntity.openEntity;
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QPostEntity.postEntity;
+import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
 import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QFolderSubscribeEntity.folderSubscribeEntity;
 import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QSubscribeEntity.subscribeEntity;
 
