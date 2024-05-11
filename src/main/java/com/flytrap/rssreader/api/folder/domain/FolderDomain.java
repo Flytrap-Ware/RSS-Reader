@@ -1,6 +1,7 @@
 package com.flytrap.rssreader.api.folder.domain;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
+import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
 import com.flytrap.rssreader.global.model.NewDefaultDomain;
 import java.util.List;

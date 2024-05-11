@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.folder.infrastructure.repository;
 
 import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderEntity.folderEntity;
-import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
+import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
 
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;

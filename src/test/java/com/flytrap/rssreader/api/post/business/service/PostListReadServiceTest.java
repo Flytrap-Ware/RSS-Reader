@@ -8,7 +8,7 @@ import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
-import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidation;
+import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.domain.PostId;
@@ -34,7 +34,7 @@ class PostListReadServiceTest {
     PostQuery postQuery;
 
     @Mock
-    FolderValidation folderValidation;
+    FolderValidator folderValidator;
 
     @Mock
     FolderQuery folderQuery;
@@ -66,7 +66,7 @@ class PostListReadServiceTest {
             );
 
             // When
-            when(folderValidation.isAccessibleFolder(folderId, accountId))
+            when(folderValidator.isAccessibleFolder(folderId, accountId))
                 .thenReturn(true);
             when(postQuery.readAllByFolder(accountId, folderId, postFilter, pageable))
                 .thenReturn(posts);
@@ -89,7 +89,7 @@ class PostListReadServiceTest {
                 .build();
 
             // When
-            when(folderValidation.isAccessibleFolder(folderId, accountId))
+            when(folderValidator.isAccessibleFolder(folderId, accountId))
                 .thenReturn(false);
 
             // Then

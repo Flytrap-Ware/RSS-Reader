@@ -6,7 +6,7 @@ import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.folder.domain.SharedMember;
+import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.folder.domain.SharedStatus;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
 import jakarta.persistence.Column;
@@ -46,16 +46,6 @@ public class FolderEntity {
         this.memberId = memberId;
         this.isShared = isShared;
         this.isDeleted = isDeleted;
-    }
-
-    public static FolderEntity from(Folder folder) {
-        return FolderEntity.builder()
-                .id(folder.getId())
-                .name(folder.getName())
-                .memberId(folder.getMemberId())
-                .isShared(folder.isShared())
-                .isDeleted(false)
-                .build();
     }
 
     public static FolderEntity from(FolderCreate folderCreate) {

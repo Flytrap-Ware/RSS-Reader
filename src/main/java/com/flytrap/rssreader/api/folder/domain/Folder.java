@@ -1,13 +1,9 @@
 package com.flytrap.rssreader.api.folder.domain;
 
-import com.flytrap.rssreader.api.post.infrastructure.output.OpenPostCountOutput;
-import com.flytrap.rssreader.api.post.infrastructure.output.PostSubscribeCountOutput;
-import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.global.model.DefaultDomain;
 import com.flytrap.rssreader.global.model.Domain;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,32 +37,8 @@ public class Folder implements DefaultDomain {
                 .build();
     }
 
-    public static Folder create(String name, long member) {
-        return Folder.builder()
-                .name(name)
-                .memberId(member)
-                .isShared(false)
-                .build();
-    }
-
-    public boolean isShared() {
-        return sharedStatus == SharedStatus.SHARED;
-    }
-
-    public void toShare() {
-        this.sharedStatus = SharedStatus.SHARED;
-    }
-
-    public void toPrivate() {
-        this.sharedStatus = SharedStatus.PRIVATE;
-    }
-
     public boolean isOwner(long accountId) { // TODO: 여기서 AccountId를 파라미터로 받기
         return this.memberId == accountId;
-    }
-
-    public void addSubscribe(FolderSubscribe subscribe) {
-        this.subscribes.add(subscribe);
     }
 
     @Override
@@ -74,24 +46,4 @@ public class Folder implements DefaultDomain {
         return obj instanceof Folder && ((Folder) obj).getId().equals(this.id);
     }
 
-    public List<Long> getSubscribeIds() {
-        return subscribes.stream()
-                .map(FolderSubscribe::getId)
-                .toList();
-    }
-
-    public void addUnreadCountsBySubscribes(Map<SubscriptionId, PostSubscribeCountOutput> countsPost, Map<SubscriptionId, OpenPostCountOutput> countsOpen) {
-        for (FolderSubscribe subscribe : subscribes) {
-
-            PostSubscribeCountOutput subscribePostCount = countsPost.get(new SubscriptionId(subscribe.getId()));
-            OpenPostCountOutput openPostCount = countsOpen.get(new SubscriptionId(subscribe.getId()));
-            int totalCount = 0;
-            int openCount = 0;
-
-            if (openPostCount != null) openCount = openPostCount.getPostCount();
-            if (subscribePostCount != null) totalCount = subscribePostCount.getPostCount();
-
-            subscribe.addUnreadCount(totalCount, openCount);
-        }
-    }
 }

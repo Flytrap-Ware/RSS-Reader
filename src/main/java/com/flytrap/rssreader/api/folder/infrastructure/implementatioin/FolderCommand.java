@@ -17,7 +17,7 @@ public class FolderCommand {
 
     private final FolderEntityJpaRepository folderEntityJpaRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public FolderAggregate readAggregate(FolderId folderId) {
         return folderEntityJpaRepository.findById(folderId.value())
             .orElseThrow(() -> new NoSuchDomainException(Folder.class))

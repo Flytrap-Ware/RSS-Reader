@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class AccountQueryImplementation {
+public class AccountQuery {
 
     private final AccountJpaRepository memberEntityJpaRepository;
 

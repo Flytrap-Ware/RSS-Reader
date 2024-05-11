@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class FolderAggregate implements DefaultDomain {
+
     private final FolderId id;
     private String name;
     private final AccountId ownerId;
@@ -24,4 +25,13 @@ public class FolderAggregate implements DefaultDomain {
     public void changeName(String name) {
         this.name = name;
     }
+
+    public void toPrivate() {
+        this.sharedStatus = SharedStatus.PRIVATE;
+    }
+
+    public void toShared() {
+        this.sharedStatus = SharedStatus.SHARED;
+    }
+
 }

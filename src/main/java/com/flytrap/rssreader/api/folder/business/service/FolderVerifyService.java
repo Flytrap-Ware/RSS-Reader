@@ -2,10 +2,9 @@ package com.flytrap.rssreader.api.folder.business.service;
 
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
-import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderMemberJpaRepository;
+import com.flytrap.rssreader.api.shared_member.infrastructure.repository.SharedMemberJpaRepository;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
-import com.flytrap.rssreader.global.exception.domain.NotBelongToMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,18 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FolderVerifyService {
 
     private final FolderEntityJpaRepository repository;
-    private final FolderMemberJpaRepository folderMemberJpaRepository;
-
-    @Transactional(readOnly = true)
-    public Folder getVerifiedOwnedFolder(Long folderId, long memberId) {
-        Folder folder = repository.findByIdAndIsDeletedFalse(folderId)
-                .orElseThrow(() -> new NoSuchDomainException(Folder.class)).toDomain();
-
-        if (!folder.isOwner(memberId))
-            throw new NotBelongToMemberException(folder);
-
-        return folder;
-    }
+    private final SharedMemberJpaRepository sharedMemberJpaRepository;
 
     @Transactional(readOnly = true)
     public Folder getVerifiedAccessableFolder(Long folderId, long memberId) {
@@ -40,7 +28,7 @@ public class FolderVerifyService {
     }
 
     private boolean isSharedFolder(Long folderId, long memberId) {
-        return folderMemberJpaRepository.existsByFolderIdAndMemberId(folderId, memberId);
+        return sharedMemberJpaRepository.existsByFolderIdAndMemberId(folderId, memberId);
     }
 
 }
