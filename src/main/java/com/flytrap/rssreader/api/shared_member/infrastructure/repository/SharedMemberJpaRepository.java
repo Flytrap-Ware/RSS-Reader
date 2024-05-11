@@ -10,6 +10,8 @@ public interface SharedMemberJpaRepository extends JpaRepository<FolderMemberEnt
 
     boolean existsByFolderIdAndMemberId(long folderId, long memberId);
 
+    void deleteByFolderIdAndMemberId(long folderId, long memberId);
+
     Optional<FolderMemberEntity> findByFolderIdAndMemberId(long folderId, long memberId);
 
 }

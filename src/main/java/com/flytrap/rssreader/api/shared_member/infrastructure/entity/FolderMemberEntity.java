@@ -34,13 +34,6 @@ public class FolderMemberEntity {
         this.memberId = memberId;
     }
 
-    public static FolderMemberEntity of(Long id, long inviteeId) {
-        return FolderMemberEntity.builder()
-                .folderId(id)
-                .memberId(inviteeId)
-                .build();
-    }
-
     public static FolderMemberEntity from(SharedMemberCreate sharedMemberCreate) {
         return FolderMemberEntity.builder()
             .folderId(sharedMemberCreate.folderId().value())

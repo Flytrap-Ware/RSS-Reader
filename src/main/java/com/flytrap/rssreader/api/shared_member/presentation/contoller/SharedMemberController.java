@@ -47,7 +47,11 @@ public class SharedMemberController implements SharedMemberControllerApi {
         @PathVariable Long folderId,
         @Login AccountCredentials accountCredentials
     ) {
-        return null;
+        sharedMemberService.leaveFolder(
+            new FolderId(folderId), accountCredentials.id()
+        );
+
+        return ApplicationResponse.success();
     }
 
     @DeleteMapping("/api/folders/{folderId}/members/{inviteeId}")

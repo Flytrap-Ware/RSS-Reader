@@ -26,6 +26,10 @@ public class FolderAggregate implements DefaultDomain {
         this.name = name;
     }
 
+    public void toPrivate() {
+        this.sharedStatus = SharedStatus.PRIVATE;
+    }
+
     public void toShared() {
         this.sharedStatus = SharedStatus.SHARED;
     }

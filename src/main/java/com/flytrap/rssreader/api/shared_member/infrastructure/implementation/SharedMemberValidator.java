@@ -19,4 +19,10 @@ public class SharedMemberValidator {
             .existsByFolderIdAndMemberId(folderId.value(), inviteeId.value());
     }
 
+    @Transactional(readOnly = true)
+    public boolean hasNoSharedMembersByFolder(FolderId folderId) {
+        return sharedMemberJpaRepository
+            .countAllByFolderId(folderId.value()) <= 0;
+    }
+
 }

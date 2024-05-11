@@ -17,15 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Tag(name ="공유 폴더")
 public interface SharedFolderUpdateControllerApi {
 
-    @Operation(summary = "초대된 폴더에서 떠나기", description = "내가 초대된 폴더에서 스스로 나간다.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-    })
-    ApplicationResponse<String> leaveFolder(
-        @Parameter(description = "떠나고자 하는 폴더의 ID") @PathVariable Long folderId,
-        @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials member
-    );
-
     @Operation(summary = "공유 폴더에 포함된 한 회원 추방하기", description = "공유 폴더에 포함된 한 회원 추방한다. 폴더 관리자만 추방할 수 있다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),

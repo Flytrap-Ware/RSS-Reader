@@ -26,23 +26,6 @@ public class SharedFolderUpdateController implements SharedFolderUpdateControlle
     private final FolderUpdateService folderUpdateService;
     private final FolderVerifyService folderVerifyService;
 
-    // 공유 폴더에 사람 나가기 (내가 스스로 나간다)
-    @DeleteMapping("/{folderId}/members/me-delete")
-    public ApplicationResponse<String> leaveFolder(
-            @PathVariable Long folderId,
-            @Login AccountCredentials member
-    ) {
-        Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id().value());
-        
-        sharedFolderUpdateService.leave(verifiedFolder, member.id().value());
-
-        if (sharedFolderReadService.countAllMembersByFolder(folderId) <= 0) {
-            folderUpdateService.makePrivate(verifiedFolder);
-        }
-
-        return ApplicationResponse.success();
-    }
-
     //공유 폴더에 사람 삭제하기 (만든 사람만)
     @DeleteMapping("/{folderId}/members/{inviteeId}-delete")
     public ApplicationResponse<String> deleteMember(

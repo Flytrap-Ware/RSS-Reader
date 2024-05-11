@@ -2,6 +2,7 @@ package com.flytrap.rssreader.api.shared_member.business.service;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
+import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
@@ -10,6 +11,7 @@ import com.flytrap.rssreader.api.shared_member.domain.SharedMemberCreate;
 import com.flytrap.rssreader.api.shared_member.infrastructure.implementation.SharedMemberCommand;
 import com.flytrap.rssreader.api.shared_member.infrastructure.implementation.SharedMemberValidator;
 import com.flytrap.rssreader.global.exception.domain.DuplicateDomainException;
+import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +46,22 @@ public class SharedMemberService {
         folderCommand.update(folderAggregate);
 
         return sharedMember;
+    }
+
+    @Transactional
+    public void leaveFolder(FolderId folderId, AccountId accountId) {
+        if (folderValidator.isMyOwnFolder(folderId, accountId))
+            throw new IllegalArgumentException("폴더 주인은 떠날 수 없습니다."); // TODO: 예외 추가하기
+
+        if (!folderValidator.isAccessibleFolder(folderId, accountId))
+            throw new ForbiddenAccessFolderException(FolderDomain.class);
+
+        sharedMemberCommand.deleteBy(folderId, accountId);
+
+        if (sharedMemberValidator.hasNoSharedMembersByFolder(folderId)) {
+            FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+            folderAggregate.toPrivate();
+            folderCommand.update(folderAggregate);
+        }
     }
 }
