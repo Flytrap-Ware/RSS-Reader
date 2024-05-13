@@ -1,26 +1,19 @@
 package com.flytrap.rssreader.api.alert.infrastructure.implement;
 
-import com.flytrap.rssreader.api.alert.domain.Alert;
-import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
+import com.flytrap.rssreader.api.alert.domain.AlertId;
 import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertEntityJpaRepository;
-import com.flytrap.rssreader.api.folder.domain.FolderId;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class AlertQuery {
+public class AlertValidator {
 
     private final AlertEntityJpaRepository alertJpaRepository;
 
     @Transactional(readOnly = true)
-    public List<Alert> readAllByFolder(FolderId folderId) {
-        return alertJpaRepository.findAllByFolderId(folderId.value())
-            .stream()
-            .map(AlertEntity::toReadOnly)
-            .toList();
+    public boolean exists(AlertId alertId) {
+        return alertJpaRepository.existsById(alertId.value());
     }
-
 }

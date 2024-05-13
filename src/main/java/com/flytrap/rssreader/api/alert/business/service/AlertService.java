@@ -3,11 +3,13 @@ package com.flytrap.rssreader.api.alert.business.service;
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.alert.domain.Alert;
 import com.flytrap.rssreader.api.alert.domain.AlertCreate;
+import com.flytrap.rssreader.api.alert.domain.AlertId;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
 import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
 import com.flytrap.rssreader.api.alert.infrastructure.external.AlertSender;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertCommand;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertQuery;
+import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertValidator;
 import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertEntityJpaRepository;
 import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
@@ -28,6 +30,7 @@ public class AlertService {
 
     private final AlertQuery alertQuery;
     private final AlertCommand alertCommand;
+    private final AlertValidator alertValidator;
     private final FolderValidator folderValidator;
 
     public List<Alert> getAlertsByFolder(FolderId folderId, AccountId accountId) {
@@ -48,12 +51,15 @@ public class AlertService {
         return alertCommand.create(new AlertCreate(folderId, accountId, alertPlatform, webhookUrl));
     }
 
-    public void removeAlert(Long alertId) {
-        Alert alert = alertRepository.findById(alertId)
-                .orElseThrow(() -> new NoSuchDomainException(Alert.class))
-                .toReadOnly();
+    public void removeAlert(FolderId folderId, AccountId accountId, AlertId alertId) {
 
-        alertRepository.deleteById(alert.getId().value());
+        if (!folderValidator.isAccessibleFolder(folderId, accountId))
+            throw new ForbiddenAccessFolderException(FolderDomain.class);
+
+        if (!alertValidator.exists(alertId))
+            throw new NoSuchDomainException(Alert.class);
+
+        alertCommand.delete(alertId);
     }
 
     public void sendAlertToPlatform(String folderName, String webhookUrl, List<PostEntity> posts) {
