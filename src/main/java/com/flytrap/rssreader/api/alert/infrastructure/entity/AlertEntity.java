@@ -1,6 +1,7 @@
 package com.flytrap.rssreader.api.alert.infrastructure.entity;
 
 import com.flytrap.rssreader.api.alert.domain.Alert;
+import com.flytrap.rssreader.api.alert.domain.AlertId;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,9 +60,9 @@ public class AlertEntity {
             .build();
     }
 
-    public Alert toDomain() {
+    public Alert toReadOnly() {
         return Alert.builder()
-            .id(id)
+            .id(new AlertId(id))
             .memberId(memberId)
             .folderId(folderId)
             .alertPlatform(alertPlatform)
