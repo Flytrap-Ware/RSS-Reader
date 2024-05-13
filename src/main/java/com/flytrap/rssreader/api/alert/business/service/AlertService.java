@@ -2,9 +2,11 @@ package com.flytrap.rssreader.api.alert.business.service;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.alert.domain.Alert;
+import com.flytrap.rssreader.api.alert.domain.AlertCreate;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
 import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
 import com.flytrap.rssreader.api.alert.infrastructure.external.AlertSender;
+import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertCommand;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertQuery;
 import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertEntityJpaRepository;
 import com.flytrap.rssreader.api.folder.domain.FolderDomain;
@@ -25,6 +27,7 @@ public class AlertService {
     private final List<AlertSender> alertSenders;
 
     private final AlertQuery alertQuery;
+    private final AlertCommand alertCommand;
     private final FolderValidator folderValidator;
 
     public List<Alert> getAlertsByFolder(FolderId folderId, AccountId accountId) {
@@ -35,12 +38,14 @@ public class AlertService {
         return alertQuery.readAllByFolder(folderId);
     }
 
-    public Alert registerAlert(Long folderId, Long memberId, String webhookUrl) {
+    public Alert registerAlert(FolderId folderId, AccountId accountId, String webhookUrl) {
+
+        if (!folderValidator.isAccessibleFolder(folderId, accountId))
+            throw new ForbiddenAccessFolderException(FolderDomain.class);
+
         AlertPlatform alertPlatform = AlertPlatform.parseWebhookUrl(webhookUrl);
 
-        return alertRepository.save(
-                        AlertEntity.create(memberId, folderId, alertPlatform, webhookUrl))
-                .toReadOnly();
+        return alertCommand.create(new AlertCreate(folderId, accountId, alertPlatform, webhookUrl));
     }
 
     public void removeAlert(Long alertId) {
