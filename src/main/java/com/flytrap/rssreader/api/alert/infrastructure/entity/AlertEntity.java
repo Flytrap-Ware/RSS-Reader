@@ -1,6 +1,8 @@
 package com.flytrap.rssreader.api.alert.infrastructure.entity;
 
 import com.flytrap.rssreader.api.alert.domain.Alert;
+import com.flytrap.rssreader.api.alert.domain.AlertCreate;
+import com.flytrap.rssreader.api.alert.domain.AlertId;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,19 +51,18 @@ public class AlertEntity {
         this.webhookUrl = webhookUrl;
     }
 
-    public static AlertEntity create(Long memberId, Long folderId, AlertPlatform alertPlatform,
-        String webhookUrl) {
+    public static AlertEntity from(AlertCreate alertCreate) {
         return AlertEntity.builder()
-            .memberId(memberId)
-            .folderId(folderId)
-            .alertPlatform(alertPlatform)
-            .webhookUrl(webhookUrl)
+            .memberId(alertCreate.accountId().value())
+            .folderId(alertCreate.folderId().value())
+            .alertPlatform(alertCreate.alertPlatform())
+            .webhookUrl(alertCreate.webhookUrl())
             .build();
     }
 
-    public Alert toDomain() {
+    public Alert toReadOnly() {
         return Alert.builder()
-            .id(id)
+            .id(new AlertId(id))
             .memberId(memberId)
             .folderId(folderId)
             .alertPlatform(alertPlatform)
