@@ -14,10 +14,12 @@ import org.springframework.context.annotation.Configuration;
 public class BatchConfig {
 
     private final JobRepository jobRepository;
+    public static final String JOB_CRAWLING_NAME = "crawlingJob";
+    public static final String JOB_STAT_NAME = "statJob";
 
     @Bean
     public Job crawlingJob(Step crawlingStep) {
-        return new JobBuilder("crawlingJob", jobRepository)
+        return new JobBuilder(JOB_CRAWLING_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .flow(crawlingStep)
                 .end()
@@ -26,7 +28,7 @@ public class BatchConfig {
 
     @Bean
     public Job statJob(Step statStep) {
-        return new JobBuilder("statJob", jobRepository)
+        return new JobBuilder(JOB_STAT_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .flow(statStep)
                 .end()
