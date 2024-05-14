@@ -61,36 +61,4 @@ public class PostUpdateController implements PostUpdateControllerApi {
         return new ApplicationResponse<>(DELETE_BOOKMARK_MESSAGE + postId);
     }
 
-    // TODO: 리액션 기능 다시 개발하기
-//    /**
-//     * 리액션 반응은 공유된 폴더의 POST만 가능합니다. 공유 된 폴더인지 체크 한 후 POST와 MEMBER사이에 리액션이 일어납니다.
-//     *
-//     * @param postId
-//     * @param member
-//     * @return
-//     */
-//    @PostMapping("/{postId}/reactions")
-//    public ApplicationResponse<Long> addReaction(
-//            @PathVariable Long postId,
-//            @Valid @RequestBody ReactionRequest request,
-//            @Login AccountSession member) {
-//
-//        //TODO: 1.공유된 폴더인가?, 유효한 폴더 인가?
-//        // 2.공유폴더에 구독된 POST를 알아야한다
-//        // Long reaction = reactionService.addReaction(postId, member.id(), request.emoji());
-//
-//        return new ApplicationResponse<>(0L);
-//    }
-//
-//    @DeleteMapping("/{postId}/reactions")
-//    public ApplicationResponse<Void> deleteReaction(
-//            @PathVariable Long postId,
-//            @Login AccountSession member) {
-//
-//        //TODO: 1.공유된 폴더인가?, 유효한 폴더 인가?
-//        // 2.공유폴더에 구독된 POST를 알아야한다
-//        // reactionService.deleteReaction(postId, member.id());
-//
-//        return new ApplicationResponse<>(null);
-//    }
 }
