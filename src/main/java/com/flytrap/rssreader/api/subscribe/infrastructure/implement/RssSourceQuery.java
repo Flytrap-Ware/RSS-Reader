@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RssSourceQuery {
 
-    private final RssResourceJpaRepository rssResourceJpaRepository; // TODO: Subscription으로 변경하기
+    private final RssResourceJpaRepository rssResourceJpaRepository;
 
     public RssSource read(RssSourceId rssSourceId) {
         return rssResourceJpaRepository.findById(rssSourceId.value())

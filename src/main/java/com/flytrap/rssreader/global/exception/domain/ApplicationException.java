@@ -1,5 +1,7 @@
 package com.flytrap.rssreader.global.exception.domain;
 
+import com.flytrap.rssreader.global.model.DefaultDomain;
+
 public class ApplicationException extends RuntimeException {
 
     private String defaultCode;
@@ -14,8 +16,7 @@ public class ApplicationException extends RuntimeException {
         this.defaultCode = defaultCode;
     }
 
-    // TODO: DefaultDomain이 통합되면 파라미터 타입 Class<? extends DefaultDomain>으로 변경하기
-    public ApplicationException(Class<?> domain) {
+    public ApplicationException(Class<? extends DefaultDomain> domain) {
         super(String.format(message, domain.getSimpleName()));
         this.defaultCode = domain.getSimpleName();
     }

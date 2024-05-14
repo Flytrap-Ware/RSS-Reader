@@ -35,7 +35,6 @@ public class SubscriptionCommand {
             SubscriptionEntity newSubscriptionEntity = SubscriptionEntity.builder()
                 .folderId(folderId.value())
                 .rssSourceId(rssSourceEntity.getId())
-                .description("") // TODO: 컬럼 제거하기
                 .build();
 
             return subscriptionJpaRepository.save(newSubscriptionEntity)
@@ -48,7 +47,6 @@ public class SubscriptionCommand {
             SubscriptionEntity newSubscriptionEntity = SubscriptionEntity.builder()
                 .folderId(folderId.value())
                 .rssSourceId(newRssSourceEntity.getId())
-                .description("") // TODO: 컬럼 제거하기
                 .build();
 
             globalEventPublisher.publish(new PostCollectEvent(newRssSourceEntity));

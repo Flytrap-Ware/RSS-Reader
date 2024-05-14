@@ -31,15 +31,11 @@ public class SubscriptionEntity {
     @Column(name = "rss_source_id", nullable = false)
     private Long rssSourceId;
 
-    @Column(length = 2500)
-    private String description; // TODO: RssResource로 옮기기
-
     @Builder
-    protected SubscriptionEntity(Long id, Long folderId, Long rssSourceId, String description) {
+    protected SubscriptionEntity(Long id, Long folderId, Long rssSourceId) {
         this.id = id;
         this.folderId = folderId;
         this.rssSourceId = rssSourceId;
-        this.description = description;
     }
 
     public Subscription toReadOnly(RssSourceEntity rssSourceEntity) {
