@@ -18,7 +18,7 @@ public class SubscriptionQuery {
         return subscriptionDslRepository
             .findAllByFolder(folderId.value())
             .stream()
-            .map(SubscriptionOutput::toDomain)
+            .map(SubscriptionOutput::toReadOnly)
             .toList();
     }
 }

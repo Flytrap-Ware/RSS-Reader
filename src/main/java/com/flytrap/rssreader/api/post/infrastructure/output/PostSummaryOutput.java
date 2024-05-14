@@ -21,7 +21,7 @@ public record PostSummaryOutput(
         boolean bookmark
 ) {
 
-    public Post toDomain() {
+    public Post toReadOnly() {
         return Post.builder()
                 .id(new PostId(id))
                 .guid(guid)

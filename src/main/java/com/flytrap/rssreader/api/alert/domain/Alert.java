@@ -2,8 +2,8 @@ package com.flytrap.rssreader.api.alert.domain;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.global.model.DefaultDomain;
 import com.flytrap.rssreader.global.model.Domain;
+import com.flytrap.rssreader.global.model.DefaultDomain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;

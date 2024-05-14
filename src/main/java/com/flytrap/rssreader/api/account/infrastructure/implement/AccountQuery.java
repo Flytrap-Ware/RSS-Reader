@@ -19,21 +19,21 @@ public class AccountQuery {
     private final AccountJpaRepository accountJpaRepository;
 
     public Optional<Account> readByProviderKey(Long oauthPk) {
-        return accountJpaRepository.findByProviderKey(oauthPk).map(AccountEntity::toDomain);
+        return accountJpaRepository.findByProviderKey(oauthPk).map(AccountEntity::toReadOnly);
     }
 
     public List<Account> readAllByName(AccountName name) {
         return accountJpaRepository.findAllByName(name.value())
-                .stream().map(AccountEntity::toDomain).toList();
+                .stream().map(AccountEntity::toReadOnly).toList();
     }
 
     public Optional<Account> readById(AccountId id) {
-        return accountJpaRepository.findById(id.value()).map(AccountEntity::toDomain);
+        return accountJpaRepository.findById(id.value()).map(AccountEntity::toReadOnly);
     }
 
     public List<Account> readAllById(Collection<AccountId> ids) {
         List<Long> accountIds =  ids.stream().map(AccountId::value).toList();
         return accountJpaRepository.findAllById(accountIds)
-                .stream().map(AccountEntity::toDomain).toList();
+                .stream().map(AccountEntity::toReadOnly).toList();
     }
 }

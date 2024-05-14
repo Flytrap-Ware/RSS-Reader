@@ -16,7 +16,7 @@ public class RssSourceQuery {
     public RssSource read(RssSourceId rssSourceId) {
         return rssResourceJpaRepository.findById(rssSourceId.value())
             .orElseThrow(() -> new NoSuchDomainException(RssSource.class))
-            .toExistingSubscribeDomain();
+            .toExistingRssSource();
     }
 
 }

@@ -1,27 +1,24 @@
 package com.flytrap.rssreader.api.subscribe.domain;
 
-import com.flytrap.rssreader.global.model.DefaultDomain;
 import com.flytrap.rssreader.global.model.Domain;
-import lombok.AccessLevel;
+import com.flytrap.rssreader.global.model.DefaultDomain;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
 @Domain(name = "rssSource")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RssSource implements DefaultDomain {
 
-    private Long id;
-    private String title;
-    private String url;
-    private BlogPlatform platform;
-    private boolean isNewSubscribe;
+    private final RssSourceId id;
+    private final String title;
+    private final String url;
+    private final BlogPlatform platform;
+    private final boolean isNewSubscribe;
 
     @Builder
-    protected RssSource(Long id, String title, String url, BlogPlatform platform, boolean isNewSubscribe) {
+    protected RssSource(RssSourceId id, String title, String url, BlogPlatform platform, boolean isNewSubscribe) {
         this.id = id;
         this.title = title;
         this.url = url;
@@ -36,7 +33,7 @@ public class RssSource implements DefaultDomain {
                 .build();
     }
 
-    public static RssSource of(Long id, String title, String url, BlogPlatform platform, boolean isNewSubscribe) {
+    public static RssSource of(RssSourceId id, String title, String url, BlogPlatform platform, boolean isNewSubscribe) {
         return RssSource.builder()
                 .id(id)
                 .title(title)

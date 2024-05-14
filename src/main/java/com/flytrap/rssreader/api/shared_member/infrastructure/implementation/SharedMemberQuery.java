@@ -17,7 +17,7 @@ public class SharedMemberQuery {
     public List<SharedMember> readAllByFolder(FolderId folderId) {
         return sharedMemberDslRepository.findAllByFolder(folderId.value())
             .stream()
-            .map(SharedMemberOutput::toDomain)
+            .map(SharedMemberOutput::toReadOnly)
             .toList();
     }
 

@@ -27,7 +27,7 @@ public class PostReadService {
 
         globalEventPublisher.publish(new PostOpenEvent(postAggregate, accountId));
 
-        return postAggregate.toDomain(rssSource);
+        return postAggregate.toReadOnly(rssSource);
     }
 
 }

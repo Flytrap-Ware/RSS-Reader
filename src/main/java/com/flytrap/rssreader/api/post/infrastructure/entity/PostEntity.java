@@ -94,7 +94,7 @@ public class PostEntity {
         this.description = itemData.description();
     }
 
-    public Post toDomain(Open open, Bookmark bookmark, RssSourceEntity rssSource) {
+    public Post toReadOnly(Open open, Bookmark bookmark, RssSourceEntity rssSource) {
 
         if (!Objects.equals(rssSource.getId(), rssSourceId)) {
             throw new RuntimeException("정합성 일치하지 않음.");

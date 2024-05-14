@@ -47,7 +47,7 @@ public class PostQuery {
         boolean isBookmark = bookmarkJpaRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
 
-        return postEntity.toDomain(Open.from(isRead), Bookmark.from(isBookmark),
+        return postEntity.toReadOnly(Open.from(isRead), Bookmark.from(isBookmark),
             rssSourceEntity);
     }
 
@@ -56,7 +56,7 @@ public class PostQuery {
         Pageable pageable) {
         return postListReadRepository
             .findAllByAccount(accountId.value(), postFilter, pageable)
-            .stream().map(PostSummaryOutput::toDomain).toList();
+            .stream().map(PostSummaryOutput::toReadOnly).toList();
     }
 
     @Transactional(readOnly = true)
@@ -64,7 +64,7 @@ public class PostQuery {
         Pageable pageable) {
         return postListReadRepository
             .findAllByFolder(accountId.value(), folderId.value(), postFilter, pageable)
-            .stream().map(PostSummaryOutput::toDomain).toList();
+            .stream().map(PostSummaryOutput::toReadOnly).toList();
     }
 
     @Transactional(readOnly = true)
@@ -72,14 +72,14 @@ public class PostQuery {
         PostFilter postFilter, Pageable pageable) {
         return postListReadRepository.findAllBySubscription(accountId.value(),
                 rssSourceId.value(), postFilter, pageable).stream()
-            .map(PostSummaryOutput::toDomain).toList();
+            .map(PostSummaryOutput::toReadOnly).toList();
     }
 
     @Transactional(readOnly = true)
     public List<Post> readAllBookmarked(AccountId accountId, PostFilter postFilter,
         Pageable pageable) {
         return postListReadRepository.findAllBookmarked(accountId.value(), postFilter, pageable)
-            .stream().map(PostSummaryOutput::toDomain).toList();
+            .stream().map(PostSummaryOutput::toReadOnly).toList();
     }
 
 }

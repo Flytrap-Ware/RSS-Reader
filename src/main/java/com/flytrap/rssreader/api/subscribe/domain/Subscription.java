@@ -1,23 +1,20 @@
 package com.flytrap.rssreader.api.subscribe.domain;
 
 import com.flytrap.rssreader.global.model.Domain;
-import com.flytrap.rssreader.global.model.NewDefaultDomain;
-import lombok.AccessLevel;
+import com.flytrap.rssreader.global.model.DefaultDomain;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
 @Domain(name = "subscription")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Subscription implements NewDefaultDomain {
+public class Subscription implements DefaultDomain {
 
-    private SubscriptionId id;
-    private String title;
-    private String url;
-    private BlogPlatform platform;
+    private final SubscriptionId id;
+    private final String title;
+    private final String url;
+    private final BlogPlatform platform;
 
     @Builder
     protected Subscription(SubscriptionId id, String title, String url, BlogPlatform platform) {

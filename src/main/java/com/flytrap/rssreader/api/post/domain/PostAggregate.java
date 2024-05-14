@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import com.flytrap.rssreader.global.model.Domain;
-import com.flytrap.rssreader.global.model.NewDefaultDomain;
+import com.flytrap.rssreader.global.model.DefaultDomain;
 import java.time.Instant;
 import java.util.Objects;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.Getter;
 
 @Getter
 @Domain(name = "post")
-public class PostAggregate implements NewDefaultDomain {
+public class PostAggregate implements DefaultDomain {
 
     private final PostId id;
     private final String guid;
@@ -63,7 +63,7 @@ public class PostAggregate implements NewDefaultDomain {
         this.bookmark = Bookmark.UNMARKED;
     }
 
-    public Post toDomain(RssSource rssSource) {
+    public Post toReadOnly(RssSource rssSource) {
         if (!Objects.equals(rssSource.getId(), rssSourceId.value())) {
             throw new InconsistentDomainException(PostAggregate.class);
         }

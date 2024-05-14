@@ -13,6 +13,6 @@ public class AccountCommand {
     private final AccountJpaRepository accountJpaRepository;
 
     public Account create(Account account) {
-        return accountJpaRepository.save(AccountEntity.from(account)).toDomain();
+        return accountJpaRepository.save(AccountEntity.from(account)).toReadOnly();
     }
 }

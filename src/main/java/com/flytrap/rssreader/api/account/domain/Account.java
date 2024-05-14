@@ -1,25 +1,21 @@
 package com.flytrap.rssreader.api.account.domain;
 
-import com.flytrap.rssreader.global.model.DefaultDomain;
 import com.flytrap.rssreader.global.model.Domain;
-import lombok.AccessLevel;
+import com.flytrap.rssreader.global.model.DefaultDomain;
+import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 
 @Getter
 @Domain(name = "account")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Account implements DefaultDomain {
 
-    private AccountId id;
-    private AccountName name;
-    private String email;
-    private String profile;
-    private ProviderInfo providerInfo;
-    private Instant createdAt;
+    private final AccountId id;
+    private final AccountName name;
+    private final String email;
+    private final String profile;
+    private final ProviderInfo providerInfo;
+    private final Instant createdAt;
 
     @Builder
     private Account(AccountId id, AccountName name, String email, String profile, long providerKey,

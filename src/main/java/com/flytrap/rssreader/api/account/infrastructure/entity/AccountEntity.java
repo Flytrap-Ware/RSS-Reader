@@ -53,7 +53,7 @@ public class AccountEntity {
         this.authProvider = authProvider;
     }
 
-    public Account toDomain() {
+    public Account toReadOnly() {
         return Account.of(this.id, this.name, this.email, this.profile, this.providerKey, this.authProvider, this.createdAt);
     }
 

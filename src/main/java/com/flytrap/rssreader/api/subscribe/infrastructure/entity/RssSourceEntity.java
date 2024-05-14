@@ -3,6 +3,7 @@ package com.flytrap.rssreader.api.subscribe.infrastructure.entity;
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.parser.dto.RssSourceData;
+import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -56,37 +57,37 @@ public class RssSourceEntity {
                 .build();
     }
 
-    public static RssSourceEntity from(RssSource subscribe) {
+    public static RssSourceEntity from(RssSource rssSource) {
         return RssSourceEntity.builder()
-            .id(subscribe.getId())
-            .title(subscribe.getTitle())
-            .url(subscribe.getUrl())
-            .platform(subscribe.getPlatform())
+            .id(rssSource.getId().value())
+            .title(rssSource.getTitle())
+            .url(rssSource.getUrl())
+            .platform(rssSource.getPlatform())
             .build();
     }
 
     /**
-     * 이 SubscribeEntity를 새로 추가된 구독을 나타내는 Subscribe Domain 객체로 변환합니다.
-     * 이 메서드는 구독이 새로 생성되었다는 것을 나타내는 플래그와 함께 Subscribe 도메인 객체를 초기화합니다.
-     * SubscribeEntity가 데이터베이스에 아직 존재하지 않는 새 구독을 나타낼 때 이 메서드를 사용하세요.
-     * (기존에 존재하던 구독일 경우 toExistingSubscribeDomain()으로 변환하세요.)
+     * 이 RssResourceEntity를 새로 추가된 구독을 나타내는 RssResource Domain 객체로 변환합니다.
+     * 이 메서드는 구독이 새로 생성되었다는 것을 나타내는 플래그와 함께 RssResource 도메인 객체를 초기화합니다.
+     * RssResourceEntity가 데이터베이스에 아직 존재하지 않는 새 구독을 나타낼 때 이 메서드를 사용하세요.
+     * (기존에 존재하던 구독일 경우 toExistingRssResourceDomain()으로 변환하세요.)
      *
-     * @return 새로 추가된 구독 Subscribe Domain 객체
+     * @return 새로 추가된 구독 RssResource Domain 객체
      */
-    public RssSource toNewSubscribeDomain() {
-        return RssSource.of(this.id, this.title, this.url, this.platform, true);
+    public RssSource toNewRssSource() {
+        return RssSource.of(new RssSourceId(this.id), this.title, this.url, this.platform, true);
     }
 
     /**
-     * 이 SubscribeEntity를 기존에 존재하던 구독을 나타내는 Subscribe Domain 객체로 변환합니다.
-     * 이 메서드는 구독이 기존에 존재한다는 것을 나타내는 플래그와 함께 Subscribe 도메인 객체를 초기화합니다.
-     * SubscribeEntity가 데이터베이스에 이미 존재하는 구독을 나타낼 때 이 메서드를 사용하세요.
-     * (새로 추가된 구독일 경우 toNewSubscribeDomain()으로 변환하세요.)
+     * 이 RssResourceEntity를 기존에 존재하던 구독을 나타내는 RssResource Domain 객체로 변환합니다.
+     * 이 메서드는 구독이 기존에 존재한다는 것을 나타내는 플래그와 함께 RssResource 도메인 객체를 초기화합니다.
+     * RssResourceEntity가 데이터베이스에 이미 존재하는 구독을 나타낼 때 이 메서드를 사용하세요.
+     * (새로 추가된 구독일 경우 toNewRssResourceDomain()으로 변환하세요.)
      *
-     * @return 기존에 존재하던 구독 Subscribe Domain 객체
+     * @return 기존에 존재하던 구독 RssResource Domain 객체
      */
-    public RssSource toExistingSubscribeDomain() {
-        return RssSource.of(this.id, this.title, this.url, this.platform, false);
+    public RssSource toExistingRssSource() {
+        return RssSource.of(new RssSourceId(this.id), this.title, this.url, this.platform, false);
     }
 
     public void updateTitle(String title) {

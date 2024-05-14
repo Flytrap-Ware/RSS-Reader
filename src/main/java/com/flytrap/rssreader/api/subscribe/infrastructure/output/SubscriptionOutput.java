@@ -10,7 +10,7 @@ public record SubscriptionOutput(
     String url,
     BlogPlatform platform
 ) {
-    public Subscription toDomain() {
+    public Subscription toReadOnly() {
         return Subscription.builder()
             .id(new SubscriptionId(id))
             .title(title)
