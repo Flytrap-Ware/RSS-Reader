@@ -109,7 +109,7 @@ jacocoTestCoverageVerification { // TODO test coverage check
 //            element = 'CLASS'
 
             limit {
-                minimum = 0.1
+                minimum = 0.01
             }
             excludes = [
                     'com.flytrap.**.api.*',

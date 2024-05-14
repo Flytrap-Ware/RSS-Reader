@@ -1,7 +1,6 @@
 package com.flytrap.rssreader.api.post.presentation.dto.response;
 
 import com.flytrap.rssreader.api.post.domain.Post;
-
 import java.time.Instant;
 import java.util.List;
 
@@ -24,15 +23,15 @@ public record PostResponse(
 
     public static PostResponse from(Post post) {
         return new PostResponse(
-                post.getId(),
+                post.getId().value(),
                 post.getGuid(),
                 post.getTitle(),
                 post.getThumbnailUrl(),
                 post.getDescription(),
                 post.getPubDate(),
                 post.getSubscribeTitle(),
-                post.isOpen(),
-                post.isBookmark()
+                post.getOpen().flag(),
+                post.getBookmark().flag()
         );
     }
 }

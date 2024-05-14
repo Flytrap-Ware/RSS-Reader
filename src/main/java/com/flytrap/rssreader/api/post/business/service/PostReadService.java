@@ -1,47 +1,33 @@
 package com.flytrap.rssreader.api.post.business.service;
 
-
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
-import com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEvent;
+import com.flytrap.rssreader.api.account.domain.AccountId;
+import com.flytrap.rssreader.api.post.business.event.PostOpenEvent;
 import com.flytrap.rssreader.api.post.domain.Post;
-import com.flytrap.rssreader.api.post.infrastructure.output.PostSubscribeCountOutput;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostListReadRepository;
-import com.flytrap.rssreader.global.event.PublishEvent;
-import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.flytrap.rssreader.api.post.domain.PostAggregate;
+import com.flytrap.rssreader.api.post.domain.PostId;
+import com.flytrap.rssreader.api.post.infrastructure.implementation.PostCommand;
+import com.flytrap.rssreader.api.subscribe.domain.RssSource;
+import com.flytrap.rssreader.api.subscribe.infrastructure.implement.RssSourceQuery;
+import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class PostReadService {
 
-    private final PostEntityJpaRepository postEntityJpaRepository;
-    private final PostListReadRepository postListReadRepository;
+    private final PostCommand postCommand;
+    private final RssSourceQuery rssSourceQuery;
+    private final GlobalEventPublisher globalEventPublisher;
 
-    @Transactional(readOnly = true)
-    @PublishEvent(eventType = PostOpenEvent.class,
-            params = "#{T(com.flytrap.rssreader.api.post.business.event.postOpen.PostOpenEventParam).create(#sessionMember.id(), #postId)}")
-    public Post getPost(SessionMember sessionMember, Long postId) {
+    public Post viewPost(AccountId accountId, PostId postId) {
 
-        return postListReadRepository.findById(postId)
-                .orElseThrow(() -> new NoSuchDomainException(Post.class))
-                .toDomain();
+        PostAggregate postAggregate = postCommand.readAggregate(postId, accountId);
+        RssSource rssSource = rssSourceQuery.read(postAggregate.getRssSourceId());
+
+        globalEventPublisher.publish(new PostOpenEvent(postAggregate, accountId));
+
+        return postAggregate.toReadOnly(rssSource);
     }
 
-    @Transactional(readOnly = true)
-    public Map<Long, PostSubscribeCountOutput> countPosts(List<Long> subscribes) {
-        return postEntityJpaRepository.findSubscribeCounts(subscribes).stream()
-                .collect(Collectors.toMap(PostSubscribeCountOutput::getSubscribeId, it -> it));
-    }
-
-    public Post findById(Long postId) {
-        return postEntityJpaRepository.findById(postId)
-                .orElseThrow(() -> new NoSuchDomainException(Post.class))
-                .toDomain();
-    }
 }

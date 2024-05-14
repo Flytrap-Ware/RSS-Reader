@@ -8,7 +8,7 @@ import com.flytrap.rssreader.global.model.DefaultDomain;
 public class ForbiddenAccessFolderException extends ApplicationException {
 
     static {
-        message = "💣 Can not access to Login Folder = %s";
+        message = "💣 Can not access to Folder = %s";
     }
 
     public ForbiddenAccessFolderException(DefaultDomain domain) {
@@ -21,4 +21,5 @@ public class ForbiddenAccessFolderException extends ApplicationException {
     public ForbiddenAccessFolderException(Class<? extends DefaultDomain> domainClass) {
         super(domainClass);
     }
+
 }

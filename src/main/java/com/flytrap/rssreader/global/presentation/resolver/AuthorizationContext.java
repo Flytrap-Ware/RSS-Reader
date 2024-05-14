@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.global.presentation.resolver;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +13,9 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 public class AuthorizationContext {
 
-    private Optional<SessionMember> loginMember;
+    private Optional<AccountCredentials> loginAccount;
 
-    public void setLoginMember(SessionMember member) {
-        this.loginMember = Optional.ofNullable(member);
+    public void setLoginAccount(AccountCredentials accountCredentials) {
+        this.loginAccount = Optional.ofNullable(accountCredentials);
     }
 }

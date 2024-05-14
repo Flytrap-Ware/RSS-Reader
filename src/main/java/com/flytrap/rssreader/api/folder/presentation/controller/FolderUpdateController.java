@@ -1,18 +1,13 @@
 package com.flytrap.rssreader.api.folder.presentation.controller;
 
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
-import com.flytrap.rssreader.api.folder.business.service.FolderSubscribeService;
+import com.flytrap.rssreader.api.account.domain.AccountId;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.business.service.FolderUpdateService;
-import com.flytrap.rssreader.api.folder.business.service.FolderVerifyService;
-import com.flytrap.rssreader.api.folder.domain.Folder;
-import com.flytrap.rssreader.api.folder.domain.FolderSubscribe;
+import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.presentation.controller.swagger.FolderUpdateControllerApi;
-import com.flytrap.rssreader.api.folder.presentation.dto.FolderRequest;
-import com.flytrap.rssreader.api.post.business.facade.OpenCheckFacade;
-import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
-import com.flytrap.rssreader.api.subscribe.business.service.SubscribeService;
-import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
-import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest;
+import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateRequest;
+import com.flytrap.rssreader.api.folder.presentation.dto.FolderUpdateResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import jakarta.validation.Valid;
@@ -32,79 +27,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/folders")
 public class FolderUpdateController implements FolderUpdateControllerApi {
 
-    private final FolderUpdateService folderService;
-    private final FolderVerifyService folderVerifyService;
-    private final SubscribeService subscribeService;
-    private final FolderSubscribeService folderSubscribeService;
-    private final OpenCheckFacade openCheckFacade;
-    private final PostCollectService postCollectService;
+    private final FolderUpdateService folderUpdateService;
 
     @PostMapping
-    public ApplicationResponse<FolderRequest.Response> createFolder(
-            @Valid @RequestBody FolderRequest.CreateRequest request,
-            @Login SessionMember member) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApplicationResponse<FolderUpdateResponse> createNewFolder(
+            @Valid @RequestBody FolderUpdateRequest request,
+            @Login AccountCredentials accountCredentials) {
 
-        Folder newFolder = folderService.createNewFolder(request, member.id());
+        FolderAggregate newFolder = folderUpdateService
+            .createNewFolder(new AccountId(accountCredentials.id().value()), request.name());
 
-        return new ApplicationResponse<>(FolderRequest.Response.from(newFolder));
+        return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
 
     @PatchMapping("/{folderId}")
-    public ApplicationResponse<FolderRequest.Response> updateFolder(
-            @Valid @RequestBody FolderRequest.CreateRequest request,
+    @ResponseStatus(HttpStatus.OK)
+    public ApplicationResponse<FolderUpdateResponse> updateFolder(
+            @Valid @RequestBody FolderUpdateRequest request,
             @PathVariable Long folderId,
-            @Login SessionMember member) {
+            @Login AccountCredentials accountCredentials) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
-        Folder updatedFolder = folderService.updateFolder(request, verifiedFolder, member.id());
+        FolderAggregate folder = folderUpdateService
+            .updateFolder(new AccountId(accountCredentials.id().value()), new FolderId(folderId), request.name());
 
-        return new ApplicationResponse<>(FolderRequest.Response.from(updatedFolder));
+        return new ApplicationResponse<>(FolderUpdateResponse.from(folder));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{folderId}")
-    public ApplicationResponse<String> deleteFolder(
+    public ApplicationResponse<Void> deleteFolder(
             @PathVariable Long folderId,
-            @Login SessionMember member) {
+            @Login AccountCredentials accountCredentials) {
 
-        Folder verifiedFolder = folderVerifyService.getVerifiedOwnedFolder(folderId, member.id());
-        Folder folder = folderService.deleteFolder(verifiedFolder, member.id());
-        folderSubscribeService.unsubscribeAllByFolder(folder);
+        folderUpdateService.deleteFolder(new AccountId(accountCredentials.id().value()), new FolderId(folderId));
 
-        return new ApplicationResponse<>("폴더가 삭제되었습니다 : " + folder.getName());
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{folderId}/rss")
-    public ApplicationResponse<SubscribeRequest.Response> subscribe(
-            @PathVariable Long folderId,
-            @Valid @RequestBody SubscribeRequest.CreateRequest request,
-            @Login SessionMember member) {
-
-        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id());
-        Subscribe subscribe = subscribeService.subscribe(request);
-        folderSubscribeService.folderSubscribe(subscribe, verifiedFolder.getId());
-
-        if (subscribe.isNewSubscribe()) {
-            postCollectService.addNewSubscribeForCollect(subscribe);
-        }
-
-        FolderSubscribe folderSubscribe = FolderSubscribe.from(subscribe);
-        folderSubscribe = openCheckFacade.addUnreadCountInFolderSubscribe(member.id(), subscribe, folderSubscribe);
-
-        return new ApplicationResponse<>(SubscribeRequest.Response.from(folderSubscribe));
-    }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{folderId}/rss/{subscribeId}")
-    public ApplicationResponse<Void> unsubscribe(
-            @PathVariable Long folderId,
-            @PathVariable Long subscribeId,
-            @Login SessionMember member) {
-
-        Folder verifiedFolder = folderVerifyService.getVerifiedAccessableFolder(folderId, member.id());
-        folderSubscribeService.folderUnsubscribe(subscribeId,
-                verifiedFolder.getId());
         return new ApplicationResponse<>(null);
     }
+
 }

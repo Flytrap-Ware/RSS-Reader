@@ -1,8 +1,7 @@
 package com.flytrap.rssreader.api.parser;
 
+import com.flytrap.rssreader.api.parser.dto.RssSourceData;
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
-import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
-import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscribeRequest.CreateRequest;
 import java.io.IOException;
 import java.util.Optional;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,18 +16,18 @@ import org.xml.sax.SAXException;
 @Component
 public class RssSubscribeParser implements RssDocumentParser {
 
-    public Optional<RssSubscribeData> parseRssDocuments(CreateRequest request) {
-        BlogPlatform blogPlatform = BlogPlatform.parseLink(request.blogUrl());
+    public Optional<RssSourceData> parseRssDocuments(String rssUrl) {
+        BlogPlatform blogPlatform = BlogPlatform.parseLink(rssUrl);
 
         try {
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-                .parse(request.blogUrl());
+                .parse(rssUrl);
 
             String rootTagName = document.getDocumentElement().getTagName();
             if (IS_RSS_ROOT_TAG.test(rootTagName)) {
-                return Optional.of(createSubscribeDataFromRss(document, request.blogUrl(), blogPlatform));
+                return Optional.of(createSubscribeDataFromRss(document, rssUrl, blogPlatform));
             } else if (IS_ATOM_ROOT_TAG.test(rootTagName)) {
-                return Optional.of(createSubscribeDataFromAtom(document, request.blogUrl(), blogPlatform));
+                return Optional.of(createSubscribeDataFromAtom(document, rssUrl, blogPlatform));
             } else {
                 throw new ParserConfigurationException();
             }
@@ -39,13 +38,13 @@ public class RssSubscribeParser implements RssDocumentParser {
         }
     }
 
-    private RssSubscribeData createSubscribeDataFromRss(Document document, String url,
+    private RssSourceData createSubscribeDataFromRss(Document document, String url,
         BlogPlatform blogPlatform) {
         Element tag = (Element) document.getElementsByTagName(
                 RssTag.RssSubscribeTag.CHANNEL.getTagName())
             .item(0);
 
-        return new RssSubscribeData(
+        return new RssSourceData(
             getTagValue(tag, RssTag.RssSubscribeTag.TITLE.getTagName()),
             url,
             blogPlatform,
@@ -53,13 +52,13 @@ public class RssSubscribeParser implements RssDocumentParser {
         );
     }
 
-    private RssSubscribeData createSubscribeDataFromAtom(Document document, String url,
+    private RssSourceData createSubscribeDataFromAtom(Document document, String url,
         BlogPlatform blogPlatform) {
         Element tag = (Element) document.getElementsByTagName(
                 RssTag.AtomSubscribeTag.FEED.getTagName())
             .item(0);
 
-        return new RssSubscribeData(
+        return new RssSourceData(
             getTagValue(tag, RssTag.AtomSubscribeTag.TITLE.getTagName()),
             url,
             blogPlatform,
