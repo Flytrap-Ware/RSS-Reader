@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.global.event;
 
+import com.flytrap.rssreader.api.alert.business.event.NewPostAlertEvent;
 import com.flytrap.rssreader.api.post.business.event.PostCollectEvent;
 import com.flytrap.rssreader.api.post.business.event.PostOpenEvent;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,10 @@ public class GlobalEventPublisher {
     }
 
     public void publish(PostCollectEvent event) {
+        eventPublisher.publishEvent(event);
+    }
+
+    public void publish(NewPostAlertEvent event) {
         eventPublisher.publishEvent(event);
     }
 }

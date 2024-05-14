@@ -1,9 +1,11 @@
 package com.flytrap.rssreader.api.alert.infrastructure.entity;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.alert.domain.Alert;
 import com.flytrap.rssreader.api.alert.domain.AlertCreate;
 import com.flytrap.rssreader.api.alert.domain.AlertId;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -63,8 +65,8 @@ public class AlertEntity {
     public Alert toReadOnly() {
         return Alert.builder()
             .id(new AlertId(id))
-            .memberId(memberId)
-            .folderId(folderId)
+            .memberId(new AccountId(memberId))
+            .folderId(new FolderId(folderId))
             .alertPlatform(alertPlatform)
             .webhookUrl(webhookUrl)
             .build();

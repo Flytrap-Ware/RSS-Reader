@@ -2,7 +2,7 @@ package com.flytrap.rssreader.api.shared_member.business.service;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
-import com.flytrap.rssreader.api.folder.domain.FolderDomain;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
@@ -54,7 +54,7 @@ public class SharedMemberService {
             throw new IllegalArgumentException("폴더 주인은 떠날 수 없습니다."); // TODO: 예외 추가하기
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         sharedMemberCommand.deleteBy(folderId, accountId);
 

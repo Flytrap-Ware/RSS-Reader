@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.post.business.service;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
-import com.flytrap.rssreader.api.folder.domain.FolderDomain;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
@@ -35,7 +35,7 @@ public class PostListReadService {
         PostFilter postFilter, Pageable pageable) {
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         return postQuery.readAllByFolder(accountId, folderId, postFilter, pageable);
     }

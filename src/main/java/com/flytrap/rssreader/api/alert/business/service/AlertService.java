@@ -5,16 +5,12 @@ import com.flytrap.rssreader.api.alert.domain.Alert;
 import com.flytrap.rssreader.api.alert.domain.AlertCreate;
 import com.flytrap.rssreader.api.alert.domain.AlertId;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
-import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
-import com.flytrap.rssreader.api.alert.infrastructure.external.AlertSender;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertCommand;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertQuery;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertValidator;
-import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertEntityJpaRepository;
-import com.flytrap.rssreader.api.folder.domain.FolderDomain;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
-import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import java.util.List;
@@ -25,9 +21,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AlertService {
 
-    private final AlertEntityJpaRepository alertRepository;
-    private final List<AlertSender> alertSenders;
-
     private final AlertQuery alertQuery;
     private final AlertCommand alertCommand;
     private final AlertValidator alertValidator;
@@ -36,7 +29,7 @@ public class AlertService {
     public List<Alert> getAlertsByFolder(FolderId folderId, AccountId accountId) {
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         return alertQuery.readAllByFolder(folderId);
     }
@@ -44,7 +37,7 @@ public class AlertService {
     public Alert registerAlert(FolderId folderId, AccountId accountId, String webhookUrl) {
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         AlertPlatform alertPlatform = AlertPlatform.parseWebhookUrl(webhookUrl);
 
@@ -54,29 +47,12 @@ public class AlertService {
     public void removeAlert(FolderId folderId, AccountId accountId, AlertId alertId) {
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         if (!alertValidator.exists(alertId))
             throw new NoSuchDomainException(Alert.class);
 
         alertCommand.delete(alertId);
-    }
-
-    public void sendAlertToPlatform(String folderName, String webhookUrl, List<PostEntity> posts) {
-        AlertPlatform alertPlatform = AlertPlatform.parseWebhookUrl(webhookUrl);
-
-        for (AlertSender alertSender : alertSenders) {
-            if (alertSender.isSupport(alertPlatform)) {
-                alertSender.sendAlert(folderName, webhookUrl, posts);
-            }
-        }
-    }
-
-    public List<Alert> getAlertListBySubscribe(Long subscribeId) {
-        return alertRepository.findAlertsBySubscribeId(subscribeId)
-                .stream()
-                .map(AlertEntity::toReadOnly)
-                .toList();
     }
 
 }

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
-import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
@@ -84,9 +83,6 @@ class PostListReadServiceTest {
             FolderId folderId = new FolderId(1L);
             PostFilter postFilter = new PostFilter(false, null, null, null);
             Pageable pageable = Pageable.ofSize(10);
-            Folder folder = Folder.builder()
-                .id(folderId.value()).isShared(false)
-                .build();
 
             // When
             when(folderValidator.isAccessibleFolder(folderId, accountId))

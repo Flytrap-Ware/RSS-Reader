@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.folder.presentation.dto;
 
 import com.flytrap.rssreader.api.folder.domain.AccessibleFolders;
-import com.flytrap.rssreader.api.folder.domain.FolderDomain;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.folder.domain.SharedStatus;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
@@ -33,7 +33,7 @@ public record MyFoldersResponse(
         List<FolderSubscriptionSummary> blogs,
         List<SharedMemberSummary> invitedMembers
     ) {
-        public static MyFolderSummary from(FolderDomain folder) {
+        public static MyFolderSummary from(Folder folder) {
             return new MyFolderSummary(
                 folder.getId().value(),
                 folder.getName(),
