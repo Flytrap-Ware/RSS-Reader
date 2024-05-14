@@ -10,7 +10,7 @@ public record AlertResponse(
 
     public static AlertResponse from(Alert alert) {
         return new AlertResponse(
-            alert.getId(),
+            alert.getId().value(),
             alert.getAlertPlatform().name(),
             alert.getWebhookUrl());
     }

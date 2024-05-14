@@ -1,4 +1,4 @@
-package com.flytrap.rssreader.api.post.business.service.collect;
+package com.flytrap.rssreader.api.post.infrastructure.system;
 
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import java.util.Deque;

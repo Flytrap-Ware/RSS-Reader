@@ -37,10 +37,6 @@ public class Folder implements DefaultDomain {
                 .build();
     }
 
-    public boolean isOwner(long accountId) { // TODO: 여기서 AccountId를 파라미터로 받기
-        return this.memberId == accountId;
-    }
-
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Folder && ((Folder) obj).getId().equals(this.id);

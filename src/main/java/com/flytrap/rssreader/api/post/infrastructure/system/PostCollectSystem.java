@@ -1,12 +1,13 @@
-package com.flytrap.rssreader.api.post.business.service.collect;
+package com.flytrap.rssreader.api.post.infrastructure.system;
 
-import com.flytrap.rssreader.api.alert.business.event.NewPostAlertEventPublisher;
+import com.flytrap.rssreader.api.alert.business.event.NewPostAlertEvent;
 import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscribeEntityJpaRepository;
+import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,13 +23,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostCollectService { // TODO: infra system으로 내리기. Service에서 Entity를 참조하고 있기 때문
+public class PostCollectSystem {
 
     private final SubscribeCollectionPriorityQueue collectionQueue;
     private final SubscribeEntityJpaRepository subscribeRepository;
     private final PostEntityJpaRepository postRepository;
     private final RssPostParser postParser;
-    private final NewPostAlertEventPublisher newPostAlertEventPublisher;
+    private final GlobalEventPublisher globalEventPublisher;
 
     public void collectPosts(int selectBatchSize) {
         var now = Instant.now();
@@ -53,7 +54,6 @@ public class PostCollectService { // TODO: infra system으로 내리기. Service
         }
     }
 
-    // TODO: Service에서 Entity를 참조하고 있음. 개선하기
     public void enqueueHighPrioritySubscription(SubscribeEntity subscribeEntity) {
         collectionQueue.add(subscribeEntity, CollectPriority.HIGH);
     }
@@ -80,7 +80,7 @@ public class PostCollectService { // TODO: infra system으로 내리기. Service
         }
 
         if (!newPosts.isEmpty()) {
-            newPostAlertEventPublisher.publishNewPostAlertEvent(subscribe, newPosts);
+            globalEventPublisher.publish(new NewPostAlertEvent(subscribe, newPosts));
         }
 
         return collectedPosts;
