@@ -51,7 +51,7 @@ public class PostReadServiceTest {
             PostAggregate postAggregate = PostAggregate.builder()
                 .id(postId).rssSourceId(rssSourceId).build();
             RssSource rssSource = RssSource.builder()
-                .id(rssSourceId.value()).build();
+                .id(rssSourceId).build();
 
             // When
             when(postCommand.readAggregate(postId, accountId))

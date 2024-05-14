@@ -64,7 +64,7 @@ public class PostAggregate implements DefaultDomain {
     }
 
     public Post toReadOnly(RssSource rssSource) {
-        if (!Objects.equals(rssSource.getId(), rssSourceId.value())) {
+        if (!Objects.equals(rssSource.getId().value(), rssSourceId.value())) {
             throw new InconsistentDomainException(PostAggregate.class);
         }
 
