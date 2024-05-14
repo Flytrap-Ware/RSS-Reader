@@ -1,7 +1,11 @@
 package com.flytrap.rssreader.api.alert.infrastructure.entity;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.alert.domain.Alert;
+import com.flytrap.rssreader.api.alert.domain.AlertCreate;
+import com.flytrap.rssreader.api.alert.domain.AlertId;
 import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,8 +31,8 @@ public class AlertEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @Column(name = "account_id", nullable = false)
+    private Long accountId;
 
     @Column(name = "folder_id", nullable = false)
     private Long folderId;
@@ -40,30 +44,29 @@ public class AlertEntity {
     private String webhookUrl;
 
     @Builder
-    protected AlertEntity(Long id, Long memberId, Long folderId, AlertPlatform alertPlatform,
+    protected AlertEntity(Long id, Long accountId, Long folderId, AlertPlatform alertPlatform,
         String webhookUrl) {
         this.id = id;
-        this.memberId = memberId;
+        this.accountId = accountId;
         this.folderId = folderId;
         this.alertPlatform = alertPlatform;
         this.webhookUrl = webhookUrl;
     }
 
-    public static AlertEntity create(Long memberId, Long folderId, AlertPlatform alertPlatform,
-        String webhookUrl) {
+    public static AlertEntity from(AlertCreate alertCreate) {
         return AlertEntity.builder()
-            .memberId(memberId)
-            .folderId(folderId)
-            .alertPlatform(alertPlatform)
-            .webhookUrl(webhookUrl)
+            .accountId(alertCreate.accountId().value())
+            .folderId(alertCreate.folderId().value())
+            .alertPlatform(alertCreate.alertPlatform())
+            .webhookUrl(alertCreate.webhookUrl())
             .build();
     }
 
-    public Alert toDomain() {
+    public Alert toReadOnly() {
         return Alert.builder()
-            .id(id)
-            .memberId(memberId)
-            .folderId(folderId)
+            .id(new AlertId(id))
+            .accountId(new AccountId(accountId))
+            .folderId(new FolderId(folderId))
             .alertPlatform(alertPlatform)
             .webhookUrl(webhookUrl)
             .build();

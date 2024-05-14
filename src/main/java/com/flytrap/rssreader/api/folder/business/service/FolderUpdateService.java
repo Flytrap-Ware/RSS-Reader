@@ -1,50 +1,49 @@
 package com.flytrap.rssreader.api.folder.business.service;
 
+import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
-import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
-import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
-import com.flytrap.rssreader.api.folder.presentation.dto.FolderRequest;
-import jakarta.validation.Valid;
+import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
+import com.flytrap.rssreader.api.folder.domain.FolderCreate;
+import com.flytrap.rssreader.api.folder.domain.FolderId;
+import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
+import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
+import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class FolderUpdateService {
 
-    private final FolderEntityJpaRepository repository;
+    private final FolderValidator folderValidator;
+    private final FolderCommand folderCommand;
 
-    public Folder createNewFolder(@Valid FolderRequest.CreateRequest request, long member) {
-        Folder folder = Folder.create(request.name(), member);
-        return repository.save(FolderEntity.from(folder)).toDomain();
+    public FolderAggregate createNewFolder(AccountId accountId, String folderName) {
+        FolderCreate folderCreate = FolderCreate.builder()
+            .name(folderName)
+            .ownerId(accountId)
+            .build();
+
+        return folderCommand.create(folderCreate);
     }
 
-    @Transactional
-    public Folder updateFolder(FolderRequest.CreateRequest request, Folder folder, long memberId) {
-        folder.updateName(request.name());
+    public FolderAggregate updateFolder(AccountId accountId, FolderId folderId, String folderName) {
+        if (!folderValidator.isMyOwnFolder(folderId, accountId))
+            throw new ForbiddenAccessFolderException(Folder.class);
 
-        return repository.save(FolderEntity.from(folder)).toDomain();
+        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+        folderAggregate.changeName(folderName);
+
+        return folderCommand.update(folderAggregate);
     }
 
-    @Transactional
-    public Folder deleteFolder(Folder folder, long id) {
-        folder.delete();
+    public void deleteFolder(AccountId accountId, FolderId folderId) {
+        if (!folderValidator.isMyOwnFolder(folderId, accountId))
+            throw new ForbiddenAccessFolderException(Folder.class);
 
-        return repository.save(FolderEntity.from(folder)).toDomain();
+        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+
+        folderCommand.delete(folderAggregate);
     }
 
-    public void shareFolder(Folder folder) {
-        if (!folder.isShared()) {
-            folder.toShare();
-            repository.save(FolderEntity.from(folder));
-        }
-    }
-
-    public void makePrivate(Folder folder) {
-        if (folder.isShared()) {
-            folder.toPrivate();
-            repository.save(FolderEntity.from(folder));
-        }
-    }
 }

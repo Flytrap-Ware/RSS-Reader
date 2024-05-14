@@ -1,11 +1,11 @@
 package com.flytrap.rssreader.api.auth.business.service;
 
-import com.flytrap.rssreader.api.member.business.service.MemberService;
-import com.flytrap.rssreader.api.member.domain.Member;
+import com.flytrap.rssreader.api.account.business.service.AccountService;
+import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.auth.infrastructure.external.provider.AuthProvider;
+import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.global.properties.AuthProperties;
 import com.flytrap.rssreader.api.auth.presentation.dto.Login;
-import com.flytrap.rssreader.api.auth.presentation.dto.SessionMember;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,22 +15,21 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final AuthProperties authProperties;
-
     private final AuthProvider authProvider;
-    private final MemberService memberService;
+    private final AccountService accountService;
 
-    public Member doAuthentication(Login request) {
+    public Account doAuthentication(Login request) {
         return authProvider.requestAccessToken(request.code())
                 .flatMap(authProvider::requestUserResource)
-                .map(memberService::loginMember)
+                .map(accountService::login)
                 .block();
     }
 
-    public void login(Member member, HttpSession session) {
-        session.setAttribute(authProperties.sessionId(), SessionMember.from(member));
+    public void login(Account account, HttpSession session) {
+        session.setAttribute(authProperties.sessionId(), AccountCredentials.from(account));
     }
 
-    public void logout(HttpSession session) {
+    public void signOut(HttpSession session) {
         session.invalidate();
     }
 }

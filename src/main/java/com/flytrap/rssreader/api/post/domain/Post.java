@@ -1,37 +1,30 @@
 package com.flytrap.rssreader.api.post.domain;
 
-import com.flytrap.rssreader.global.model.DefaultDomain;
 import com.flytrap.rssreader.global.model.Domain;
-import lombok.AccessLevel;
+import com.flytrap.rssreader.global.model.DefaultDomain;
+import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 
 @Getter
 @Domain(name = "post")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post implements DefaultDomain {
 
-    private Long id;
-    private Long subscribeId;
-    private String guid;
-    private String title;
-    private String thumbnailUrl;
-    private String description;
-    private Instant pubDate;
-    private String subscribeTitle;
-    private boolean open;
-    private boolean bookmark;
-    // TODO: react
+    private final PostId id;
+    private final String guid;
+    private final String title;
+    private final String thumbnailUrl;
+    private final String description;
+    private final Instant pubDate;
+    private final String subscribeTitle;
+    private final Open open;
+    private final Bookmark bookmark;
 
     @Builder
-    protected Post(Long id, Long subscribeId, String guid, String title, String thumbnailUrl,
-                   String description, Instant pubDate, String subscribeTitle, boolean open,
-                   boolean bookmark) {
+    protected Post(PostId id, String guid, String title, String thumbnailUrl,
+        String description, Instant pubDate, String subscribeTitle, Open open,
+        Bookmark bookmark) {
         this.id = id;
-        this.subscribeId = subscribeId;
         this.guid = guid;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;

@@ -18,4 +18,5 @@ public class NoSuchDomainException extends ApplicationException {
     public NoSuchDomainException(Class<? extends DefaultDomain> domainClass) {
         super(domainClass);
     }
+
 }

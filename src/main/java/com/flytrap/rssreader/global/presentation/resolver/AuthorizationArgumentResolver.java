@@ -26,9 +26,9 @@ public class AuthorizationArgumentResolver implements HandlerMethodArgumentResol
         Login parameterAnnotation = parameter.getParameterAnnotation(Login.class);
 
         if (parameterAnnotation != null && parameterAnnotation.required()) {
-            return context.getLoginMember().orElseThrow(() -> new AuthenticationException("로그인이 필요한 기능입니다."));
+            return context.getLoginAccount().orElseThrow(() -> new AuthenticationException("로그인이 필요한 기능입니다."));
         }
 
-        return context.getLoginMember().get();
+        return context.getLoginAccount().get();
     }
 }

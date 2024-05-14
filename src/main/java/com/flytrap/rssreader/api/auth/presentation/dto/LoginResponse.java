@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.auth.presentation.dto;
 
 
-import com.flytrap.rssreader.api.member.domain.Member;
+import com.flytrap.rssreader.api.account.domain.Account;
 
 public record LoginResponse(
     long id,
@@ -9,7 +9,7 @@ public record LoginResponse(
     String profile
 ) {
 
-    public static LoginResponse from(Member member) {
-        return new LoginResponse(member.getId(), member.getName(), member.getProfile());
+    public static LoginResponse from(Account member) {
+        return new LoginResponse(member.getId().value(), member.getName().value(), member.getProfile());
     }
 }
