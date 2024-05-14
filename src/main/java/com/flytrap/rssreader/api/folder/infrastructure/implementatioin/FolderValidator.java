@@ -18,14 +18,14 @@ public class FolderValidator {
     @Transactional(readOnly = true)
     public boolean isAccessibleFolder(FolderId folderId, AccountId accountId) {
         return folderJpaRepository
-            .existsByIdAndMemberIdAndIsDeletedFalse(folderId.value(), accountId.value())
+            .existsByIdAndAccountIdAndIsDeletedFalse(folderId.value(), accountId.value())
             || sharedMemberJpaRepository
-            .existsByFolderIdAndMemberId(folderId.value(), accountId.value());
+            .existsByFolderIdAndAccountId(folderId.value(), accountId.value());
     }
 
     @Transactional(readOnly = true)
     public boolean isMyOwnFolder(FolderId folderId, AccountId accountId) {
-        return folderJpaRepository.existsByIdAndMemberIdAndIsDeletedFalse(folderId.value(),
+        return folderJpaRepository.existsByIdAndAccountIdAndIsDeletedFalse(folderId.value(),
             accountId.value());
     }
 

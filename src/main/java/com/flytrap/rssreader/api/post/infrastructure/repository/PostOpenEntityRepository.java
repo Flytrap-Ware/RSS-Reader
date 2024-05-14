@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostOpenEntityRepository extends JpaRepository<OpenEntity, Long> {
 
-    boolean existsByMemberIdAndPostId(Long memberId, Long postId);
+    boolean existsByAccountIdAndPostId(Long accountId, Long postId);
 
-    void deleteByMemberIdAndPostId(long memberId, Long postId);
+    void deleteByAccountIdAndPostId(long memberId, Long postId);
 }

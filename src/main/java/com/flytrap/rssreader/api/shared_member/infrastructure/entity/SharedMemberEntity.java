@@ -4,6 +4,7 @@ import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMemberCreate;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMemberId;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,31 +19,35 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "folder_member")
-public class FolderMemberEntity {
+@Table(name = "shared_member")
+public class SharedMemberEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "folder_id", nullable = false)
     private Long folderId;
-    private Long memberId;
+
+    @Column(name = "account_id", nullable = false)
+    private Long accountId;
 
     @Builder
-    protected FolderMemberEntity(Long id, Long folderId, Long memberId) {
+    protected SharedMemberEntity(Long id, Long folderId, Long accountId) {
         this.id = id;
         this.folderId = folderId;
-        this.memberId = memberId;
+        this.accountId = accountId;
     }
 
-    public static FolderMemberEntity from(SharedMemberCreate sharedMemberCreate) {
-        return FolderMemberEntity.builder()
+    public static SharedMemberEntity from(SharedMemberCreate sharedMemberCreate) {
+        return SharedMemberEntity.builder()
             .folderId(sharedMemberCreate.folderId().value())
-            .memberId(sharedMemberCreate.inviteeId().value())
+            .accountId(sharedMemberCreate.inviteeId().value())
             .build();
     }
 
     public SharedMember toReadOnly(Account account) {
-        if (!Objects.equals(account.getId().value(), memberId)) {
+        if (!Objects.equals(account.getId().value(), accountId)) {
             throw new RuntimeException("정합성 일치하지 않음.");
         }
 

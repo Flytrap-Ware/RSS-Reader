@@ -14,15 +14,15 @@ import lombok.ToString;
 public class Alert  implements DefaultDomain {
 
     private final AlertId id;
-    private final AccountId memberId;
+    private final AccountId accountId;
     private final FolderId folderId;
     private final AlertPlatform alertPlatform;
     private final String webhookUrl;
 
     @Builder
-    protected Alert(AlertId id, AccountId memberId, FolderId folderId, AlertPlatform alertPlatform, String webhookUrl) {
+    protected Alert(AlertId id, AccountId accountId, FolderId folderId, AlertPlatform alertPlatform, String webhookUrl) {
         this.id = id;
-        this.memberId = memberId;
+        this.accountId = accountId;
         this.folderId = folderId;
         this.alertPlatform = alertPlatform;
         this.webhookUrl = webhookUrl;

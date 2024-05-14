@@ -13,9 +13,9 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 public class AuthorizationContext {
 
-    private Optional<AccountCredentials> loginMember;
+    private Optional<AccountCredentials> loginAccount;
 
-    public void setLoginMember(AccountCredentials member) {
-        this.loginMember = Optional.ofNullable(member);
+    public void setLoginAccount(AccountCredentials accountCredentials) {
+        this.loginAccount = Optional.ofNullable(accountCredentials);
     }
 }

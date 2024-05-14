@@ -27,8 +27,8 @@ public class AlertSendSystem {
         }
     }
 
-    public List<Alert> getAlertListBySubscribe(Long subscribeId) {
-        return alertRepository.findAlertsBySubscribeId(subscribeId)
+    public List<Alert> getAlertListByRssSource(Long rssSourceId) {
+        return alertRepository.findAlertsByRssSourceId(rssSourceId)
             .stream()
             .map(AlertEntity::toReadOnly)
             .toList();

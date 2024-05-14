@@ -2,7 +2,7 @@ package com.flytrap.rssreader.fixture;
 
 import com.flytrap.rssreader.api.account.domain.AuthProvider;
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
-import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import java.time.Instant;
 
 public class FixtureFields {
@@ -75,6 +75,6 @@ public class FixtureFields {
         public static String guid = GUID;
         public static String title = TITLE;
         public static String description = DESCRIPTION;
-        public static SubscribeEntity subscribe = FixtureFactory.generateSubscribeEntity();
+        public static RssSourceEntity subscribe = FixtureFactory.generateSubscribeEntity();
     }
 }

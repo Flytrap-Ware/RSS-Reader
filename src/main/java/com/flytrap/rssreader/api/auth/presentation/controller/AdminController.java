@@ -33,7 +33,7 @@ public class AdminController implements AdminControllerApi {
             throws AuthenticationException {
 
         if (request.code().equals(properties.code())) {
-            session.setAttribute(authProperties.sessionId(), AccountCredentials.from(properties.getMember()));
+            session.setAttribute(authProperties.sessionId(), AccountCredentials.from(properties.getAccount()));
             log.info("🙌 admin login success");
 
             return new ApplicationResponse<>(

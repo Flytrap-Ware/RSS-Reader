@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.folder.infrastructure.repository;
 
 import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderEntity.folderEntity;
-import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
+import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QSharedMemberEntity.sharedMemberEntity;
 
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -22,10 +22,10 @@ public class FolderEntityDslRepository {
         return queryFactory
             .select(folderEntity)
             .from(folderEntity)
-            .leftJoin(folderMemberEntity)
-            .on(folderEntity.id.eq(folderMemberEntity.folderId))
-            .where(folderEntity.memberId.eq(accountId)
-                .or(folderMemberEntity.memberId.eq(accountId))
+            .leftJoin(sharedMemberEntity)
+            .on(folderEntity.id.eq(sharedMemberEntity.folderId))
+            .where(folderEntity.accountId.eq(accountId)
+                .or(sharedMemberEntity.accountId.eq(accountId))
                 .and(folderEntity.isDeleted.eq(false)))
             .fetch();
     }

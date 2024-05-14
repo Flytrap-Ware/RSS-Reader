@@ -4,9 +4,9 @@ import static com.flytrap.rssreader.api.folder.infrastructure.entity.QFolderEnti
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QBookmarkEntity.bookmarkEntity;
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QOpenEntity.openEntity;
 import static com.flytrap.rssreader.api.post.infrastructure.entity.QPostEntity.postEntity;
-import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
-import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QFolderSubscribeEntity.folderSubscribeEntity;
-import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QSubscribeEntity.subscribeEntity;
+import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QSharedMemberEntity.sharedMemberEntity;
+import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QRssSourceEntity.rssSourceEntity;
+import static com.flytrap.rssreader.api.subscribe.infrastructure.entity.QSubscriptionEntity.subscriptionEntity;
 
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSummaryOutput;
@@ -48,16 +48,16 @@ public class PostListReadDslRepository implements PostListReadRepository {
         BooleanBuilder builder = new BooleanBuilder();
         builder
             .and(folderEntity.isDeleted.eq(false))
-            .and(folderEntity.memberId.eq(accountId))
-            .or(folderMemberEntity.memberId.eq(accountId));
+            .and(folderEntity.accountId.eq(accountId))
+            .or(sharedMemberEntity.accountId.eq(accountId));
 
         addFilterCondition(builder, postFilter, accountId);
 
         return initFindAllQuery()
-            .join(folderSubscribeEntity)
-            .on(subscribeEntity.id.eq(folderSubscribeEntity.subscribeId))
-            .join(folderEntity).on(folderSubscribeEntity.folderId.eq(folderEntity.id))
-            .leftJoin(folderMemberEntity).on(folderEntity.id.eq(folderMemberEntity.folderId))
+            .join(subscriptionEntity)
+            .on(rssSourceEntity.id.eq(subscriptionEntity.rssSourceId))
+            .join(folderEntity).on(subscriptionEntity.folderId.eq(folderEntity.id))
+            .leftJoin(sharedMemberEntity).on(folderEntity.id.eq(sharedMemberEntity.folderId))
             .where(builder)
             .orderBy(postEntity.pubDate.desc())
             .offset(pageable.getOffset())
@@ -70,13 +70,13 @@ public class PostListReadDslRepository implements PostListReadRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder
-            .and(folderSubscribeEntity.folderId.eq(folderId));
+            .and(subscriptionEntity.folderId.eq(folderId));
 
         addFilterCondition(builder, postFilter, accountId);
 
         return initFindAllQuery()
-            .join(folderSubscribeEntity)
-            .on(subscribeEntity.id.eq(folderSubscribeEntity.subscribeId))
+            .join(subscriptionEntity)
+            .on(rssSourceEntity.id.eq(subscriptionEntity.rssSourceId))
             .where(builder)
             .orderBy(postEntity.pubDate.desc())
             .offset(pageable.getOffset())
@@ -89,7 +89,7 @@ public class PostListReadDslRepository implements PostListReadRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder
-            .and(postEntity.subscriptionId.eq(subscribeId));
+            .and(postEntity.rssSourceId.eq(subscribeId));
 
         addFilterCondition(builder, postFilter, accountId);
 
@@ -106,7 +106,7 @@ public class PostListReadDslRepository implements PostListReadRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder
-            .and(bookmarkEntity.memberId.eq(accountId));
+            .and(bookmarkEntity.accountId.eq(accountId));
 
         addFilterCondition(builder, postFilter, accountId);
 
@@ -123,19 +123,19 @@ public class PostListReadDslRepository implements PostListReadRepository {
             .selectDistinct(
                 Projections.constructor(PostSummaryOutput.class,
                     postEntity.id,
-                    postEntity.subscriptionId,
+                    postEntity.rssSourceId,
                     postEntity.guid,
                     postEntity.title,
                     postEntity.thumbnailUrl,
                     postEntity.description,
                     postEntity.pubDate,
-                    subscribeEntity.title,
+                    rssSourceEntity.title,
                     Expressions.booleanTemplate("{0} is not null", openEntity.id),
                     Expressions.booleanTemplate("{0} is not null", bookmarkEntity.id)
                 )
             )
             .from(postEntity)
-            .join(subscribeEntity).on(postEntity.subscriptionId.eq(subscribeEntity.id))
+            .join(rssSourceEntity).on(postEntity.rssSourceId.eq(rssSourceEntity.id))
             .leftJoin(openEntity).on(postEntity.id.eq(openEntity.postId))
             .leftJoin(bookmarkEntity).on(postEntity.id.eq(bookmarkEntity.postId));
     }
@@ -143,8 +143,8 @@ public class PostListReadDslRepository implements PostListReadRepository {
     private void addFilterCondition(BooleanBuilder builder, PostFilter postFilter, long accountId) {
 
         builder
-            .and(openEntity.memberId.eq(accountId).or(openEntity.memberId.isNull()))
-            .and(bookmarkEntity.memberId.eq(accountId).or(bookmarkEntity.memberId.isNull()));
+            .and(openEntity.accountId.eq(accountId).or(openEntity.accountId.isNull()))
+            .and(bookmarkEntity.accountId.eq(accountId).or(bookmarkEntity.accountId.isNull()));
 
         if (postFilter.hasKeyword()) {
             builder

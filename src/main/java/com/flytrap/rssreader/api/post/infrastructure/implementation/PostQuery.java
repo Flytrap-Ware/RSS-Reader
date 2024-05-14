@@ -13,10 +13,10 @@ import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJp
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostListReadRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenEntityRepository;
-import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
-import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
-import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
-import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscribeEntityJpaRepository;
+import com.flytrap.rssreader.api.subscribe.domain.RssSource;
+import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,22 +32,23 @@ public class PostQuery {
     private final BookmarkEntityJpaRepository bookmarkEntityJpaRepository;
     private final PostOpenEntityRepository postOpenEntityRepository;
     private final PostListReadRepository postListReadRepository;
-    private final SubscribeEntityJpaRepository subscriptionEntityJpaRepository;
+    private final RssResourceJpaRepository subscriptionEntityJpaRepository;
 
     @Transactional(readOnly = true)
     public Post read(PostId postId, AccountId accountId) {
 
         PostEntity postEntity = postEntityJpaRepository.findById(postId.value())
             .orElseThrow(() -> new NoSuchDomainException(Post.class));
-        SubscribeEntity subscribeEntity = subscriptionEntityJpaRepository.findById(
+        RssSourceEntity rssSourceEntity = subscriptionEntityJpaRepository.findById(
                 postEntity.getId())
-            .orElseThrow(() -> new NoSuchDomainException(Subscribe.class));
-        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(
+            .orElseThrow(() -> new NoSuchDomainException(RssSource.class));
+        boolean isRead = postOpenEntityRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
-        boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(
+        boolean isBookmark = bookmarkEntityJpaRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
 
-        return postEntity.toDomain(Open.from(isRead), Bookmark.from(isBookmark), subscribeEntity);
+        return postEntity.toDomain(Open.from(isRead), Bookmark.from(isBookmark),
+            rssSourceEntity);
     }
 
     @Transactional(readOnly = true)
@@ -67,10 +68,10 @@ public class PostQuery {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> readAllBySubscription(AccountId accountId, SubscriptionId subscriptionId,
+    public List<Post> readAllBySubscription(AccountId accountId, RssSourceId rssSourceId,
         PostFilter postFilter, Pageable pageable) {
         return postListReadRepository.findAllBySubscription(accountId.value(),
-                subscriptionId.value(), postFilter, pageable).stream()
+                rssSourceId.value(), postFilter, pageable).stream()
             .map(PostSummaryOutput::toDomain).toList();
     }
 

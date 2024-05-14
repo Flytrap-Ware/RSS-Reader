@@ -15,7 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "member")
+@Table(name = "account")
 @EntityListeners(AuditingEntityListener.class)
 public class AccountEntity {
 

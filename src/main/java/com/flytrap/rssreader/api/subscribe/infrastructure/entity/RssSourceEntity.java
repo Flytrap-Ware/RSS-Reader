@@ -1,8 +1,8 @@
 package com.flytrap.rssreader.api.subscribe.infrastructure.entity;
 
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
-import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
-import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
+import com.flytrap.rssreader.api.subscribe.domain.RssSource;
+import com.flytrap.rssreader.api.parser.dto.RssSourceData;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "rss_subscribe")
-public class SubscribeEntity {
+@Table(name = "rss_source")
+public class RssSourceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +40,7 @@ public class SubscribeEntity {
     private Instant lastCollectedAt;
 
     @Builder
-    protected SubscribeEntity(Long id, String title, String url,
+    protected RssSourceEntity(Long id, String title, String url,
             BlogPlatform platform) {
         this.id = id;
         this.title = title;
@@ -48,16 +48,16 @@ public class SubscribeEntity {
         this.platform = platform;
     }
 
-    public static SubscribeEntity from(RssSubscribeData rssSubscribeData) {
-        return SubscribeEntity.builder()
-                .title(rssSubscribeData.title())
-                .url(rssSubscribeData.url())
-                .platform(rssSubscribeData.platform())
+    public static RssSourceEntity from(RssSourceData rssSourceData) {
+        return RssSourceEntity.builder()
+                .title(rssSourceData.title())
+                .url(rssSourceData.url())
+                .platform(rssSourceData.platform())
                 .build();
     }
 
-    public static SubscribeEntity from(Subscribe subscribe) {
-        return SubscribeEntity.builder()
+    public static RssSourceEntity from(RssSource subscribe) {
+        return RssSourceEntity.builder()
             .id(subscribe.getId())
             .title(subscribe.getTitle())
             .url(subscribe.getUrl())
@@ -73,8 +73,8 @@ public class SubscribeEntity {
      *
      * @return 새로 추가된 구독 Subscribe Domain 객체
      */
-    public Subscribe toNewSubscribeDomain() {
-        return Subscribe.of(this.id, this.title, this.url, this.platform, true);
+    public RssSource toNewSubscribeDomain() {
+        return RssSource.of(this.id, this.title, this.url, this.platform, true);
     }
 
     /**
@@ -85,8 +85,8 @@ public class SubscribeEntity {
      *
      * @return 기존에 존재하던 구독 Subscribe Domain 객체
      */
-    public Subscribe toExistingSubscribeDomain() {
-        return Subscribe.of(this.id, this.title, this.url, this.platform, false);
+    public RssSource toExistingSubscribeDomain() {
+        return RssSource.of(this.id, this.title, this.url, this.platform, false);
     }
 
     public void updateTitle(String title) {

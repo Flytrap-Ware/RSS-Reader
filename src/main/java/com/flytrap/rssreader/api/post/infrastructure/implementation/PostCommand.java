@@ -26,9 +26,9 @@ public class PostCommand {
     @Transactional(readOnly = true)
     public PostAggregate readAggregate(PostId postId, AccountId accountId) {
 
-        boolean isRead = postOpenEntityRepository.existsByMemberIdAndPostId(
+        boolean isRead = postOpenEntityRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
-        boolean isBookmark = bookmarkEntityJpaRepository.existsByMemberIdAndPostId(
+        boolean isBookmark = bookmarkEntityJpaRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
 
         return postEntityJpaRepository.findById(postId.value())
@@ -39,10 +39,10 @@ public class PostCommand {
     @Transactional
     public void updateOnlyOpen(PostAggregate postAggregate, AccountId accountId) {
         boolean existOpenInDB = postOpenEntityRepository
-            .existsByMemberIdAndPostId(accountId.value(), postAggregate.getId().value());
+            .existsByAccountIdAndPostId(accountId.value(), postAggregate.getId().value());
         if (existOpenInDB && !postAggregate.isOpened()) {
             postOpenEntityRepository
-                .deleteByMemberIdAndPostId(accountId.value(), postAggregate.getId().value());
+                .deleteByAccountIdAndPostId(accountId.value(), postAggregate.getId().value());
         } else if (!existOpenInDB && postAggregate.isOpened()) {
             OpenEntity openEntity = OpenEntity.from(accountId, postAggregate.getId());
             postOpenEntityRepository.save(openEntity);
@@ -52,10 +52,10 @@ public class PostCommand {
     @Transactional
     public void updateOnlyBookmark(PostAggregate postAggregate, AccountId accountId) {
         boolean existBookmarkInDB = bookmarkEntityJpaRepository
-            .existsByMemberIdAndPostId(accountId.value(), postAggregate.getId().value());
+            .existsByAccountIdAndPostId(accountId.value(), postAggregate.getId().value());
         if (existBookmarkInDB && !postAggregate.isBookmarked()) {
             bookmarkEntityJpaRepository
-                .deleteByMemberIdAndPostId(accountId.value(), postAggregate.getId().value());
+                .deleteByAccountIdAndPostId(accountId.value(), postAggregate.getId().value());
         } else if (!existBookmarkInDB && postAggregate.isBookmarked()) {
             BookmarkEntity bookmarkEntity = BookmarkEntity.create(accountId, postAggregate.getId());
             bookmarkEntityJpaRepository.save(bookmarkEntity);

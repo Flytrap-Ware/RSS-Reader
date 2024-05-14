@@ -1,17 +1,17 @@
 package com.flytrap.rssreader.api.shared_member.infrastructure.repository;
 
-import com.flytrap.rssreader.api.shared_member.infrastructure.entity.FolderMemberEntity;
+import com.flytrap.rssreader.api.shared_member.infrastructure.entity.SharedMemberEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SharedMemberJpaRepository extends JpaRepository<FolderMemberEntity, Long> { // todo : rename to folderMemberJpaRepository
+public interface SharedMemberJpaRepository extends JpaRepository<SharedMemberEntity, Long> {
 
     long countAllByFolderId(long folderId);
 
-    boolean existsByFolderIdAndMemberId(long folderId, long memberId);
+    boolean existsByFolderIdAndAccountId(long folderId, long accountId);
 
-    void deleteByFolderIdAndMemberId(long folderId, long memberId);
+    void deleteByFolderIdAndAccountId(long folderId, long accountId);
 
-    Optional<FolderMemberEntity> findByFolderIdAndMemberId(long folderId, long memberId);
+    Optional<SharedMemberEntity> findByFolderIdAndAccountId(long folderId, long accountId);
 
 }

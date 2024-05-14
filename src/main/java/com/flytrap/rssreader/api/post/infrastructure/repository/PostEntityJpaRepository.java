@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostEntityJpaRepository extends JpaRepository<PostEntity, Long> {
 
-    List<PostEntity> findAllBySubscriptionId(long subscriptionId);
+    List<PostEntity> findAllByRssSourceId(long rssSourceId);
 
 }

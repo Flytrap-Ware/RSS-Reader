@@ -19,14 +19,14 @@ import java.util.List;
 @RequestMapping("/api/members")
 public class AccountController implements AccountControllerApi {
 
-    private final AccountService memberService;
+    private final AccountService accountService;
 
     @GetMapping
     public ApplicationResponse<NameSearchResponse> searchAccountByName(NameSearchRequest nameSearch) {
-        List<AccountSummaryResponse> memberSummaries = memberService.get(new AccountName(nameSearch.name()))
+        List<AccountSummaryResponse> accountSummaries = accountService.get(new AccountName(nameSearch.name()))
                 .stream().map(AccountSummaryResponse::from)
                 .toList();
-        return new ApplicationResponse<>(new NameSearchResponse(memberSummaries));
+        return new ApplicationResponse<>(new NameSearchResponse(accountSummaries));
     }
 
 }

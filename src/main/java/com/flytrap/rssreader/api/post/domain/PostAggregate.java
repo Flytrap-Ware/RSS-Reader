@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.post.domain;
 
-import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
-import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
+import com.flytrap.rssreader.api.subscribe.domain.RssSource;
+import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import com.flytrap.rssreader.global.model.Domain;
 import com.flytrap.rssreader.global.model.NewDefaultDomain;
@@ -20,21 +20,21 @@ public class PostAggregate implements NewDefaultDomain {
     private final String thumbnailUrl;
     private final String description;
     private final Instant pubDate;
-    private final SubscriptionId subscriptionId;
+    private final RssSourceId rssSourceId;
     private Open open;
     private Bookmark bookmark;
 
     @Builder
     protected PostAggregate(PostId id, String guid, String title, String thumbnailUrl,
         String description,
-        Instant pubDate, SubscriptionId subscriptionId, Open open, Bookmark bookmark) {
+        Instant pubDate, RssSourceId rssSourceId, Open open, Bookmark bookmark) {
         this.id = id;
         this.guid = guid;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
         this.description = description;
         this.pubDate = pubDate;
-        this.subscriptionId = subscriptionId;
+        this.rssSourceId = rssSourceId;
         this.open = open;
         this.bookmark = bookmark;
     }
@@ -63,14 +63,14 @@ public class PostAggregate implements NewDefaultDomain {
         this.bookmark = Bookmark.UNMARKED;
     }
 
-    public Post toDomain(Subscribe subscription) {
-        if (!Objects.equals(subscription.getId(), subscriptionId.value())) {
+    public Post toDomain(RssSource rssSource) {
+        if (!Objects.equals(rssSource.getId(), rssSourceId.value())) {
             throw new InconsistentDomainException(PostAggregate.class);
         }
 
         return Post.builder()
             .id(id)
-            .subscribeTitle(subscription.getTitle())
+            .subscribeTitle(rssSource.getTitle())
             .guid(guid)
             .title(title)
             .thumbnailUrl(thumbnailUrl)

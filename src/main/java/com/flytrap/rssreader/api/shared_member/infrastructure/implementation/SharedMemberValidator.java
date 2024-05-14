@@ -16,7 +16,7 @@ public class SharedMemberValidator {
     @Transactional(readOnly = true)
     public boolean existsBy(FolderId folderId, AccountId inviteeId) {
         return sharedMemberJpaRepository
-            .existsByFolderIdAndMemberId(folderId.value(), inviteeId.value());
+            .existsByFolderIdAndAccountId(folderId.value(), inviteeId.value());
     }
 
     @Transactional(readOnly = true)

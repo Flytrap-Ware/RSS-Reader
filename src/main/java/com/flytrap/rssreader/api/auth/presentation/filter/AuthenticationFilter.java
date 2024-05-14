@@ -34,7 +34,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         AccountCredentials attribute = (session != null)
                 ? (AccountCredentials) session.getAttribute(authProperties.sessionId())
                 : null;
-        context.setLoginMember(attribute);
+        context.setLoginAccount(attribute);
 
         chain.doFilter(request, response);
     }

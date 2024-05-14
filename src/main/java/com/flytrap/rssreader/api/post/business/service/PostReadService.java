@@ -6,8 +6,8 @@ import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.infrastructure.implementation.PostCommand;
-import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
-import com.flytrap.rssreader.api.subscribe.infrastructure.implement.SubscriptionReader;
+import com.flytrap.rssreader.api.subscribe.domain.RssSource;
+import com.flytrap.rssreader.api.subscribe.infrastructure.implement.RssSourceQuery;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,17 +17,17 @@ import org.springframework.stereotype.Service;
 public class PostReadService {
 
     private final PostCommand postCommand;
-    private final SubscriptionReader subscriptionReader;
+    private final RssSourceQuery rssSourceQuery;
     private final GlobalEventPublisher globalEventPublisher;
 
     public Post viewPost(AccountId accountId, PostId postId) {
 
         PostAggregate postAggregate = postCommand.readAggregate(postId, accountId);
-        Subscribe subscription = subscriptionReader.read(postAggregate.getSubscriptionId()); // TODO: 도메인 변경하기
+        RssSource rssSource = rssSourceQuery.read(postAggregate.getRssSourceId());
 
         globalEventPublisher.publish(new PostOpenEvent(postAggregate, accountId));
 
-        return postAggregate.toDomain(subscription);
+        return postAggregate.toDomain(rssSource);
     }
 
 }

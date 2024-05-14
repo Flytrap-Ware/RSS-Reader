@@ -10,17 +10,17 @@ import lombok.ToString;
 
 @Getter
 @ToString
-@Domain(name = "folderSubscription")
+@Domain(name = "subscription")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FolderSubscription implements NewDefaultDomain {
+public class Subscription implements NewDefaultDomain {
 
-    private FolderSubscriptionId id;
+    private SubscriptionId id;
     private String title;
     private String url;
     private BlogPlatform platform;
 
     @Builder
-    protected FolderSubscription(FolderSubscriptionId id, String title, String url, BlogPlatform platform) {
+    protected Subscription(SubscriptionId id, String title, String url, BlogPlatform platform) {
         this.id = id;
         this.title = title;
         this.url = url;

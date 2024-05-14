@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.shared_member.infrastructure.repository;
 
 import static com.flytrap.rssreader.api.account.infrastructure.entity.QAccountEntity.accountEntity;
-import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QFolderMemberEntity.folderMemberEntity;
+import static com.flytrap.rssreader.api.shared_member.infrastructure.entity.QSharedMemberEntity.sharedMemberEntity;
 
 import com.flytrap.rssreader.api.shared_member.infrastructure.output.SharedMemberOutput;
 import com.querydsl.core.types.Projections;
@@ -24,15 +24,15 @@ public class SharedMemberDslRepository {
         return queryFactory
             .selectDistinct(
                 Projections.constructor(SharedMemberOutput.class,
-                    folderMemberEntity.id,
+                    sharedMemberEntity.id,
                     accountEntity.id,
                     accountEntity.name,
                     accountEntity.profile
                 )
-            ).from(folderMemberEntity)
+            ).from(sharedMemberEntity)
             .join(accountEntity)
-            .on(folderMemberEntity.memberId.eq(accountEntity.id))
-            .where(folderMemberEntity.folderId.eq(folderId))
+            .on(sharedMemberEntity.accountId.eq(accountEntity.id))
+            .where(sharedMemberEntity.folderId.eq(folderId))
             .fetch();
     }
 

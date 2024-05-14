@@ -1,18 +1,18 @@
 package com.flytrap.rssreader.api.subscribe.infrastructure.output;
 
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
-import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
-import com.flytrap.rssreader.api.subscribe.domain.FolderSubscriptionId;
+import com.flytrap.rssreader.api.subscribe.domain.Subscription;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 
-public record FolderSubscriptionOutput(
+public record SubscriptionOutput(
     long id,
     String title,
     String url,
     BlogPlatform platform
 ) {
-    public FolderSubscription toDomain() {
-        return FolderSubscription.builder()
-            .id(new FolderSubscriptionId(id))
+    public Subscription toDomain() {
+        return Subscription.builder()
+            .id(new SubscriptionId(id))
             .title(title)
             .url(url)
             .platform(platform)

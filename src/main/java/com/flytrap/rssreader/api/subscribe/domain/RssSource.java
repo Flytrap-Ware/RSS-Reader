@@ -10,9 +10,9 @@ import lombok.ToString;
 
 @Getter
 @ToString
-@Domain(name = "subscribe")
+@Domain(name = "rssSource")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Subscribe implements DefaultDomain {
+public class RssSource implements DefaultDomain {
 
     private Long id;
     private String title;
@@ -21,7 +21,7 @@ public class Subscribe implements DefaultDomain {
     private boolean isNewSubscribe;
 
     @Builder
-    protected Subscribe(Long id, String title, String url, BlogPlatform platform, boolean isNewSubscribe) {
+    protected RssSource(Long id, String title, String url, BlogPlatform platform, boolean isNewSubscribe) {
         this.id = id;
         this.title = title;
         this.url = url;
@@ -29,15 +29,15 @@ public class Subscribe implements DefaultDomain {
         this.isNewSubscribe = isNewSubscribe;
     }
 
-    public static Subscribe create(String url) {
-        return Subscribe.builder()
+    public static RssSource create(String url) {
+        return RssSource.builder()
                 .url(url)
                 .isNewSubscribe(true)
                 .build();
     }
 
-    public static Subscribe of(Long id, String title, String url, BlogPlatform platform, boolean isNewSubscribe) {
-        return Subscribe.builder()
+    public static RssSource of(Long id, String title, String url, BlogPlatform platform, boolean isNewSubscribe) {
+        return RssSource.builder()
                 .id(id)
                 .title(title)
                 .url(url)

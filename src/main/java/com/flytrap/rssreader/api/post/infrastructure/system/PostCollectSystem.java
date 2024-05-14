@@ -5,8 +5,8 @@ import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
-import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
-import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscribeEntityJpaRepository;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class PostCollectSystem {
 
     private final SubscribeCollectionPriorityQueue collectionQueue;
-    private final SubscribeEntityJpaRepository subscribeRepository;
+    private final RssResourceJpaRepository rssResourceRepository;
     private final PostEntityJpaRepository postRepository;
     private final RssPostParser postParser;
     private final GlobalEventPublisher globalEventPublisher;
@@ -36,31 +36,32 @@ public class PostCollectSystem {
         var pageable = PageRequest.of(
             0, selectBatchSize,
             Sort.by(Sort.Direction.ASC, "lastCollectedAt"));
-        var subscribes =
-            subscribeRepository.findAll(pageable).getContent();
+        var rssResources =
+            rssResourceRepository.findAll(pageable).getContent();
 
-        collectionQueue.addAll(subscribes, CollectPriority.LOW);
+        collectionQueue.addAll(rssResources, CollectPriority.LOW);
 
         while (!collectionQueue.isQueueEmpty()) {
-            SubscribeEntity subscribe = collectionQueue.poll();
-            postParser.parseRssDocuments(subscribe.getUrl())
+            RssSourceEntity rssResource = collectionQueue.poll();
+            postParser.parseRssDocuments(rssResource.getUrl())
                 .ifPresent(rssPostsData -> {
                     postRepository.saveAll(
-                        generateCollectedPostsForUpsert(rssPostsData, subscribe));
-                    subscribe.updateTitle(rssPostsData.subscribeTitle());
-                    subscribe.updateLastCollectedAt(now);
-                    subscribeRepository.save(subscribe);
+                        generateCollectedPostsForUpsert(rssPostsData, rssResource));
+                    rssResource.updateTitle(rssPostsData.rssSourceTitle());
+                    rssResource.updateLastCollectedAt(now);
+                    rssResourceRepository.save(rssResource);
                 });
         }
     }
 
-    public void enqueueHighPrioritySubscription(SubscribeEntity subscribeEntity) {
-        collectionQueue.add(subscribeEntity, CollectPriority.HIGH);
+    public void enqueueHighPrioritySubscription(RssSourceEntity rssSourceEntity) {
+        collectionQueue.add(rssSourceEntity, CollectPriority.HIGH);
     }
 
     private List<PostEntity> generateCollectedPostsForUpsert(RssPostsData postData,
-        SubscribeEntity subscribe) {
-        List<PostEntity> existingPosts = postRepository.findAllBySubscriptionId(subscribe.getId());
+        RssSourceEntity rssResource) {
+        List<PostEntity> existingPosts = postRepository
+            .findAllByRssSourceId(rssResource.getId());
 
         Map<String, PostEntity> existingPostsMap = convertListToHashSet(existingPosts);
         List<PostEntity> collectedPosts = new ArrayList<>();
@@ -73,14 +74,14 @@ public class PostCollectSystem {
                 post = existingPostsMap.get(itemData.guid());
                 post.updateBy(itemData);
             } else {
-                post = PostEntity.from(itemData, subscribe.getId());
+                post = PostEntity.from(itemData, rssResource.getId());
                 newPosts.add(post);
             }
             collectedPosts.add(post);
         }
 
         if (!newPosts.isEmpty()) {
-            globalEventPublisher.publish(new NewPostAlertEvent(subscribe, newPosts));
+            globalEventPublisher.publish(new NewPostAlertEvent(rssResource, newPosts));
         }
 
         return collectedPosts;

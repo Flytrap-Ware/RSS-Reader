@@ -19,7 +19,7 @@ public class NewPostAlertEventListener {
     @Async
     @EventListener(NewPostAlertEvent.class)
     public void handle(NewPostAlertEvent event) {
-        List<Alert> alerts = alertSendSystem.getAlertListBySubscribe(event.subscribe().getId());
+        List<Alert> alerts = alertSendSystem.getAlertListByRssSource(event.rssSource().getId());
         if (!alerts.isEmpty()) {
             alerts.forEach(alert ->
                 alertSendSystem.sendAlertToPlatform(
