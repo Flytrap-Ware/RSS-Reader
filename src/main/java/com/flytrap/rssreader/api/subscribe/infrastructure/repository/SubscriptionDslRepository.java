@@ -9,6 +9,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -32,6 +33,25 @@ public class SubscriptionDslRepository {
         return fetchOne != null;
     }
 
+    public Optional<SubscriptionOutput> findById(long subscriptionId) {
+        return Optional.of(
+            queryFactory
+                .selectDistinct(
+                    Projections.constructor(SubscriptionOutput.class,
+                        subscriptionEntity.id,
+                        rssSourceEntity.title,
+                        rssSourceEntity.url,
+                        rssSourceEntity.platform,
+                        rssSourceEntity.id
+                    )
+                ).from(subscriptionEntity)
+                .join(rssSourceEntity)
+                .on(subscriptionEntity.rssSourceId.eq(rssSourceEntity.id))
+                .where(subscriptionEntity.id.eq(subscriptionId))
+                .fetchFirst()
+        );
+    }
+
     public List<SubscriptionOutput> findAllByFolder(long folderId) {
         return queryFactory
             .selectDistinct(
@@ -39,7 +59,8 @@ public class SubscriptionDslRepository {
                     subscriptionEntity.id,
                     rssSourceEntity.title,
                     rssSourceEntity.url,
-                    rssSourceEntity.platform
+                    rssSourceEntity.platform,
+                    rssSourceEntity.id
                 )
             ).from(subscriptionEntity)
             .join(rssSourceEntity)

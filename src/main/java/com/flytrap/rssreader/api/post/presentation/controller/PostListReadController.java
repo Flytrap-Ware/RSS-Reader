@@ -7,7 +7,7 @@ import com.flytrap.rssreader.api.post.business.service.PostListReadService;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostListReadControllerApi;
 import com.flytrap.rssreader.api.post.presentation.dto.response.PostResponse;
-import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import java.util.List;
@@ -68,7 +68,7 @@ public class PostListReadController implements PostListReadControllerApi {
         @Login AccountCredentials accountCredentials) {
 
         List<PostResponse> posts = postListReadService.getPostsBySubscription(
-                new AccountId(accountCredentials.id().value()), new RssSourceId(subscriptionId),
+                new AccountId(accountCredentials.id().value()), new SubscriptionId(subscriptionId),
                 postFilter, pageable)
             .stream()
             .map(PostResponse::from)

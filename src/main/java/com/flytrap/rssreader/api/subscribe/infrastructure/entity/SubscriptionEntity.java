@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.subscribe.infrastructure.entity;
 
+import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import com.flytrap.rssreader.api.subscribe.domain.Subscription;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
@@ -48,6 +49,7 @@ public class SubscriptionEntity {
             .url(rssSourceEntity.getUrl())
             .title(rssSourceEntity.getTitle())
             .platform(rssSourceEntity.getPlatform())
+            .rssSourceId(new RssSourceId(rssSourceEntity.getId()))
             .build();
     }
 
