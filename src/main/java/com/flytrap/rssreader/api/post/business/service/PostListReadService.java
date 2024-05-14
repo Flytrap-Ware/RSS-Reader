@@ -7,7 +7,9 @@ import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderVal
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.infrastructure.implementation.PostQuery;
-import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
+import com.flytrap.rssreader.api.subscribe.domain.Subscription;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
+import com.flytrap.rssreader.api.subscribe.infrastructure.implement.SubscriptionQuery;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostListReadService {
 
     private final FolderValidator folderValidator;
+    private final SubscriptionQuery subscriptionQuery;
     private final PostQuery postQuery;
 
     public List<Post> getPostsByAccount(AccountId accountId, PostFilter postFilter,
@@ -38,10 +41,11 @@ public class PostListReadService {
         return postQuery.readAllByFolder(accountId, folderId, postFilter, pageable);
     }
 
-    public List<Post> getPostsBySubscription(AccountId accountId, RssSourceId rssSourceId,
+    public List<Post> getPostsBySubscription(AccountId accountId, SubscriptionId subscriptionId,
         PostFilter postFilter, Pageable pageable) {
+        Subscription subscription = subscriptionQuery.read(subscriptionId);
 
-        return postQuery.readAllBySubscription(accountId, rssSourceId, postFilter, pageable);
+        return postQuery.readAllBySubscription(accountId, subscription.getRssSourceId(), postFilter, pageable);
     }
 
     public List<Post> getBookmarkedPosts(AccountId accountId, PostFilter postFilter,
