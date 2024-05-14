@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.subscribe.infrastructure.entity;
 
-import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
-import com.flytrap.rssreader.api.subscribe.domain.FolderSubscriptionId;
+import com.flytrap.rssreader.api.subscribe.domain.Subscription;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "folder_subscribe")
-public class FolderSubscribeEntity {
+@Table(name = "subscription")
+public class SubscriptionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,27 +28,23 @@ public class FolderSubscribeEntity {
     @Column(name = "folder_id", nullable = false)
     private Long folderId;
 
-    @Column(name = "subscribe_id", nullable = false)
-    private Long subscribeId;
-
-    @Column(length = 2500, nullable = false)
-    private String description; // TODO: RssResource로 옮기기, null 허용하기
+    @Column(name = "rss_source_id", nullable = false)
+    private Long rssSourceId;
 
     @Builder
-    protected FolderSubscribeEntity(Long id, Long folderId, Long subscribeId, String description) {
+    protected SubscriptionEntity(Long id, Long folderId, Long rssSourceId) {
         this.id = id;
         this.folderId = folderId;
-        this.subscribeId = subscribeId;
-        this.description = description;
+        this.rssSourceId = rssSourceId;
     }
 
-    public FolderSubscription toReadOnly(SubscribeEntity rssSourceEntity) {
-        if (!Objects.equals(rssSourceEntity.getId(), subscribeId)) {
-            throw new InconsistentDomainException(this.getClass());
+    public Subscription toReadOnly(RssSourceEntity rssSourceEntity) {
+        if (!Objects.equals(rssSourceEntity.getId(), rssSourceId)) {
+            throw new InconsistentDomainException(Subscription.class);
         }
 
-        return FolderSubscription.builder()
-            .id(new FolderSubscriptionId(id))
+        return Subscription.builder()
+            .id(new SubscriptionId(id))
             .url(rssSourceEntity.getUrl())
             .title(rssSourceEntity.getTitle())
             .platform(rssSourceEntity.getPlatform())

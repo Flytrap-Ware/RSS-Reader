@@ -10,7 +10,7 @@ import java.time.Instant;
 
 public record PostSummaryOutput(
         Long id,
-        Long subscribeId,
+        Long rssSourceId,
         String guid,
         String title,
         String thumbnailUrl,
@@ -19,10 +19,9 @@ public record PostSummaryOutput(
         String subscribeTitle,
         boolean open,
         boolean bookmark
-        // TODO: react 추가하기
 ) {
 
-    public Post toDomain() {
+    public Post toReadOnly() {
         return Post.builder()
                 .id(new PostId(id))
                 .guid(guid)

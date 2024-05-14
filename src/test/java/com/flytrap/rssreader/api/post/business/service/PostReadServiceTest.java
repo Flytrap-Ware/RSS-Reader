@@ -9,9 +9,9 @@ import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.infrastructure.implementation.PostCommand;
-import com.flytrap.rssreader.api.subscribe.domain.Subscribe;
-import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
-import com.flytrap.rssreader.api.subscribe.infrastructure.implement.SubscriptionReader;
+import com.flytrap.rssreader.api.subscribe.domain.RssSource;
+import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
+import com.flytrap.rssreader.api.subscribe.infrastructure.implement.RssSourceQuery;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ public class PostReadServiceTest {
     PostCommand postCommand;
 
     @Mock
-    SubscriptionReader subscriptionReader;
+    RssSourceQuery rssSourceQuery;
 
     @Mock
     GlobalEventPublisher globalEventPublisher;
@@ -47,17 +47,17 @@ public class PostReadServiceTest {
             // Given
             AccountId accountId = new AccountId(1L);
             PostId postId = new PostId(1L);
-            SubscriptionId subscriptionId = new SubscriptionId(1L);
+            RssSourceId rssSourceId = new RssSourceId(1L);
             PostAggregate postAggregate = PostAggregate.builder()
-                .id(postId).subscriptionId(subscriptionId).build();
-            Subscribe subscription = Subscribe.builder()
-                .id(subscriptionId.value()).build();
+                .id(postId).rssSourceId(rssSourceId).build();
+            RssSource rssSource = RssSource.builder()
+                .id(rssSourceId).build();
 
             // When
             when(postCommand.readAggregate(postId, accountId))
                 .thenReturn(postAggregate);
-            when(subscriptionReader.read(subscriptionId))
-                .thenReturn(subscription);
+            when(rssSourceQuery.read(rssSourceId))
+                .thenReturn(rssSource);
 
             // Then
             Post result = postReadService.viewPost(accountId, postId);

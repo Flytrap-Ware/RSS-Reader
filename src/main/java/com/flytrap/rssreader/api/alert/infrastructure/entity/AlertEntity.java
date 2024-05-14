@@ -31,8 +31,8 @@ public class AlertEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @Column(name = "account_id", nullable = false)
+    private Long accountId;
 
     @Column(name = "folder_id", nullable = false)
     private Long folderId;
@@ -44,10 +44,10 @@ public class AlertEntity {
     private String webhookUrl;
 
     @Builder
-    protected AlertEntity(Long id, Long memberId, Long folderId, AlertPlatform alertPlatform,
+    protected AlertEntity(Long id, Long accountId, Long folderId, AlertPlatform alertPlatform,
         String webhookUrl) {
         this.id = id;
-        this.memberId = memberId;
+        this.accountId = accountId;
         this.folderId = folderId;
         this.alertPlatform = alertPlatform;
         this.webhookUrl = webhookUrl;
@@ -55,7 +55,7 @@ public class AlertEntity {
 
     public static AlertEntity from(AlertCreate alertCreate) {
         return AlertEntity.builder()
-            .memberId(alertCreate.accountId().value())
+            .accountId(alertCreate.accountId().value())
             .folderId(alertCreate.folderId().value())
             .alertPlatform(alertCreate.alertPlatform())
             .webhookUrl(alertCreate.webhookUrl())
@@ -65,7 +65,7 @@ public class AlertEntity {
     public Alert toReadOnly() {
         return Alert.builder()
             .id(new AlertId(id))
-            .memberId(new AccountId(memberId))
+            .accountId(new AccountId(accountId))
             .folderId(new FolderId(folderId))
             .alertPlatform(alertPlatform)
             .webhookUrl(webhookUrl)

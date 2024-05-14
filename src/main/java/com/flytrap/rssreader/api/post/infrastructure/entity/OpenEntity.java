@@ -23,22 +23,22 @@ public class OpenEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @Column(name = "account_id", nullable = false)
+    private Long accountId;
 
     @Column(name = "post_id", nullable = false)
     private Long postId;
 
     @Builder
-    protected OpenEntity(Long id, Long memberId, Long postId) {
+    protected OpenEntity(Long id, Long accountId, Long postId) {
         this.id = id;
-        this.memberId = memberId;
+        this.accountId = accountId;
         this.postId = postId;
     }
 
     public static OpenEntity from(AccountId accountId, PostId postId) {
         return OpenEntity.builder()
-            .memberId(accountId.value())
+            .accountId(accountId.value())
             .postId(postId.value())
             .build();
     }

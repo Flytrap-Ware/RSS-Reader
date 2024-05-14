@@ -10,7 +10,7 @@ public record SharedMemberOutput(
     String name,
     String profileUrl
 ) {
-    public SharedMember toDomain() {
+    public SharedMember toReadOnly() {
         return SharedMember.builder()
             .id(new SharedMemberId(id))
             .accountId(new AccountId(accountId))

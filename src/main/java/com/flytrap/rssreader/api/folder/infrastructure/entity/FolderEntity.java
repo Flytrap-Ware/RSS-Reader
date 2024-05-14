@@ -7,7 +7,7 @@ import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.domain.SharedStatus;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
-import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
+import com.flytrap.rssreader.api.subscribe.domain.Subscription;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,17 +32,17 @@ public class FolderEntity {
     @Column(length = 255, nullable = false)
     private String name;
     @Column(nullable = false)
-    private Long memberId;
+    private Long accountId;
     @Column(nullable = false)
     private Boolean isShared;
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
     @Builder
-    public FolderEntity(Long id, String name, Long memberId, Boolean isShared, Boolean isDeleted) {
+    public FolderEntity(Long id, String name, Long accountId, Boolean isShared, Boolean isDeleted) {
         this.id = id;
         this.name = name;
-        this.memberId = memberId;
+        this.accountId = accountId;
         this.isShared = isShared;
         this.isDeleted = isDeleted;
     }
@@ -50,7 +50,7 @@ public class FolderEntity {
     public static FolderEntity from(FolderCreate folderCreate) {
         return FolderEntity.builder()
             .name(folderCreate.getName())
-            .memberId(folderCreate.getOwnerId().value())
+            .accountId(folderCreate.getOwnerId().value())
             .isShared(folderCreate.getSharedStatus().isShared())
             .isDeleted(false)
             .build();
@@ -60,7 +60,7 @@ public class FolderEntity {
         return FolderEntity.builder()
             .id(folderAggregate.getId().value())
             .name(folderAggregate.getName())
-            .memberId(folderAggregate.getOwnerId().value())
+            .accountId(folderAggregate.getOwnerId().value())
             .isShared(folderAggregate.getSharedStatus().isShared())
             .isDeleted(false)
             .build();
@@ -70,19 +70,19 @@ public class FolderEntity {
         return FolderEntity.builder()
             .id(folderAggregate.getId().value())
             .name(folderAggregate.getName())
-            .memberId(folderAggregate.getOwnerId().value())
+            .accountId(folderAggregate.getOwnerId().value())
             .isShared(folderAggregate.getSharedStatus().isShared())
             .isDeleted(true)
             .build();
     }
 
-    public Folder toReadonly(List<FolderSubscription> folderSubscriptions, List<SharedMember> sharedMembers) {
+    public Folder toReadonly(List<Subscription> subscriptions, List<SharedMember> sharedMembers) {
         return Folder.builder()
             .id(new FolderId(id))
             .name(name)
-            .ownerId(new AccountId(memberId))
+            .ownerId(new AccountId(accountId))
             .sharedStatus(SharedStatus.from(isShared))
-            .subscriptions(folderSubscriptions)
+            .subscriptions(subscriptions)
             .sharedMembers(sharedMembers)
             .build();
     }
@@ -91,7 +91,7 @@ public class FolderEntity {
         return FolderAggregate.builder()
             .id(new FolderId(id))
             .name(name)
-            .ownerId(new AccountId(memberId))
+            .ownerId(new AccountId(accountId))
             .sharedStatus(SharedStatus.from(isShared))
             .build();
     }

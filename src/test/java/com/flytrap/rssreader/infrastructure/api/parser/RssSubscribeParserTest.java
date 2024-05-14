@@ -3,7 +3,7 @@ package com.flytrap.rssreader.infrastructure.api.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.flytrap.rssreader.api.parser.RssSubscribeParser;
-import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
+import com.flytrap.rssreader.api.parser.dto.RssSourceData;
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
@@ -25,7 +25,7 @@ class RssSubscribeParserTest {
         RssSubscribeParser rssSubscribeParser = new RssSubscribeParser();
 
         // when
-        Optional<RssSubscribeData> result = rssSubscribeParser.parseRssDocuments(rssUrl);
+        Optional<RssSourceData> result = rssSubscribeParser.parseRssDocuments(rssUrl);
         BlogPlatform blogPlatform = BlogPlatform.parseLink(rssUrl);
 
         // then

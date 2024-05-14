@@ -1,7 +1,8 @@
-package com.flytrap.rssreader.api.account.infrastructure.repository;
+package com.flytrap.rssreader.api.account.infrastructure.implement;
 
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.account.infrastructure.entity.AccountEntity;
+import com.flytrap.rssreader.api.account.infrastructure.repository.AccountJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +10,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AccountCommand {
 
-    private final AccountJpaRepository memberEntityJpaRepository;
+    private final AccountJpaRepository accountJpaRepository;
 
     public Account create(Account account) {
-        return memberEntityJpaRepository.save(AccountEntity.from(account)).toDomain();
+        return accountJpaRepository.save(AccountEntity.from(account)).toReadOnly();
     }
 }

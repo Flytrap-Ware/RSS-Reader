@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.account.domain.AuthProvider;
-import com.flytrap.rssreader.api.account.infrastructure.repository.AccountCommand;
-import com.flytrap.rssreader.api.account.infrastructure.repository.AccountQuery;
+import com.flytrap.rssreader.api.account.infrastructure.implement.AccountCommand;
+import com.flytrap.rssreader.api.account.infrastructure.implement.AccountQuery;
 import com.flytrap.rssreader.fixture.FixtureFactory;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

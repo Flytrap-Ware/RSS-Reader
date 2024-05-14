@@ -16,12 +16,12 @@ public class AuthService {
 
     private final AuthProperties authProperties;
     private final AuthProvider authProvider;
-    private final AccountService memberService;
+    private final AccountService accountService;
 
     public Account doAuthentication(Login request) {
         return authProvider.requestAccessToken(request.code())
                 .flatMap(authProvider::requestUserResource)
-                .map(memberService::login)
+                .map(accountService::login)
                 .block();
     }
 

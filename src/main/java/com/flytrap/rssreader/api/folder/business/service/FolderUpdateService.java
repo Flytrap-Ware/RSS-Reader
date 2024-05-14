@@ -1,11 +1,13 @@
 package com.flytrap.rssreader.api.folder.business.service;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
+import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class FolderUpdateService {
 
     public FolderAggregate updateFolder(AccountId accountId, FolderId folderId, String folderName) {
         if (!folderValidator.isMyOwnFolder(folderId, accountId))
-            throw new IllegalArgumentException("폴더 수정 권한 없음"); // TODO: 예외 만들기
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
         folderAggregate.changeName(folderName);
@@ -37,7 +39,7 @@ public class FolderUpdateService {
 
     public void deleteFolder(AccountId accountId, FolderId folderId) {
         if (!folderValidator.isMyOwnFolder(folderId, accountId))
-            throw new IllegalArgumentException("폴더 수정 권한 없음"); // TODO: 예외 만들기
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
 

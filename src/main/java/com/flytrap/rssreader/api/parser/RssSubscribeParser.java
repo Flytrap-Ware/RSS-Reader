@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.parser;
 
-import com.flytrap.rssreader.api.parser.dto.RssSubscribeData;
+import com.flytrap.rssreader.api.parser.dto.RssSourceData;
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import java.io.IOException;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
 @Component
 public class RssSubscribeParser implements RssDocumentParser {
 
-    public Optional<RssSubscribeData> parseRssDocuments(String rssUrl) {
+    public Optional<RssSourceData> parseRssDocuments(String rssUrl) {
         BlogPlatform blogPlatform = BlogPlatform.parseLink(rssUrl);
 
         try {
@@ -38,13 +38,13 @@ public class RssSubscribeParser implements RssDocumentParser {
         }
     }
 
-    private RssSubscribeData createSubscribeDataFromRss(Document document, String url,
+    private RssSourceData createSubscribeDataFromRss(Document document, String url,
         BlogPlatform blogPlatform) {
         Element tag = (Element) document.getElementsByTagName(
                 RssTag.RssSubscribeTag.CHANNEL.getTagName())
             .item(0);
 
-        return new RssSubscribeData(
+        return new RssSourceData(
             getTagValue(tag, RssTag.RssSubscribeTag.TITLE.getTagName()),
             url,
             blogPlatform,
@@ -52,13 +52,13 @@ public class RssSubscribeParser implements RssDocumentParser {
         );
     }
 
-    private RssSubscribeData createSubscribeDataFromAtom(Document document, String url,
+    private RssSourceData createSubscribeDataFromAtom(Document document, String url,
         BlogPlatform blogPlatform) {
         Element tag = (Element) document.getElementsByTagName(
                 RssTag.AtomSubscribeTag.FEED.getTagName())
             .item(0);
 
-        return new RssSubscribeData(
+        return new RssSourceData(
             getTagValue(tag, RssTag.AtomSubscribeTag.TITLE.getTagName()),
             url,
             blogPlatform,

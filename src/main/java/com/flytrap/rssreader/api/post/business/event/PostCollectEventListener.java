@@ -15,6 +15,6 @@ public class PostCollectEventListener {
     @Async
     @EventListener(PostCollectEvent.class)
     public void handle(PostCollectEvent event) {
-        postCollectSystem.enqueueHighPrioritySubscription(event.subscribeEntity());
+        postCollectSystem.enqueueHighPrioritySubscription(event.rssSourceEntity());
     }
 }

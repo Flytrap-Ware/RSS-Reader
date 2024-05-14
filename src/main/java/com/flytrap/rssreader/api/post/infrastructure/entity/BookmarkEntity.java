@@ -23,22 +23,22 @@ public class BookmarkEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @Column(name = "account_id", nullable = false)
+    private Long accountId;
 
     @Column(name = "post_id", nullable = false)
     private Long postId;
 
     @Builder
-    protected BookmarkEntity(Long id, Long memberId, Long postId) {
+    protected BookmarkEntity(Long id, Long accountId, Long postId) {
         this.id = id;
-        this.memberId = memberId;
+        this.accountId = accountId;
         this.postId = postId;
     }
 
     public static BookmarkEntity create(AccountId accountId, PostId postId) {
         return BookmarkEntity.builder()
-            .memberId(accountId.value())
+            .accountId(accountId.value())
             .postId(postId.value())
             .build();
     }

@@ -3,8 +3,8 @@ package com.flytrap.rssreader.api.subscribe.presentation.controller;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.subscribe.business.service.SubscriptionService;
-import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
-import com.flytrap.rssreader.api.subscribe.domain.FolderSubscriptionId;
+import com.flytrap.rssreader.api.subscribe.domain.Subscription;
+import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.api.subscribe.presentation.controller.swagger.SubscriptionControllerApi;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.AddSubscriptionRequest;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscriptionResponse;
@@ -33,14 +33,14 @@ public class SubscriptionController implements SubscriptionControllerApi {
         @Valid @RequestBody AddSubscriptionRequest request,
         @Login AccountCredentials accountCredentials
     ) {
-        FolderSubscription folderSubscription = subscriptionService
+        Subscription subscription = subscriptionService
             .addSubscriptionToFolder(
                 accountCredentials.id(),
                 new FolderId(folderId),
                 request.blogUrl()
             );
 
-        return new ApplicationResponse<>(SubscriptionResponse.from(folderSubscription));
+        return new ApplicationResponse<>(SubscriptionResponse.from(subscription));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -53,7 +53,7 @@ public class SubscriptionController implements SubscriptionControllerApi {
         subscriptionService.removeSubscriptionToFolder(
             accountCredentials.id(),
             new FolderId(folderId),
-            new FolderSubscriptionId(subscriptionId)
+            new SubscriptionId(subscriptionId)
         );
 
         return new ApplicationResponse<>(null);

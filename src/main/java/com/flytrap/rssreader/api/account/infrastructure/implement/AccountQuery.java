@@ -1,9 +1,10 @@
-package com.flytrap.rssreader.api.account.infrastructure.repository;
+package com.flytrap.rssreader.api.account.infrastructure.implement;
 
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.account.domain.AccountName;
 import com.flytrap.rssreader.api.account.infrastructure.entity.AccountEntity;
+import com.flytrap.rssreader.api.account.infrastructure.repository.AccountJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,24 +16,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountQuery {
 
-    private final AccountJpaRepository memberEntityJpaRepository;
+    private final AccountJpaRepository accountJpaRepository;
 
     public Optional<Account> readByProviderKey(Long oauthPk) {
-        return memberEntityJpaRepository.findByProviderKey(oauthPk).map(AccountEntity::toDomain);
+        return accountJpaRepository.findByProviderKey(oauthPk).map(AccountEntity::toReadOnly);
     }
 
     public List<Account> readAllByName(AccountName name) {
-        return memberEntityJpaRepository.findAllByName(name.value())
-                .stream().map(AccountEntity::toDomain).toList();
+        return accountJpaRepository.findAllByName(name.value())
+                .stream().map(AccountEntity::toReadOnly).toList();
     }
 
     public Optional<Account> readById(AccountId id) {
-        return memberEntityJpaRepository.findById(id.value()).map(AccountEntity::toDomain);
+        return accountJpaRepository.findById(id.value()).map(AccountEntity::toReadOnly);
     }
 
     public List<Account> readAllById(Collection<AccountId> ids) {
         List<Long> accountIds =  ids.stream().map(AccountId::value).toList();
-        return memberEntityJpaRepository.findAllById(accountIds)
-                .stream().map(AccountEntity::toDomain).toList();
+        return accountJpaRepository.findAllById(accountIds)
+                .stream().map(AccountEntity::toReadOnly).toList();
     }
 }

@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.folder.domain.AccessibleFolders;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.folder.domain.SharedStatus;
-import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
+import com.flytrap.rssreader.api.subscribe.domain.Subscription;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ public record MyFoldersResponse(
     public record MyFolderSummary(
         long id,
         String name,
-        List<FolderSubscriptionSummary> blogs,
+        List<SubscriptionSummary> blogs,
         List<SharedMemberSummary> invitedMembers
     ) {
         public static MyFolderSummary from(Folder folder) {
@@ -38,21 +38,21 @@ public record MyFoldersResponse(
                 folder.getId().value(),
                 folder.getName(),
                 folder.getSubscriptions().stream()
-                    .map(FolderSubscriptionSummary::from).toList(),
+                    .map(SubscriptionSummary::from).toList(),
                 folder.getSharedMembers().stream()
                     .map(SharedMemberSummary::from).toList()
             );
         }
     }
 
-    public record FolderSubscriptionSummary(
+    public record SubscriptionSummary(
         long id,
         String title
     ) {
-        public static FolderSubscriptionSummary from(FolderSubscription folderSubscription) {
-            return new FolderSubscriptionSummary(
-                folderSubscription.getId().value(),
-                folderSubscription.getTitle()
+        public static SubscriptionSummary from(Subscription subscription) {
+            return new SubscriptionSummary(
+                subscription.getId().value(),
+                subscription.getTitle()
             );
         }
     }

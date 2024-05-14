@@ -6,8 +6,9 @@ import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
-import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
+import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
+import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "rss_post")
+@Table(name = "post")
 public class PostEntity {
 
     @Id
@@ -51,30 +52,28 @@ public class PostEntity {
     private Instant pubDate;
 
     @Column(nullable = false)
-    private Long subscriptionId;
-
-    // TODO: React 추가 하기
+    private Long rssSourceId;
 
     @Builder
     protected PostEntity(Long id, String guid, String title, String thumbnailUrl, String description, Instant pubDate,
-                         Long subscriptionId) {
+                         Long rssSourceId) {
         this.id = id;
         this.guid = guid;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
         this.description = description;
         this.pubDate = pubDate;
-        this.subscriptionId = subscriptionId;
+        this.rssSourceId = rssSourceId;
     }
 
-    public static PostEntity from(RssPostsData.RssItemData itemData, Long subscriptionId) {
+    public static PostEntity from(RssPostsData.RssItemData itemData, Long rssSourceId) {
         return PostEntity.builder()
                 .guid(itemData.guid())
                 .title(itemData.title())
                 .thumbnailUrl(itemData.thumbnailUrl())
                 .description(itemData.description())
                 .pubDate(itemData.pubDate())
-                .subscriptionId(subscriptionId)
+                .rssSourceId(rssSourceId)
                 .build();
     }
 
@@ -86,7 +85,7 @@ public class PostEntity {
             .thumbnailUrl(postAggregate.getThumbnailUrl())
             .description(postAggregate.getDescription())
             .pubDate(postAggregate.getPubDate())
-            .subscriptionId(postAggregate.getSubscriptionId().value())
+            .rssSourceId(postAggregate.getRssSourceId().value())
             .build();
     }
 
@@ -96,15 +95,15 @@ public class PostEntity {
         this.description = itemData.description();
     }
 
-    public Post toDomain(Open open, Bookmark bookmark, SubscribeEntity subscription) {
+    public Post toReadOnly(Open open, Bookmark bookmark, RssSourceEntity rssSource) {
 
-        if (!Objects.equals(subscription.getId(), subscriptionId)) {
-            throw new RuntimeException("정합성 일치하지 않음.");
+        if (!Objects.equals(rssSource.getId(), rssSourceId)) {
+            throw new InconsistentDomainException(Post.class);
         }
 
         return Post.builder()
                 .id(new PostId(id))
-                .subscribeTitle(subscription.getTitle())
+                .subscribeTitle(rssSource.getTitle())
                 .guid(guid)
                 .title(title)
                 .thumbnailUrl(thumbnailUrl)
@@ -118,7 +117,7 @@ public class PostEntity {
     public PostAggregate toAggregate(Open open, Bookmark bookmark) {
         return PostAggregate.builder()
             .id(new PostId(id))
-            .subscriptionId(new SubscriptionId(subscriptionId))
+            .rssSourceId(new RssSourceId(rssSourceId))
             .guid(guid)
             .title(title)
             .thumbnailUrl(thumbnailUrl)

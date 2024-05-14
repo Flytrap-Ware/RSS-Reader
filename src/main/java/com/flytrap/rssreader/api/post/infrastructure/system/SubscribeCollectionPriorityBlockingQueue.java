@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.api.post.infrastructure.system;
 
-import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscribeEntity;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SubscribeCollectionPriorityBlockingQueue implements SubscribeCollectionPriorityQueue {
 
-    private final Deque<SubscribeEntity> queue = new ConcurrentLinkedDeque<>();
+    private final Deque<RssSourceEntity> queue = new ConcurrentLinkedDeque<>();
 
     @Override
-    public void add(SubscribeEntity subscribe, CollectPriority priority) {
+    public void add(RssSourceEntity subscribe, CollectPriority priority) {
         if (priority == CollectPriority.HIGH) {
             queue.addFirst(subscribe);
         } else {
@@ -21,7 +21,7 @@ public class SubscribeCollectionPriorityBlockingQueue implements SubscribeCollec
     }
 
     @Override
-    public void addAll(List<SubscribeEntity> subscribes, CollectPriority priority) {
+    public void addAll(List<RssSourceEntity> subscribes, CollectPriority priority) {
         if (priority == CollectPriority.HIGH) {
             for (int i = subscribes.size() - 1; i >= 0; i--) {
                 queue.addFirst(subscribes.get(i));
@@ -32,7 +32,7 @@ public class SubscribeCollectionPriorityBlockingQueue implements SubscribeCollec
     }
 
     @Override
-    public SubscribeEntity poll() {
+    public RssSourceEntity poll() {
         return queue.poll();
     }
 
