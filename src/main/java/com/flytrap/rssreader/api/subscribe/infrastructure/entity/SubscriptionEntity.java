@@ -40,7 +40,7 @@ public class SubscriptionEntity {
 
     public Subscription toReadOnly(RssSourceEntity rssSourceEntity) {
         if (!Objects.equals(rssSourceEntity.getId(), rssSourceId)) {
-            throw new InconsistentDomainException(this.getClass());
+            throw new InconsistentDomainException(Subscription.class);
         }
 
         return Subscription.builder()

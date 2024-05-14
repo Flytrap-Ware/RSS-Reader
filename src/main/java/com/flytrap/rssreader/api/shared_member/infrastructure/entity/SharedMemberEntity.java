@@ -4,6 +4,7 @@ import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMemberCreate;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMemberId;
+import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -48,7 +49,7 @@ public class SharedMemberEntity {
 
     public SharedMember toReadOnly(Account account) {
         if (!Objects.equals(account.getId().value(), accountId)) {
-            throw new RuntimeException("정합성 일치하지 않음.");
+            throw new InconsistentDomainException(SharedMember.class);
         }
 
         return SharedMember.builder()

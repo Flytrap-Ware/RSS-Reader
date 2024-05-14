@@ -8,6 +8,7 @@ import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
+import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -97,7 +98,7 @@ public class PostEntity {
     public Post toReadOnly(Open open, Bookmark bookmark, RssSourceEntity rssSource) {
 
         if (!Objects.equals(rssSource.getId(), rssSourceId)) {
-            throw new RuntimeException("정합성 일치하지 않음.");
+            throw new InconsistentDomainException(Post.class);
         }
 
         return Post.builder()

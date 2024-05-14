@@ -2,6 +2,9 @@ package com.flytrap.rssreader.global.exception.domain;
 
 import com.flytrap.rssreader.global.model.DefaultDomain;
 
+/**
+ * 로그인한 멤버가 폴더의 주인이 아닐때 발생 시킬 에러
+ */
 public class NotFolderOwnerException extends ApplicationException {
 
     static {
