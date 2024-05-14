@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface AlertEntityJpaRepository extends JpaRepository<AlertEntity, Long> {
+public interface AlertJpaRepository extends JpaRepository<AlertEntity, Long> {
 
     List<AlertEntity> findAllByFolderId(Long folderId);
 

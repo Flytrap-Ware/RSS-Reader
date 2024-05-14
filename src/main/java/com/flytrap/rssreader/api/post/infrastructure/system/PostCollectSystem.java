@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.alert.business.event.NewPostAlertEvent;
 import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
@@ -27,7 +27,7 @@ public class PostCollectSystem {
 
     private final SubscribeCollectionPriorityQueue collectionQueue;
     private final RssResourceJpaRepository rssResourceRepository;
-    private final PostEntityJpaRepository postRepository;
+    private final PostJpaRepository postRepository;
     private final RssPostParser postParser;
     private final GlobalEventPublisher globalEventPublisher;
 

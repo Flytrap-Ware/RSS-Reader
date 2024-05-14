@@ -7,9 +7,9 @@ import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.infrastructure.entity.BookmarkEntity;
 import com.flytrap.rssreader.api.post.infrastructure.entity.OpenEntity;
-import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJpaRepository;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenEntityRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenJpaRepository;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,46 +19,46 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostCommand {
 
-    private final PostEntityJpaRepository postEntityJpaRepository;
-    private final PostOpenEntityRepository postOpenEntityRepository;
-    private final BookmarkEntityJpaRepository bookmarkEntityJpaRepository;
+    private final PostJpaRepository postJpaRepository;
+    private final PostOpenJpaRepository postOpenJpaRepository;
+    private final BookmarkJpaRepository bookmarkJpaRepository;
 
     @Transactional(readOnly = true)
     public PostAggregate readAggregate(PostId postId, AccountId accountId) {
 
-        boolean isRead = postOpenEntityRepository.existsByAccountIdAndPostId(
+        boolean isRead = postOpenJpaRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
-        boolean isBookmark = bookmarkEntityJpaRepository.existsByAccountIdAndPostId(
+        boolean isBookmark = bookmarkJpaRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
 
-        return postEntityJpaRepository.findById(postId.value())
+        return postJpaRepository.findById(postId.value())
             .orElseThrow(() -> new NoSuchDomainException(PostAggregate.class))
             .toAggregate(Open.from(isRead), Bookmark.from(isBookmark));
     }
 
     @Transactional
     public void updateOnlyOpen(PostAggregate postAggregate, AccountId accountId) {
-        boolean existOpenInDB = postOpenEntityRepository
+        boolean existOpenInDB = postOpenJpaRepository
             .existsByAccountIdAndPostId(accountId.value(), postAggregate.getId().value());
         if (existOpenInDB && !postAggregate.isOpened()) {
-            postOpenEntityRepository
+            postOpenJpaRepository
                 .deleteByAccountIdAndPostId(accountId.value(), postAggregate.getId().value());
         } else if (!existOpenInDB && postAggregate.isOpened()) {
             OpenEntity openEntity = OpenEntity.from(accountId, postAggregate.getId());
-            postOpenEntityRepository.save(openEntity);
+            postOpenJpaRepository.save(openEntity);
         }
     }
 
     @Transactional
     public void updateOnlyBookmark(PostAggregate postAggregate, AccountId accountId) {
-        boolean existBookmarkInDB = bookmarkEntityJpaRepository
+        boolean existBookmarkInDB = bookmarkJpaRepository
             .existsByAccountIdAndPostId(accountId.value(), postAggregate.getId().value());
         if (existBookmarkInDB && !postAggregate.isBookmarked()) {
-            bookmarkEntityJpaRepository
+            bookmarkJpaRepository
                 .deleteByAccountIdAndPostId(accountId.value(), postAggregate.getId().value());
         } else if (!existBookmarkInDB && postAggregate.isBookmarked()) {
             BookmarkEntity bookmarkEntity = BookmarkEntity.create(accountId, postAggregate.getId());
-            bookmarkEntityJpaRepository.save(bookmarkEntity);
+            bookmarkJpaRepository.save(bookmarkEntity);
         }
     }
 

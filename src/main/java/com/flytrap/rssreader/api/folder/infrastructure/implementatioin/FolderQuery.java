@@ -3,8 +3,8 @@ package com.flytrap.rssreader.api.folder.infrastructure.implementatioin;
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityDslRepository;
-import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
+import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderDslRepository;
+import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderJpaRepository;
 import com.flytrap.rssreader.api.shared_member.infrastructure.implementation.SharedMemberQuery;
 import com.flytrap.rssreader.api.subscribe.infrastructure.implement.SubscriptionQuery;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FolderQuery {
 
-    private final FolderEntityJpaRepository folderEntityJpaRepository;
-    private final FolderEntityDslRepository folderEntityDslRepository;
+    private final FolderJpaRepository folderJpaRepository;
+    private final FolderDslRepository folderDslRepository;
     private final SubscriptionQuery subscriptionQuery;
     private final SharedMemberQuery sharedMemberQuery;
 
     public Folder read(FolderId folderId) {
-        return folderEntityJpaRepository.findById(folderId.value())
+        return folderJpaRepository.findById(folderId.value())
             .orElseThrow(() -> new NoSuchDomainException(Folder.class))
             .toReadonly(
                 subscriptionQuery.readAllByFolder(folderId),
@@ -31,7 +31,7 @@ public class FolderQuery {
     }
 
     public List<Folder> readAllByAccount(AccountId accountId) {
-        return folderEntityDslRepository
+        return folderDslRepository
             .findAllAccessibleFolder(accountId.value())
             .stream()
             .map(folderEntity -> {

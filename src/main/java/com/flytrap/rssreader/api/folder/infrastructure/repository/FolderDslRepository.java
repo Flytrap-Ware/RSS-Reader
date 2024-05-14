@@ -10,11 +10,11 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FolderEntityDslRepository {
+public class FolderDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public FolderEntityDslRepository(EntityManager entityManager) {
+    public FolderDslRepository(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 

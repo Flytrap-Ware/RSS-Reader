@@ -9,10 +9,10 @@ import com.flytrap.rssreader.api.post.domain.PostFilter;
 import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSummaryOutput;
-import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkEntityJpaRepository;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostEntityJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostListReadRepository;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenEntityRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenJpaRepository;
 import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
@@ -28,23 +28,23 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostQuery {
 
-    private final PostEntityJpaRepository postEntityJpaRepository;
-    private final BookmarkEntityJpaRepository bookmarkEntityJpaRepository;
-    private final PostOpenEntityRepository postOpenEntityRepository;
+    private final PostJpaRepository postJpaRepository;
+    private final BookmarkJpaRepository bookmarkJpaRepository;
+    private final PostOpenJpaRepository postOpenJpaRepository;
     private final PostListReadRepository postListReadRepository;
-    private final RssResourceJpaRepository subscriptionEntityJpaRepository;
+    private final RssResourceJpaRepository rssResourceJpaRepository;
 
     @Transactional(readOnly = true)
     public Post read(PostId postId, AccountId accountId) {
 
-        PostEntity postEntity = postEntityJpaRepository.findById(postId.value())
+        PostEntity postEntity = postJpaRepository.findById(postId.value())
             .orElseThrow(() -> new NoSuchDomainException(Post.class));
-        RssSourceEntity rssSourceEntity = subscriptionEntityJpaRepository.findById(
+        RssSourceEntity rssSourceEntity = rssResourceJpaRepository.findById(
                 postEntity.getId())
             .orElseThrow(() -> new NoSuchDomainException(RssSource.class));
-        boolean isRead = postOpenEntityRepository.existsByAccountIdAndPostId(
+        boolean isRead = postOpenJpaRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
-        boolean isBookmark = bookmarkEntityJpaRepository.existsByAccountIdAndPostId(
+        boolean isBookmark = bookmarkJpaRepository.existsByAccountIdAndPostId(
             accountId.value(), postId.value());
 
         return postEntity.toDomain(Open.from(isRead), Bookmark.from(isBookmark),

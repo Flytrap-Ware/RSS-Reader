@@ -5,7 +5,7 @@ import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
-import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
+import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderJpaRepository;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,30 +15,30 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FolderCommand {
 
-    private final FolderEntityJpaRepository folderEntityJpaRepository;
+    private final FolderJpaRepository folderJpaRepository;
 
     @Transactional(readOnly = true)
     public FolderAggregate readAggregate(FolderId folderId) {
-        return folderEntityJpaRepository.findById(folderId.value())
+        return folderJpaRepository.findById(folderId.value())
             .orElseThrow(() -> new NoSuchDomainException(Folder.class))
             .toAggregate();
     }
 
     @Transactional
     public FolderAggregate create(FolderCreate folderCreate) {
-        return folderEntityJpaRepository.save(FolderEntity.from(folderCreate))
+        return folderJpaRepository.save(FolderEntity.from(folderCreate))
             .toAggregate();
     }
 
     @Transactional
     public FolderAggregate update(FolderAggregate folderAggregate) {
-        return folderEntityJpaRepository.save(FolderEntity.from(folderAggregate))
+        return folderJpaRepository.save(FolderEntity.from(folderAggregate))
             .toAggregate();
     }
 
     @Transactional
     public void delete(FolderAggregate folderAggregate) {
-        folderEntityJpaRepository.save(FolderEntity.fromForDelete(folderAggregate));
+        folderJpaRepository.save(FolderEntity.fromForDelete(folderAggregate));
     }
 
 }

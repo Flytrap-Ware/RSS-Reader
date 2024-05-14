@@ -4,7 +4,7 @@ import com.flytrap.rssreader.api.alert.domain.Alert;
 import com.flytrap.rssreader.api.alert.domain.AlertCreate;
 import com.flytrap.rssreader.api.alert.domain.AlertId;
 import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
-import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertEntityJpaRepository;
+import com.flytrap.rssreader.api.alert.infrastructure.repository.AlertJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AlertCommand {
 
-    private final AlertEntityJpaRepository alertJpaRepository;
+    private final AlertJpaRepository alertJpaRepository;
 
     @Transactional
     public Alert create(AlertCreate alertCreate) {
