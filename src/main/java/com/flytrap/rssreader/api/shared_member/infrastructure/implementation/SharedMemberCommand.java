@@ -2,7 +2,7 @@ package com.flytrap.rssreader.api.shared_member.infrastructure.implementation;
 
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.account.domain.AccountId;
-import com.flytrap.rssreader.api.account.infrastructure.repository.AccountQuery;
+import com.flytrap.rssreader.api.account.infrastructure.implement.AccountQuery;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMemberCreate;
