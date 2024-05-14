@@ -1,45 +1,30 @@
 package com.flytrap.rssreader.api.folder.domain;
 
-import com.flytrap.rssreader.global.model.DefaultDomain;
-import com.flytrap.rssreader.global.model.Domain;
-import java.util.ArrayList;
+import com.flytrap.rssreader.api.account.domain.AccountId;
+import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
+import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
+import com.flytrap.rssreader.global.model.NewDefaultDomain;
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
+@Builder
 @Getter
-@Domain(name = "folder")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Folder implements DefaultDomain {
+public class Folder implements NewDefaultDomain {
+    private final FolderId id;
+    private final String name;
+    private final AccountId ownerId;
+    private final SharedStatus sharedStatus;
+    private final List<FolderSubscription> subscriptions;
+    private final List<SharedMember> sharedMembers;
 
-    private Long id;
-    private String name;
-    private Long memberId;
-    private SharedStatus sharedStatus;
-    private final List<FolderSubscribe> subscribes = new ArrayList<>();
-
-    @Builder
-    protected Folder(Long id, String name, Long memberId, Boolean isShared) {
-        this.id = id;
-        this.name = name;
-        this.memberId = memberId;
-        this.sharedStatus = SharedStatus.from(isShared);
+    public boolean isShared() {
+        return sharedStatus == SharedStatus.SHARED;
     }
 
-    public static Folder of(Long id, String name, Long memberId, Boolean isShared) {
-        return Folder.builder()
-                .id(id)
-                .name(name)
-                .memberId(memberId)
-                .isShared(isShared)
-                .build();
+    public boolean isPrivate() {
+        return sharedStatus == SharedStatus.PRIVATE;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Folder && ((Folder) obj).getId().equals(this.id);
-    }
-
 }

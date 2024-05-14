@@ -2,7 +2,6 @@ package com.flytrap.rssreader.api.folder.infrastructure.implementatioin;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.Folder;
-import com.flytrap.rssreader.api.folder.domain.FolderDomain;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityDslRepository;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;
@@ -22,7 +21,7 @@ public class FolderQuery {
     private final FolderSubscriptionQuery folderSubscriptionQuery;
     private final SharedMemberQuery sharedMemberQuery;
 
-    public FolderDomain read(FolderId folderId) {
+    public Folder read(FolderId folderId) {
         return folderEntityJpaRepository.findById(folderId.value())
             .orElseThrow(() -> new NoSuchDomainException(Folder.class))
             .toReadonly(
@@ -31,7 +30,7 @@ public class FolderQuery {
             );
     }
 
-    public List<FolderDomain> readAllByAccount(AccountId accountId) {
+    public List<Folder> readAllByAccount(AccountId accountId) {
         return folderEntityDslRepository
             .findAllAccessibleFolder(accountId.value())
             .stream()

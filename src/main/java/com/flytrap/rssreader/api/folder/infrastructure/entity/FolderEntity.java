@@ -1,13 +1,12 @@
 package com.flytrap.rssreader.api.folder.infrastructure.entity;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
-import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
-import com.flytrap.rssreader.api.folder.domain.FolderDomain;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.folder.domain.SharedStatus;
+import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,12 +76,8 @@ public class FolderEntity {
             .build();
     }
 
-    public Folder toDomain() {
-        return Folder.of(id, name, memberId, isShared);
-    }
-
-    public FolderDomain toReadonly(List<FolderSubscription> folderSubscriptions, List<SharedMember> sharedMembers) {
-        return FolderDomain.builder()
+    public Folder toReadonly(List<FolderSubscription> folderSubscriptions, List<SharedMember> sharedMembers) {
+        return Folder.builder()
             .id(new FolderId(id))
             .name(name)
             .ownerId(new AccountId(memberId))

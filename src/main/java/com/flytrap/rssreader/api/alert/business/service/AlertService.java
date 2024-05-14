@@ -8,7 +8,7 @@ import com.flytrap.rssreader.api.alert.domain.AlertPlatform;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertCommand;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertQuery;
 import com.flytrap.rssreader.api.alert.infrastructure.implement.AlertValidator;
-import com.flytrap.rssreader.api.folder.domain.FolderDomain;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
@@ -29,7 +29,7 @@ public class AlertService {
     public List<Alert> getAlertsByFolder(FolderId folderId, AccountId accountId) {
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         return alertQuery.readAllByFolder(folderId);
     }
@@ -37,7 +37,7 @@ public class AlertService {
     public Alert registerAlert(FolderId folderId, AccountId accountId, String webhookUrl) {
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         AlertPlatform alertPlatform = AlertPlatform.parseWebhookUrl(webhookUrl);
 
@@ -47,7 +47,7 @@ public class AlertService {
     public void removeAlert(FolderId folderId, AccountId accountId, AlertId alertId) {
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         if (!alertValidator.exists(alertId))
             throw new NoSuchDomainException(Alert.class);

@@ -1,8 +1,8 @@
 package com.flytrap.rssreader.api.folder.infrastructure.implementatioin;
 
-import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderEntityJpaRepository;

@@ -2,7 +2,7 @@ package com.flytrap.rssreader.api.alert.business.event;
 
 import com.flytrap.rssreader.api.alert.domain.Alert;
 import com.flytrap.rssreader.api.alert.infrastructure.system.AlertSendSystem;
-import com.flytrap.rssreader.api.folder.business.service.FolderReadService;
+import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class NewPostAlertEventListener {
 
     private final AlertSendSystem alertSendSystem;
-    private final FolderReadService folderReadService;
+    private final FolderQuery folderQuery;
 
     @Async
     @EventListener(NewPostAlertEvent.class)
@@ -23,7 +23,7 @@ public class NewPostAlertEventListener {
         if (!alerts.isEmpty()) {
             alerts.forEach(alert ->
                 alertSendSystem.sendAlertToPlatform(
-                    folderReadService.findById(alert.getFolderId()).getName(),
+                    folderQuery.read(alert.getFolderId()).getName(),
                     alert.getWebhookUrl(),
                     event.posts()
                 ));

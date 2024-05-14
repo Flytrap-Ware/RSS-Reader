@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.subscribe.business.service;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
-import com.flytrap.rssreader.api.folder.domain.FolderDomain;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
 import com.flytrap.rssreader.api.subscribe.domain.FolderSubscription;
@@ -25,7 +25,7 @@ public class SubscriptionService {
         AccountId accountId, FolderId folderId, String rssUrl
     ) {
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         if (folderSubscriptionValidator.existsBy(folderId, rssUrl))
             throw new DuplicateDomainException(FolderSubscription.class);
@@ -37,7 +37,7 @@ public class SubscriptionService {
         AccountId accountId, FolderId folderId, FolderSubscriptionId folderSubscriptionId
     ) {
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
-            throw new ForbiddenAccessFolderException(FolderDomain.class);
+            throw new ForbiddenAccessFolderException(Folder.class);
 
         folderSubscriptionCommand.delete(folderSubscriptionId);
     }
