@@ -3,7 +3,7 @@ package com.flytrap.rssreader.api.admin.presentation.controller;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.properties.AdminProperties;
 import com.flytrap.rssreader.global.properties.AuthProperties;
-import com.flytrap.rssreader.api.auth.presentation.dto.Login;
+import com.flytrap.rssreader.api.auth.presentation.dto.LoginRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.LoginResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import jakarta.servlet.http.HttpSession;
@@ -29,7 +29,7 @@ public class AdminController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse<LoginResponse> getAdminProperties(
-        @RequestBody Login request, HttpSession session
+        @RequestBody LoginRequest request, HttpSession session
     ) throws AuthenticationException {
 
         if (request.code().equals(properties.code())) {
