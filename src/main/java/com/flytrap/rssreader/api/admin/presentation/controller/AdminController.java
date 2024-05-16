@@ -1,6 +1,5 @@
-package com.flytrap.rssreader.api.auth.presentation.controller;
+package com.flytrap.rssreader.api.admin.presentation.controller;
 
-import com.flytrap.rssreader.api.auth.presentation.controller.swagger.AdminControllerApi;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.properties.AdminProperties;
 import com.flytrap.rssreader.global.properties.AuthProperties;
@@ -22,18 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/admin")
-public class AdminController implements AdminControllerApi {
+public class AdminController {
 
     private final AdminProperties properties;
     private final AuthProperties authProperties;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApplicationResponse<LoginResponse> getAdminProperties(@RequestBody Login request, HttpSession session)
-            throws AuthenticationException {
+    public ApplicationResponse<LoginResponse> getAdminProperties(
+        @RequestBody Login request, HttpSession session
+    ) throws AuthenticationException {
 
         if (request.code().equals(properties.code())) {
-            session.setAttribute(authProperties.sessionId(), AccountCredentials.from(properties.getAccount()));
+            session.setAttribute(authProperties.sessionId(),
+                AccountCredentials.from(properties.getAccount()));
             log.info("🙌 admin login success");
 
             return new ApplicationResponse<>(
