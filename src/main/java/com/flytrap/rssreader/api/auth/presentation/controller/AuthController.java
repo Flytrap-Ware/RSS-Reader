@@ -3,7 +3,7 @@ package com.flytrap.rssreader.api.auth.presentation.controller;
 import com.flytrap.rssreader.api.auth.presentation.controller.swagger.AuthControllerApi;
 import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
-import com.flytrap.rssreader.api.auth.presentation.dto.Login;
+import com.flytrap.rssreader.api.auth.presentation.dto.LoginRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.LoginResponse;
 import com.flytrap.rssreader.api.auth.business.service.AuthService;
 import jakarta.servlet.http.HttpSession;
@@ -23,7 +23,7 @@ public class AuthController implements AuthControllerApi {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ApplicationResponse<LoginResponse> login(@RequestBody Login request,
+    public ApplicationResponse<LoginResponse> login(@RequestBody LoginRequest request,
                                                       HttpSession session) {
 
         Account account = authService.doAuthentication(request);

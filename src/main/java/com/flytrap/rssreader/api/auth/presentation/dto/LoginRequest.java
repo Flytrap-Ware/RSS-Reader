@@ -1,5 +1,5 @@
 package com.flytrap.rssreader.api.auth.presentation.dto;
 
-public record Login(String code) {
+public record LoginRequest(String code) {
 
 }
