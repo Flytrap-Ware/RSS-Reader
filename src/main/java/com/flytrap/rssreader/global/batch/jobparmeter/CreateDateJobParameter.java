@@ -17,6 +17,7 @@ public class CreateDateJobParameter {
 
     @Value("#{jobParameters[pubDate]}")
     public void setCreateDate(String pubDate) {
-        this.pubDate = LocalDate.parse(pubDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.pubDate = LocalDate.parse(pubDate, formatter);
     }
 }
