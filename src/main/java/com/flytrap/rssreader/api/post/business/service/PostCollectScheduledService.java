@@ -1,6 +1,7 @@
 package com.flytrap.rssreader.api.post.business.service;
 
 import com.flytrap.rssreader.api.post.infrastructure.system.PostCollectSystem;
+import com.flytrap.rssreader.api.post.infrastructure.system.PostCollectionEnableLoader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,9 +15,15 @@ public class PostCollectScheduledService {
     private int selectBatchSize;
 
     private final PostCollectSystem postCollectSystem;
+    private final PostCollectionEnableLoader postCollectionEnableLoader;
 
     @Scheduled(fixedDelay = 1000)
     public void collectPostsScheduled() {
+
+        if (postCollectionEnableLoader.isDisabled()) {
+            return;
+        }
+
         postCollectSystem.collectPosts(selectBatchSize);
     }
 

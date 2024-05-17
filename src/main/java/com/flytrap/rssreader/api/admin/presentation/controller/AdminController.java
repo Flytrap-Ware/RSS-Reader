@@ -1,6 +1,7 @@
 package com.flytrap.rssreader.api.admin.presentation.controller;
 
 import com.flytrap.rssreader.api.admin.business.service.AdminSystemService;
+import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionCycleRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.auth.presentation.dto.LoginRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.LoginResponse;
@@ -9,6 +10,7 @@ import com.flytrap.rssreader.global.presentation.resolver.AdminLogin;
 import com.flytrap.rssreader.global.properties.AdminProperties;
 import com.flytrap.rssreader.global.properties.AuthProperties;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import javax.security.sasl.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +69,17 @@ public class AdminController {
         adminSystemService.stopPostCollection();
 
         return new ApplicationResponse<>("게시글 수집 기능 중지");
+    }
+
+    @PostMapping("/api/admin/post-collection/cycle")
+    public ApplicationResponse<String> startPostCollectionCycle(
+        @RequestBody @Valid PostCollectionCycleRequest request,
+        @AdminLogin AccountCredentials accountCredentials
+    ) {
+        adminSystemService.startPostCollectionCycle(request.getBatchSize());
+
+        return new ApplicationResponse<>(
+            "게시글 수집 사이클 완료. batchSize: " + request.getBatchSize());
     }
 
 }
