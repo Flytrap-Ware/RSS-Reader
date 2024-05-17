@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.global.config;
 
 import com.flytrap.rssreader.api.post.domain.PostBlogPlatformData;
-import com.flytrap.rssreader.api.post.domain.PostStat;
+import com.flytrap.rssreader.api.post.infrastructure.entity.PostStatEntity;
 import com.flytrap.rssreader.global.batch.step.StatItemProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class StatJobConfig {
 
     private final JobRepository jobRepository;
     private final JpaCursorItemReader<PostBlogPlatformData> jpaCursorItemReader;
-    private final JpaItemWriter<PostStat> jpaItemWriter;
+    private final JpaItemWriter<PostStatEntity> jpaItemWriter;
     private final PlatformTransactionManager transactionManager;
 
 
@@ -45,7 +45,7 @@ public class StatJobConfig {
     @Bean
     public Step statStep() {
         return new StepBuilder(STEP_STAT_NAME, jobRepository)
-                .<PostBlogPlatformData, PostStat>chunk(CHUNK_SIZE, transactionManager)
+                .<PostBlogPlatformData, PostStatEntity>chunk(CHUNK_SIZE, transactionManager)
                 .reader(jpaCursorItemReader)
                 .processor(processor())
                 .writer(jpaItemWriter)
@@ -53,7 +53,7 @@ public class StatJobConfig {
     }
 
     @Bean
-    public ItemProcessor<PostBlogPlatformData, PostStat> processor() {
+    public ItemProcessor<PostBlogPlatformData, PostStatEntity> processor() {
         return new StatItemProcessor();
     }
 }

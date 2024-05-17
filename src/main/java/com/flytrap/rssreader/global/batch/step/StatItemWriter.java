@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.global.batch.step;
 
-import com.flytrap.rssreader.api.post.domain.PostStat;
+import com.flytrap.rssreader.api.post.infrastructure.entity.PostStatEntity;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +17,10 @@ public class StatItemWriter {
     private final EntityManagerFactory emf;
 
     @Bean
-    public JpaItemWriter<PostStat> jpaItemWriter() {
-        JpaItemWriter<PostStat> writer = new JpaItemWriter<>() {
+    public JpaItemWriter<PostStatEntity> jpaItemWriter() {
+        JpaItemWriter<PostStatEntity> writer = new JpaItemWriter<>() {
             @Override
-            public void write(Chunk<? extends PostStat> items) {
+            public void write(Chunk<? extends PostStatEntity> items) {
                 log.debug("[WRITER] - {}", items);
                 super.write(items);
             }

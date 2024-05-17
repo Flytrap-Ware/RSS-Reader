@@ -1,4 +1,4 @@
-package com.flytrap.rssreader.api.post.domain;
+package com.flytrap.rssreader.api.post.infrastructure.entity;
 
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import jakarta.persistence.*;
@@ -14,7 +14,7 @@ import java.time.Instant;
 @Getter
 @Entity
 @Table(name = "rss_post_stat")
-public class PostStat {
+public class PostStatEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class PostStat {
     private Long postCount;
 
     @Builder
-    public PostStat(BlogPlatform platform, Long postCount, Instant pubDate) {
+    public PostStatEntity(BlogPlatform platform, Long postCount, Instant pubDate) {
         this.platform = platform;
         this.postCount = postCount;
         this.pubDate = pubDate;

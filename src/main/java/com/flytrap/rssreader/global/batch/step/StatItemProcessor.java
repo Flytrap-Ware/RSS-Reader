@@ -1,7 +1,9 @@
 package com.flytrap.rssreader.global.batch.step;
 
+import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
 import com.flytrap.rssreader.api.post.domain.PostBlogPlatformData;
-import com.flytrap.rssreader.api.post.domain.PostStat;
+import com.flytrap.rssreader.api.post.infrastructure.entity.PostStatEntity;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostStatEntityJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -15,13 +17,14 @@ import java.time.ZonedDateTime;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class StatItemProcessor implements ItemProcessor<PostBlogPlatformData, PostStat> {
+public class StatItemProcessor implements ItemProcessor<PostBlogPlatformData, PostStatEntity> {
 
     @Override
-    public PostStat process(PostBlogPlatformData data) {
+    public PostStatEntity process(PostBlogPlatformData data) {
         Instant now = Instant.now();
         ZonedDateTime localTime = now.atZone(ZoneId.of("Asia/Seoul"));
-        return PostStat.builder()
+
+        return PostStatEntity.builder()
                 .platform(data.getPlatform())
                 .postCount(data.getPostCount())
                 .pubDate(localTime.toInstant())
