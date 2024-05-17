@@ -28,15 +28,10 @@ public class PostCollectSystem {
     private final SubscribeCollectionPriorityQueue collectionQueue;
     private final RssResourceJpaRepository rssResourceRepository;
     private final PostJpaRepository postRepository;
-    private final PostCollectionEnableLoader postCollectionEnableLoader;
     private final RssPostParser postParser;
     private final GlobalEventPublisher globalEventPublisher;
 
     public void collectPosts(int selectBatchSize) {
-
-        if (postCollectionEnableLoader.isDisabled()) {
-            return;
-        }
 
         var now = Instant.now();
         var pageable = PageRequest.of(

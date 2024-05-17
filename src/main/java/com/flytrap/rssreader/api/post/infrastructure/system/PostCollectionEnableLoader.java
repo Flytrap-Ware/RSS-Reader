@@ -22,6 +22,10 @@ public class PostCollectionEnableLoader implements CommandLineRunner {
             .isPostCollectionEnabled();
     }
 
+    public boolean isEnabled() {
+        return this.isEnable;
+    }
+
     public boolean isDisabled() {
         return !this.isEnable;
     }
