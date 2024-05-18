@@ -17,14 +17,24 @@ public class PostCollectScheduledService {
     private final PostCollectSystem postCollectSystem;
     private final PostCollectionEnableLoader postCollectionEnableLoader;
 
-    @Scheduled(fixedDelay = 1000)
-    public void collectPostsScheduled() {
+    @Scheduled(initialDelay = 0, fixedDelay = 50_000)
+    public void schedulePostCollection() {
 
         if (postCollectionEnableLoader.isDisabled()) {
             return;
         }
 
-        postCollectSystem.collectPosts(selectBatchSize);
+        postCollectSystem.loadAndEnqueueRssResources(selectBatchSize);
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public void schedulePostPersistence() {
+
+        if (postCollectionEnableLoader.isDisabled()) {
+            return;
+        }
+
+        postCollectSystem.dequeueAndSaveRssResource();
     }
 
 }
