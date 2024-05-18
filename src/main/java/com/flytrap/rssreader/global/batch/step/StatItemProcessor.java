@@ -1,9 +1,7 @@
 package com.flytrap.rssreader.global.batch.step;
 
-import com.flytrap.rssreader.api.alert.infrastructure.entity.AlertEntity;
 import com.flytrap.rssreader.api.post.domain.PostBlogPlatformData;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostStatEntity;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostStatEntityJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
