@@ -2,6 +2,7 @@ package com.flytrap.rssreader.api.admin.presentation.controller;
 
 import com.flytrap.rssreader.api.admin.business.service.AdminSystemService;
 import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionCycleRequest;
+import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionDelayRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.auth.presentation.dto.LoginRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.LoginResponse;
@@ -80,6 +81,16 @@ public class AdminController {
 
         return new ApplicationResponse<>(
             "게시글 수집 사이클 완료. batchSize: " + request.getBatchSize());
+    }
+
+    @PatchMapping("/api/admin/post-collection/delay")
+    public ApplicationResponse<String> changePostCollectionDelay(
+        @RequestBody @Valid PostCollectionDelayRequest request,
+        @AdminLogin AccountCredentials accountCredentials
+    ) {
+        adminSystemService.changePostCollectionDelay(request.getDelay());
+
+        return new ApplicationResponse<>("게시글 수집 스케쥴 간격 변경: " + request.getDelay() + "ms");
     }
 
 }

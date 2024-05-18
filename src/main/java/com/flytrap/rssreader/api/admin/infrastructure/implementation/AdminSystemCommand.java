@@ -13,14 +13,24 @@ public class AdminSystemCommand {
 
     private final AdminSystemJpaRepository adminSystemJpaRepository;
 
+    private AdminSystemAggregate cachedAggregate;
+
     public AdminSystemAggregate read() {
-        return adminSystemJpaRepository.findById(1L)
+        if (cachedAggregate != null)
+            return cachedAggregate;
+
+        cachedAggregate =  adminSystemJpaRepository.findById(1L)
             .orElseThrow(() -> new NoSuchDomainException(AdminSystemAggregate.class))
             .toAggregate();
+
+        return cachedAggregate;
     }
 
     public AdminSystemAggregate save(AdminSystemAggregate adminSystemAggregate) {
-        return adminSystemJpaRepository.save(AdminSystemEntity.from(adminSystemAggregate))
+        AdminSystemAggregate savedAggregate = adminSystemJpaRepository.save(AdminSystemEntity.from(adminSystemAggregate))
             .toAggregate();
+        cachedAggregate = savedAggregate;
+
+        return savedAggregate;
     }
 }
