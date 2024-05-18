@@ -32,8 +32,11 @@ public class PostCollectSystem {
     private final GlobalEventPublisher globalEventPublisher;
 
     public void collectPosts(int selectBatchSize) {
+        loadAndEnqueueRssResources(selectBatchSize);
+        dequeueAndSaveRssResource();
+    }
 
-        var now = Instant.now();
+    public void loadAndEnqueueRssResources(int selectBatchSize) {
         var pageable = PageRequest.of(
             0, selectBatchSize,
             Sort.by(Sort.Direction.ASC, "lastCollectedAt"));
@@ -41,6 +44,10 @@ public class PostCollectSystem {
             rssResourceRepository.findAll(pageable).getContent();
 
         collectionQueue.addAll(rssResources, CollectPriority.LOW);
+    }
+
+    public void dequeueAndSaveRssResource() {
+        var now = Instant.now();
 
         while (!collectionQueue.isQueueEmpty()) {
             RssSourceEntity rssResource = collectionQueue.poll();

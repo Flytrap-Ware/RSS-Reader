@@ -11,11 +11,15 @@ public class AdminSystemAggregate implements DefaultDomain {
 
     private final AdminSystemId id;
     private boolean postCollectionEnabled;
+    private long postCollectionDelay;
 
     @Builder
-    protected AdminSystemAggregate(AdminSystemId id, boolean postCollectionEnabled) {
+    protected AdminSystemAggregate(
+        AdminSystemId id, boolean postCollectionEnabled, long postCollectionDelay
+    ) {
         this.id = id;
         this.postCollectionEnabled = postCollectionEnabled;
+        this.postCollectionDelay = postCollectionDelay;
     }
 
     public void startPostCollection() {
@@ -24,5 +28,9 @@ public class AdminSystemAggregate implements DefaultDomain {
 
     public void stopPostCollection() {
         this.postCollectionEnabled = false;
+    }
+
+    public void changePostCollectionDelay(long delay) {
+        this.postCollectionDelay = delay;
     }
 }

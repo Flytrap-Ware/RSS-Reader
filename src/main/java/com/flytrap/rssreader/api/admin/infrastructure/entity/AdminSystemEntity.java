@@ -25,23 +25,31 @@ public class AdminSystemEntity {
     @Column(name = "post_collection_enabled", nullable = false)
     private boolean postCollectionEnabled;
 
+    @Column(name = "post_collection_delay")
+    private Long postCollectionDelay;
+
     @Builder
-    protected AdminSystemEntity(Long id, boolean postCollectionEnabled) {
+    protected AdminSystemEntity(
+        Long id, boolean postCollectionEnabled, Long postCollectionDelay
+    ) {
         this.id = id;
         this.postCollectionEnabled = postCollectionEnabled;
+        this.postCollectionDelay = postCollectionDelay;
     }
 
     public AdminSystemAggregate toAggregate() {
         return AdminSystemAggregate.builder()
             .id(new AdminSystemId(id))
             .postCollectionEnabled(postCollectionEnabled)
+            .postCollectionDelay(postCollectionDelay)
             .build();
     }
 
     public static AdminSystemEntity from(AdminSystemAggregate adminSystemAggregate) {
         return new AdminSystemEntity(
             adminSystemAggregate.getId().value(),
-            adminSystemAggregate.isPostCollectionEnabled()
+            adminSystemAggregate.isPostCollectionEnabled(),
+            adminSystemAggregate.getPostCollectionDelay()
         );
     }
 }

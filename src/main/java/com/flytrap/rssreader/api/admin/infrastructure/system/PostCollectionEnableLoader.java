@@ -1,8 +1,6 @@
-package com.flytrap.rssreader.api.post.infrastructure.system;
+package com.flytrap.rssreader.api.admin.infrastructure.system;
 
-import com.flytrap.rssreader.api.admin.domain.AdminSystemAggregate;
-import com.flytrap.rssreader.api.admin.infrastructure.repository.AdminSystemJpaRepository;
-import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
+import com.flytrap.rssreader.api.admin.infrastructure.implementation.AdminSystemCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -13,12 +11,11 @@ public class PostCollectionEnableLoader implements CommandLineRunner {
 
     private boolean isEnable;
 
-    private final AdminSystemJpaRepository adminSystemJpaRepository;
+    private final AdminSystemCommand adminSystemCommand;
 
     @Override
     public void run(String... args) throws Exception {
-        this.isEnable = adminSystemJpaRepository.findById(1L)
-            .orElseThrow(() -> new NoSuchDomainException(AdminSystemAggregate.class))
+        this.isEnable = adminSystemCommand.read()
             .isPostCollectionEnabled();
     }
 
