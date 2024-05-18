@@ -1,4 +1,4 @@
-package com.flytrap.rssreader.api.post.infrastructure.system;
+package com.flytrap.rssreader.api.admin.infrastructure.system;
 
 import com.flytrap.rssreader.api.admin.domain.AdminSystemAggregate;
 import com.flytrap.rssreader.api.admin.infrastructure.repository.AdminSystemJpaRepository;

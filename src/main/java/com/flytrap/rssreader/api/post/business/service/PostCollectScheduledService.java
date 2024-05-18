@@ -1,7 +1,7 @@
 package com.flytrap.rssreader.api.post.business.service;
 
 import com.flytrap.rssreader.api.post.infrastructure.system.PostCollectSystem;
-import com.flytrap.rssreader.api.post.infrastructure.system.PostCollectionEnableLoader;
+import com.flytrap.rssreader.api.admin.infrastructure.system.PostCollectionEnableLoader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;

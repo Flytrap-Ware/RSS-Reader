@@ -3,7 +3,7 @@ package com.flytrap.rssreader.api.admin.business.service;
 import com.flytrap.rssreader.api.admin.domain.AdminSystemAggregate;
 import com.flytrap.rssreader.api.admin.infrastructure.implementation.AdminSystemCommand;
 import com.flytrap.rssreader.api.post.infrastructure.system.PostCollectSystem;
-import com.flytrap.rssreader.api.post.infrastructure.system.PostCollectionEnableLoader;
+import com.flytrap.rssreader.api.admin.infrastructure.system.PostCollectionEnableLoader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
