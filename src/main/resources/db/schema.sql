@@ -93,10 +93,4 @@ CREATE TABLE IF NOT EXISTS `alert` (
     `webhook_url`   varchar(2500)   NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `rss_post_stat`
-(
-    `id`           bigint        NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `platform`	varchar(25)	NOT NULL,
-    `post_count`    bigint        NOT NULL,
-    `pub_date`      timestamp     NOT NULL
-);
+
