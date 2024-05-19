@@ -24,7 +24,6 @@ public class SchedulerConfig {
     private final Job statJob; // 통계 Job 추가
     private final JobLauncher jobLauncher;
 
-    // @Scheduled(cron = "${scheduler.cron-job}")
     //크롤링 Job 실행 스케줄러
     @Scheduled(fixedDelay = 1000)
     public void runJob() {
@@ -56,4 +55,3 @@ public class SchedulerConfig {
         }
     }
 }
-
