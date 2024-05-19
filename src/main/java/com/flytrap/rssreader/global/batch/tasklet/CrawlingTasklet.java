@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CrawlingTasklet implements Tasklet {
 
-    @Value("${collector.subscribe-queue.select-batch-size}")
-    private int selectBatchSize;
     private final PostCollectService postCollectService;
 
     @Override
