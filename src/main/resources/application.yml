@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: local
     group:
         local: [ local ] # localhost
         prod: [ prod ] # aws ec2

@@ -1,6 +1,6 @@
 package com.flytrap.rssreader.global.config;
 
-import com.flytrap.rssreader.api.post.business.service.collect.PostCollectService;
+import com.flytrap.rssreader.api.post.business.service.PostCollectScheduledService;
 import com.flytrap.rssreader.global.batch.tasklet.CrawlingTasklet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class CrawlingJobConfig {
 
     private final PlatformTransactionManager transactionManager;
     private final JobRepository jobRepository;
-    private final PostCollectService postCollectService;
+    private final PostCollectScheduledService postCollectScheduledService;
     public static final String STEP_CRAWLING_NAME = "crawlingStep";
 
     @Bean
@@ -39,7 +39,7 @@ public class CrawlingJobConfig {
     @Bean
     public Step crawlingStep() {
         return new StepBuilder(STEP_CRAWLING_NAME, jobRepository)
-                .tasklet(new CrawlingTasklet(postCollectService), transactionManager)
+                .tasklet(new CrawlingTasklet(postCollectScheduledService), transactionManager)
                 .build();
     }
 }
