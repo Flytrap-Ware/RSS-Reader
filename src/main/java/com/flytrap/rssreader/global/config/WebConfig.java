@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.global.config;
 
+import com.flytrap.rssreader.global.presentation.resolver.AdminAuthorizationArgumentResolver;
 import com.flytrap.rssreader.global.presentation.resolver.AuthorizationArgumentResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private final AuthorizationArgumentResolver authorizationArgumentResolver;
+    private final AdminAuthorizationArgumentResolver adminAuthorizationArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(authorizationArgumentResolver);
+        resolvers.add(adminAuthorizationArgumentResolver);
     }
 
     @Override

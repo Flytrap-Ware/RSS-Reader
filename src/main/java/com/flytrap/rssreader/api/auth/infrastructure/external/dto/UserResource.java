@@ -2,6 +2,7 @@ package com.flytrap.rssreader.api.auth.infrastructure.external.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flytrap.rssreader.api.account.domain.Account;
+import com.flytrap.rssreader.api.account.domain.AccountRoll;
 import com.flytrap.rssreader.api.account.domain.AuthProvider;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +26,9 @@ public class UserResource {
     }
 
     public Account newAccount() {
-        return Account.newAccount(login, email, avatarUrl, id, AuthProvider.GITHUB);
+        return Account.newAccount(
+            login, email, avatarUrl, id, AuthProvider.GITHUB, AccountRoll.GENERAL
+        );
     }
 
     public void updateEmail(UserEmailResource userEmailResource) {

@@ -27,7 +27,7 @@ public class SubscriptionController implements SubscriptionControllerApi {
     private final SubscriptionService subscriptionService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/folders/{folderId}/rss")
+    @PostMapping("/api/folders/{folderId}/subscriptions")
     public ApplicationResponse<SubscriptionResponse> addSubscribeToFolder(
         @PathVariable Long folderId,
         @Valid @RequestBody AddSubscriptionRequest request,
@@ -44,7 +44,7 @@ public class SubscriptionController implements SubscriptionControllerApi {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/api/folders/{folderId}/rss/{subscriptionId}") // TODO: url에서 rss 부분 수정하기 + 프론트
+    @DeleteMapping("/api/folders/{folderId}/subscriptions/{subscriptionId}") // TODO: url에서 rss 부분 수정하기 + 프론트
     public ApplicationResponse<Void> removeSubscriptionToFolder(
         @PathVariable Long folderId,
         @PathVariable Long subscriptionId,

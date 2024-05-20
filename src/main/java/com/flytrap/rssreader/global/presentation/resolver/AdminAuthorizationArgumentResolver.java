@@ -12,14 +12,14 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 @RequiredArgsConstructor
-public class AuthorizationArgumentResolver implements HandlerMethodArgumentResolver {
+public class AdminAuthorizationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AuthorizationContext context;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasLoginAnnotation = parameter
-            .hasParameterAnnotation(Login.class);
+            .hasParameterAnnotation(AdminLogin.class);
         boolean hasMemberType = AccountCredentials.class
             .isAssignableFrom(parameter.getParameterType());
 
@@ -32,13 +32,8 @@ public class AuthorizationArgumentResolver implements HandlerMethodArgumentResol
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory
     ) throws Exception {
 
-        Login parameterAnnotation = parameter.getParameterAnnotation(Login.class);
-
-        if (parameterAnnotation != null && parameterAnnotation.required()) {
-            return context.getAccountCredentials()
-                .orElseThrow(() -> new AuthenticationException("로그인이 필요한 기능입니다."));
-        }
-
-        return context.getAccountCredentials().orElse(null);
+        return context.getAccountCredentials()
+            .filter(AccountCredentials::isAdmin)
+            .orElseThrow(() -> new AuthenticationException("Admin 권한이 필요합니다."));
     }
 }

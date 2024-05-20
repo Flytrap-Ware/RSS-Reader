@@ -5,7 +5,7 @@ import com.flytrap.rssreader.api.account.domain.Account;
 import com.flytrap.rssreader.api.auth.infrastructure.external.provider.AuthProvider;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.global.properties.AuthProperties;
-import com.flytrap.rssreader.api.auth.presentation.dto.Login;
+import com.flytrap.rssreader.api.auth.presentation.dto.LoginRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class AuthService {
     private final AuthProvider authProvider;
     private final AccountService accountService;
 
-    public Account doAuthentication(Login request) {
+    public Account doAuthentication(LoginRequest request) {
         return authProvider.requestAccessToken(request.code())
                 .flatMap(authProvider::requestUserResource)
                 .map(accountService::login)
