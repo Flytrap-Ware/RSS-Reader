@@ -25,13 +25,13 @@ public class SchedulerConfig {
     private final JobLauncher jobLauncher;
 
     //크롤링 Job 실행 스케줄러
-   // @Scheduled(fixedDelay = 1000)
+    // @Scheduled(fixedDelay = 1000)
     public void runJob() {
         executeJob(crawlingJob);
     }
 
     // 통계 Job 실행 스케줄러
-    @Scheduled(cron = "0 0 23 * * *") // 매일 오후 11시에 실행
+    // @Scheduled(cron = "0 0 23 * * *") // 매일 오후 11시에 실행
     public void runStatisticsJob() {
         executeJob(statJob);
     }
@@ -39,17 +39,13 @@ public class SchedulerConfig {
     private void executeJob(Job job) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDateTime = now.format(formatter);
-        log.debug("작업 시작 시간: {}", formattedDateTime);
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
 
         try {
-            log.debug("Job in execution: {}", job.getName());
             JobExecution jobExecution = jobLauncher.run(job, jobParameters);
-            log.debug("Job completed with state: {}", jobExecution.getStatus());
         } catch (Exception e) {
             e.printStackTrace();
         }
