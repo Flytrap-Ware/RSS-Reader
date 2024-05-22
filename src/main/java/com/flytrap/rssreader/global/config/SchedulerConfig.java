@@ -25,7 +25,7 @@ public class SchedulerConfig {
     private final JobLauncher jobLauncher;
 
     //크롤링 Job 실행 스케줄러
-    @Scheduled(fixedDelay = 1000)
+   // @Scheduled(fixedDelay = 1000)
     public void runJob() {
         executeJob(crawlingJob);
     }
