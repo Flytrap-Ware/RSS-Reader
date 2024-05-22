@@ -7,6 +7,9 @@ server:
         name: JSESSIONID
         http-only: true
       timeout: 360000
+  tomcat:
+    mbeanregistry:
+      enabled: true
 
 spring:
   datasource:
@@ -25,7 +28,7 @@ spring:
         format_sql: true
     show-sql: true
     hibernate:
-     # ddl-auto: update
+      # ddl-auto: create-drop
     defer-datasource-initialization: true
   data:
     redis:
@@ -34,5 +37,5 @@ spring:
 
   sql:
     init:
-#      mode: always
+      # mode: always
       schema-locations: classpath:/db/data.sql
