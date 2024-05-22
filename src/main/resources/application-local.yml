@@ -12,7 +12,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/rss_reader
     username: root
-    password: qwer1234
+    password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   session:
@@ -36,3 +36,7 @@ spring:
     init:
 #      mode: always
       schema-locations: classpath:/db/data.sql
+
+  batch:
+    job:
+      enabled: false
