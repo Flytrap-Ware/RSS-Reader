@@ -17,8 +17,7 @@ public class CrawlingTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        //TODO: 왜인지 모르겠지만 @Value를 못 읽는다 추후 수정 필요
-        postCollectScheduledService.collectPostsScheduled();
+        postCollectScheduledService.schedulePostPersistence();
         return RepeatStatus.FINISHED;
     }
 }
