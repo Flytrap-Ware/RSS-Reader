@@ -2,11 +2,10 @@ package com.flytrap.rssreader.api.folder.infrastructure.implementatioin;
 
 import com.flytrap.rssreader.api.folder.domain.FolderAggregate;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
-import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.entity.FolderEntity;
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderJpaRepository;
-import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +17,9 @@ public class FolderCommand {
     private final FolderJpaRepository folderJpaRepository;
 
     @Transactional(readOnly = true)
-    public FolderAggregate readAggregate(FolderId folderId) {
-        return folderJpaRepository.findById(folderId.value())
-            .orElseThrow(() -> new NoSuchDomainException(Folder.class))
-            .toAggregate();
+    public Optional<FolderAggregate> readAggregate(FolderId folderId) {
+        return folderJpaRepository.findByIdAndIsDeletedFalse(folderId.value())
+            .map(FolderEntity::toAggregate);
     }
 
     @Transactional

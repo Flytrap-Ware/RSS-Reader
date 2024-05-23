@@ -8,12 +8,13 @@ import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderValidator;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
+import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class FolderUpdateService {
+public class FolderCommandService {
 
     private final FolderValidator folderValidator;
     private final FolderCommand folderCommand;
@@ -31,7 +32,8 @@ public class FolderUpdateService {
         if (!folderValidator.isMyOwnFolder(folderId, accountId))
             throw new ForbiddenAccessFolderException(Folder.class);
 
-        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId)
+            .orElseThrow(() -> new NoSuchDomainException(FolderAggregate.class));
         folderAggregate.changeName(folderName);
 
         return folderCommand.update(folderAggregate);
@@ -41,7 +43,8 @@ public class FolderUpdateService {
         if (!folderValidator.isMyOwnFolder(folderId, accountId))
             throw new ForbiddenAccessFolderException(Folder.class);
 
-        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId)
+            .orElseThrow(() -> new NoSuchDomainException(FolderAggregate.class));
 
         folderCommand.delete(folderAggregate);
     }
