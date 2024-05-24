@@ -3,7 +3,7 @@ package com.flytrap.rssreader.api.folder.business.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.flytrap.rssreader.CustomTestConfig;
+import com.flytrap.rssreader.CustomServiceTest;
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.folder.domain.FolderCreate;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderCommand;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@CustomTestConfig
+@CustomServiceTest
 class FolderQueryServiceTest {
 
     @Autowired

@@ -14,6 +14,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 @Testcontainers
 @Sql(scripts = "/reset.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-public @interface CustomTestConfig {
+public @interface CustomServiceTest {
 
 }
