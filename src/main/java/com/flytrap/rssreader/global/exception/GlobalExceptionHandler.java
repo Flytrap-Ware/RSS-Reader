@@ -21,11 +21,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({DuplicateKeyException.class, MethodArgumentNotValidException.class, IllegalArgumentException.class})
+    @ExceptionHandler({
+        DuplicateKeyException.class, IllegalArgumentException.class})
     public ErrorResponse handleBadInputException(RuntimeException e) {
         e.printStackTrace();
         log.error(e.getMessage());
         return ErrorResponse.occur("input error", e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ErrorResponse handleBadInputException(MethodArgumentNotValidException e) {
+        e.printStackTrace();
+        log.error(e.getMessage());
+        return ErrorResponse.occur(Objects.requireNonNull(e.getFieldError()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
