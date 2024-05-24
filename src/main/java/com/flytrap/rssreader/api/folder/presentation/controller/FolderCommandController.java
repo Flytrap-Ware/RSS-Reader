@@ -18,18 +18,16 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/folders")
 public class FolderCommandController implements FolderCommandControllerApi {
 
     private final FolderCommandService folderCommandService;
 
-    @PostMapping
+    @PostMapping("/api/folders")
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse<FolderUpdateResponse> createNewFolder(
             @Valid @RequestBody FolderUpdateRequest request,
@@ -41,7 +39,7 @@ public class FolderCommandController implements FolderCommandControllerApi {
         return new ApplicationResponse<>(FolderUpdateResponse.from(newFolder));
     }
 
-    @PatchMapping("/{folderId}")
+    @PatchMapping("/api/folders/{folderId}")
     @ResponseStatus(HttpStatus.OK)
     public ApplicationResponse<FolderUpdateResponse> updateFolder(
             @Valid @RequestBody FolderUpdateRequest request,
@@ -55,7 +53,7 @@ public class FolderCommandController implements FolderCommandControllerApi {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{folderId}")
+    @DeleteMapping("/api/folders/{folderId}")
     public ApplicationResponse<Void> deleteFolder(
             @PathVariable Long folderId,
             @Login AccountCredentials accountCredentials) {

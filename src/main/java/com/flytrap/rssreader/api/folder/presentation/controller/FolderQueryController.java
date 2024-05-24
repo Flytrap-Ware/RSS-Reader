@@ -10,17 +10,15 @@ import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/folders")
 public class FolderQueryController implements FolderQueryControllerApi {
 
     private final FolderQueryService folderQueryService;
 
-    @GetMapping
+    @GetMapping("/api/folders")
     public ApplicationResponse<MyFoldersResponse> getMyFolders(@Login AccountCredentials accountSession) {
 
         AccessibleFolders accessibleFolders = folderQueryService.getMyFolders(new AccountId(accountSession.id().value()));
