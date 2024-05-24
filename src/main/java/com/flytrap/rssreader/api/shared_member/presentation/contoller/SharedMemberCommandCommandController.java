@@ -4,9 +4,9 @@ import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.account.presentation.dto.AccountSummaryResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.shared_member.business.service.SharedMemberService;
+import com.flytrap.rssreader.api.shared_member.business.service.SharedMemberCommandService;
 import com.flytrap.rssreader.api.shared_member.domain.SharedMember;
-import com.flytrap.rssreader.api.shared_member.presentation.contoller.swagger.SharedMemberControllerApi;
+import com.flytrap.rssreader.api.shared_member.presentation.contoller.swagger.SharedMemberCommandControllerApi;
 import com.flytrap.rssreader.api.shared_member.presentation.dto.InviteMemberRequest;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class SharedMemberController implements SharedMemberControllerApi {
+public class SharedMemberCommandCommandController implements SharedMemberCommandControllerApi {
 
-    private final SharedMemberService sharedMemberService;
+    private final SharedMemberCommandService sharedMemberCommandService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/folders/{folderId}/members")
@@ -33,7 +33,7 @@ public class SharedMemberController implements SharedMemberControllerApi {
         @Valid @RequestBody InviteMemberRequest request,
         @Login AccountCredentials accountCredentials
     ) {
-        SharedMember sharedMember = sharedMemberService.inviteMemberToFolder(
+        SharedMember sharedMember = sharedMemberCommandService.inviteMemberToFolder(
             new FolderId(folderId),
             accountCredentials.id(),
             new AccountId(request.inviteeId())
@@ -42,29 +42,31 @@ public class SharedMemberController implements SharedMemberControllerApi {
         return new ApplicationResponse<>(AccountSummaryResponse.from(sharedMember));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/api/folders/{folderId}/members/me")
-    public ApplicationResponse<String> leaveFolder(
+    public ApplicationResponse<Void> leaveFolder(
         @PathVariable Long folderId,
         @Login AccountCredentials accountCredentials
     ) {
-        sharedMemberService.leaveFolder(
+        sharedMemberCommandService.leaveFolder(
             new FolderId(folderId), accountCredentials.id()
         );
 
-        return ApplicationResponse.success();
+        return new ApplicationResponse<>(null);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/api/folders/{folderId}/members/{inviteeId}")
-    public ApplicationResponse<String> removeMemberFromFolder(
+    public ApplicationResponse<Void> removeMemberFromFolder(
         @PathVariable Long folderId, @PathVariable Long inviteeId,
         @Login AccountCredentials accountCredentials
     ) {
-        sharedMemberService.removeMemberFromFolder(
+        sharedMemberCommandService.removeMemberFromFolder(
             new FolderId(folderId),
             accountCredentials.id(),
             new AccountId(inviteeId)
         );
 
-        return ApplicationResponse.success();
+        return new ApplicationResponse<>(null);
     }
 }

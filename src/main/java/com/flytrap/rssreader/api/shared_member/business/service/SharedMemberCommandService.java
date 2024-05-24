@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class SharedMemberService {
+public class SharedMemberCommandService {
 
     private final FolderValidator folderValidator;
     private final FolderCommand folderCommand;
