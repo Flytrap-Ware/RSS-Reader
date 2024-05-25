@@ -15,7 +15,8 @@ cd RSS-Reader/
 sudo docker-compose up -d
 
 echo "👉 blue-green deploy.sh run..."
-chmod 777 ./deploy.sh./deploy.sh
+chmod 777 ./deploy.sh
+./deploy.sh
 
 echo "👉 Cleaning up unused Docker images..."
 sudo docker image prune -a -f
