@@ -11,6 +11,7 @@ import com.flytrap.rssreader.api.subscribe.domain.Subscription;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.implement.SubscriptionQuery;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
+import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,8 @@ public class PostListQueryService {
 
     public List<Post> getPostsBySubscription(AccountId accountId, SubscriptionId subscriptionId,
         PostFilter postFilter, Pageable pageable) {
-        Subscription subscription = subscriptionQuery.read(subscriptionId);
+        Subscription subscription = subscriptionQuery.read(subscriptionId)
+            .orElseThrow(() -> new NoSuchDomainException(Subscription.class));
 
         return postQuery.readAllBySubscription(accountId, subscription.getRssSourceId(), postFilter, pageable);
     }
