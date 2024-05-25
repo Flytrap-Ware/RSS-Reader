@@ -21,6 +21,7 @@ public class StatItemWriter {
         JpaItemWriter<PostStatEntity> writer = new JpaItemWriter<>() {
             @Override
             public void write(Chunk<? extends PostStatEntity> items) {
+                log.debug("test log");
                 log.debug("[WRITER] - {}", items);
                 super.write(items);
             }
