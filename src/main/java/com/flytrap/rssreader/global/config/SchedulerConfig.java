@@ -31,7 +31,7 @@ public class SchedulerConfig {
     }
 
     // 통계 Job 실행 스케줄러
-    // @Scheduled(cron = "0 0 23 * * *") // 매일 오후 11시에 실행
+     @Scheduled(cron = "0 0 23 * * *") // 매일 오후 11시에 실행
     public void runStatisticsJob() {
         executeJob(statJob);
     }
