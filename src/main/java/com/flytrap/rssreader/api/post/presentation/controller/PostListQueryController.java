@@ -16,17 +16,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class PostListQueryController implements PostListQueryControllerApi {
 
     private final PostListQueryService postListQueryService;
 
-    @GetMapping("/posts")
+    @GetMapping("/api/posts")
     public ApplicationResponse<PostResponse.PostListResponse> getPostsByAccount(
         PostFilter postFilter, // TODO: filter 가 request 부터 repository까지 계속 전달됨
         @PageableDefault(page = 0, size = 15) Pageable pageable,
@@ -42,7 +40,7 @@ public class PostListQueryController implements PostListQueryControllerApi {
             new PostResponse.PostListResponse(posts));
     }
 
-    @GetMapping("/folders/{folderId}/posts")
+    @GetMapping("/api/folders/{folderId}/posts")
     public ApplicationResponse<PostResponse.PostListResponse> getPostsByFolder(
         @PathVariable Long folderId,
         PostFilter postFilter, // TODO: filter 가 request 부터 repository까지 계속 전달됨
@@ -59,7 +57,7 @@ public class PostListQueryController implements PostListQueryControllerApi {
             new PostResponse.PostListResponse(posts));
     }
 
-    @GetMapping("/subscriptions/{subscriptionId}/posts")
+    @GetMapping("/api/subscriptions/{subscriptionId}/posts")
     public ApplicationResponse<PostResponse.PostListResponse> getPostsBySubscription(
         @PathVariable Long subscriptionId,
         PostFilter postFilter, // TODO: filter 가 request 부터 repository까지 계속 전달됨
@@ -78,7 +76,7 @@ public class PostListQueryController implements PostListQueryControllerApi {
             new PostResponse.PostListResponse(posts));
     }
 
-    @GetMapping("/bookmarks")
+    @GetMapping("/api/bookmarks")
     public ApplicationResponse<PostResponse.PostListResponse> getBookmarkedPosts(
         PostFilter postFilter,
         @PageableDefault(page = 0, size = 15) Pageable pageable,

@@ -11,17 +11,15 @@ import com.flytrap.rssreader.global.presentation.resolver.Login;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostQueryController implements PostQueryControllerApi {
 
     private final PostQueryService postQueryService;
 
-    @GetMapping("/{postId}")
+    @GetMapping("/api/posts/{postId}")
     public ApplicationResponse<PostResponse> getPost(
         @PathVariable Long postId,
         @Login AccountCredentials accountCredentials) {

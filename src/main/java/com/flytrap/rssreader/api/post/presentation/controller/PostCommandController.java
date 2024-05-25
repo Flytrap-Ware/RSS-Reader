@@ -13,19 +13,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class PostCommandController implements PostCommandControllerApi {
 
     private final PostCommandService postCommandService;
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("posts/{postId}/read")
+    @DeleteMapping("/api/posts/{postId}/read")
     public ApplicationResponse<Void> unmarkAsOpened(
         @PathVariable Long postId,
         @Login AccountCredentials accountCredentials
@@ -36,7 +34,7 @@ public class PostCommandController implements PostCommandControllerApi {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/posts/{postId}/bookmarks")
+    @PostMapping("/api/posts/{postId}/bookmarks")
     public ApplicationResponse<BookmarkResponse> markAsBookmark(
         @PathVariable Long postId,
         @Login AccountCredentials accountCredentials
@@ -48,7 +46,7 @@ public class PostCommandController implements PostCommandControllerApi {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/posts/{postId}/bookmarks")
+    @DeleteMapping("/api/posts/{postId}/bookmarks")
     public ApplicationResponse<Void> unmarkAsBookmark(
         @PathVariable Long postId,
         @Login AccountCredentials accountCredentials
