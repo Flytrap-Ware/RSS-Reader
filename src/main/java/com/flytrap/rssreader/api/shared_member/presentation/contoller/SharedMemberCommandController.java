@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class SharedMemberCommandCommandController implements SharedMemberCommandControllerApi {
+public class SharedMemberCommandController implements SharedMemberCommandControllerApi {
 
     private final SharedMemberCommandService sharedMemberCommandService;
 

@@ -32,7 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @CustomControllerTest
-class SharedMemberCommandCommandControllerTest {
+class SharedMemberCommandControllerTest {
 
     @Autowired
     MockMvc mockMvc;
