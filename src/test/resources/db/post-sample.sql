@@ -15,3 +15,15 @@ VALUES
     (2, 'title02', 'url02', 'TISTORY', '2024-01-01 00:00:00.000000'),
     (3, 'title03', 'url03', 'MEDIUM', '2024-01-01 00:00:00.000000'),
     (4, 'title04', 'url04', 'ETC', '2024-01-01 00:00:00.000000');
+
+INSERT INTO `folder`(id, account_id, name, is_shared, is_deleted)
+VALUES
+    (1, 1, 'folder 1', false, false),
+    (2, 1, 'folder 2', false, false);
+
+INSERT INTO `subscription`(id, folder_id, rss_source_id)
+VALUES
+    (1, 1, 1),
+    (2, 1, 2),
+    (3, 2, 3),
+    (4, 2, 4);

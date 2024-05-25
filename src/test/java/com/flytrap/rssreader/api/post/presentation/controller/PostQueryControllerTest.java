@@ -10,6 +10,7 @@ import com.flytrap.rssreader.CustomControllerTest;
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.account.domain.AccountRoll;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
+import com.flytrap.rssreader.api.post.PostScriptSql;
 import com.flytrap.rssreader.global.presentation.resolver.AdminAuthorizationArgumentResolver;
 import com.flytrap.rssreader.global.presentation.resolver.AuthorizationArgumentResolver;
 import javax.security.sasl.AuthenticationException;
@@ -17,8 +18,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 
 @CustomControllerTest
@@ -34,7 +33,7 @@ class PostQueryControllerTest {
     AdminAuthorizationArgumentResolver adminAuthorizationArgumentResolver;
 
     @Nested
-    @Sql(scripts = "/post-sample.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @PostScriptSql
     class 게시글_보기_API {
 
         @Test
