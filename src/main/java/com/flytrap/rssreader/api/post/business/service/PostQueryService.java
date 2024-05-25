@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PostReadService {
+public class PostQueryService {
 
     private final PostCommand postCommand;
     private final RssSourceQuery rssSourceQuery;

@@ -23,11 +23,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PostListReadDslRepository implements PostListReadRepository {
+public class PostDslRepositoryImpl implements PostDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public PostListReadDslRepository(EntityManager entityManager) {
+    public PostDslRepositoryImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 

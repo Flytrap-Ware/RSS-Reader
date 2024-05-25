@@ -3,9 +3,9 @@ package com.flytrap.rssreader.api.post.presentation.controller;
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.post.business.service.PostListReadService;
+import com.flytrap.rssreader.api.post.business.service.PostListQueryService;
 import com.flytrap.rssreader.api.post.domain.PostFilter;
-import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostListReadControllerApi;
+import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostListQueryControllerApi;
 import com.flytrap.rssreader.api.post.presentation.dto.response.PostResponse;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class PostListReadController implements PostListReadControllerApi {
+public class PostListQueryController implements PostListQueryControllerApi {
 
-    private final PostListReadService postListReadService;
+    private final PostListQueryService postListQueryService;
 
     @GetMapping("/posts")
     public ApplicationResponse<PostResponse.PostListResponse> getPostsByAccount(
@@ -32,7 +32,7 @@ public class PostListReadController implements PostListReadControllerApi {
         @PageableDefault(page = 0, size = 15) Pageable pageable,
         @Login AccountCredentials accountCredentials) {
 
-        List<PostResponse> posts = postListReadService.getPostsByAccount(
+        List<PostResponse> posts = postListQueryService.getPostsByAccount(
                 new AccountId(accountCredentials.id().value()), postFilter, pageable)
             .stream()
             .map(PostResponse::from)
@@ -49,7 +49,7 @@ public class PostListReadController implements PostListReadControllerApi {
         @PageableDefault(page = 0, size = 15) Pageable pageable,
         @Login AccountCredentials accountCredentials) {
 
-        List<PostResponse> posts = postListReadService.getPostsByFolder(
+        List<PostResponse> posts = postListQueryService.getPostsByFolder(
                 new AccountId(accountCredentials.id().value()), new FolderId(folderId), postFilter, pageable)
             .stream()
             .map(PostResponse::from)
@@ -67,7 +67,7 @@ public class PostListReadController implements PostListReadControllerApi {
         // TODO: pageable 도 마찬가지. service 에서 만들면 됨
         @Login AccountCredentials accountCredentials) {
 
-        List<PostResponse> posts = postListReadService.getPostsBySubscription(
+        List<PostResponse> posts = postListQueryService.getPostsBySubscription(
                 new AccountId(accountCredentials.id().value()), new SubscriptionId(subscriptionId),
                 postFilter, pageable)
             .stream()
@@ -85,7 +85,7 @@ public class PostListReadController implements PostListReadControllerApi {
         @Login AccountCredentials accountCredentials
     ) {
 
-        List<PostResponse> posts = postListReadService.getBookmarkedPosts(
+        List<PostResponse> posts = postListQueryService.getBookmarkedPosts(
                 new AccountId(accountCredentials.id().value()), postFilter, pageable)
             .stream()
             .map(PostResponse::from)

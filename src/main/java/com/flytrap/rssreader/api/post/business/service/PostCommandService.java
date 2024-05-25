@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PostUpdateService {
+public class PostCommandService {
 
     private final PostCommand postCommand;
 

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
-public interface PostListReadRepository {
+public interface PostDslRepository {
 
     Optional<PostSummaryOutput> findById(Long postId);
 

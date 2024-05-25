@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.PathVariable;
 
-public interface PostUpdateControllerApi {
+public interface PostCommandControllerApi {
 
     @Operation(summary = "북마크 추가", description = "게시글 하나를 북마크에 추가한다.")
     @ApiResponses(value = {

@@ -2,9 +2,9 @@ package com.flytrap.rssreader.api.post.presentation.controller;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
-import com.flytrap.rssreader.api.post.business.service.PostUpdateService;
+import com.flytrap.rssreader.api.post.business.service.PostCommandService;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostUpdateControllerApi;
+import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostCommandControllerApi;
 import com.flytrap.rssreader.api.post.presentation.dto.response.BookmarkResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class PostUpdateController implements PostUpdateControllerApi {
+public class PostCommandController implements PostCommandControllerApi {
 
     private static final String DELETE_BOOKMARK_MESSAGE = "북마크가 삭제되었습니다. postId = ";
 
-    private final PostUpdateService postUpdateService;
+    private final PostCommandService postCommandService;
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("posts/{postId}/read")
@@ -32,7 +32,7 @@ public class PostUpdateController implements PostUpdateControllerApi {
         @PathVariable Long postId,
         @Login AccountCredentials accountCredentials
     ) {
-        postUpdateService.unmarkAsOpen(new AccountId(accountCredentials.id().value()), new PostId(postId));
+        postCommandService.unmarkAsOpen(new AccountId(accountCredentials.id().value()), new PostId(postId));
 
         return new ApplicationResponse<>(null);
     }
@@ -43,7 +43,7 @@ public class PostUpdateController implements PostUpdateControllerApi {
         @PathVariable Long postId,
         @Login AccountCredentials accountCredentials
     ) {
-        postUpdateService
+        postCommandService
             .markAsBookmark(new AccountId(accountCredentials.id().value()), new PostId(postId));
 
         return new ApplicationResponse<>(new BookmarkResponse(accountCredentials.id().value(), postId));
@@ -55,7 +55,7 @@ public class PostUpdateController implements PostUpdateControllerApi {
         @PathVariable Long postId,
         @Login AccountCredentials accountCredentials
     ) {
-        postUpdateService
+        postCommandService
             .unmarkAsBookmark(new AccountId(accountCredentials.id().value()), new PostId(postId));
 
         return new ApplicationResponse<>(DELETE_BOOKMARK_MESSAGE + postId);

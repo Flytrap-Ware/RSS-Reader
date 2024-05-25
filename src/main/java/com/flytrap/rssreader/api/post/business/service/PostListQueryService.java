@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 @Service
-public class PostListReadService {
+public class PostListQueryService {
 
     private final FolderValidator folderValidator;
     private final SubscriptionQuery subscriptionQuery;

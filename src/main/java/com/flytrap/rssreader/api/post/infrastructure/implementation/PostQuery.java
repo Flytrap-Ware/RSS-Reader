@@ -10,8 +10,8 @@ import com.flytrap.rssreader.api.post.domain.PostId;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.output.PostSummaryOutput;
 import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostDslRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
-import com.flytrap.rssreader.api.post.infrastructure.repository.PostListReadRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenJpaRepository;
 import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
@@ -31,7 +31,7 @@ public class PostQuery {
     private final PostJpaRepository postJpaRepository;
     private final BookmarkJpaRepository bookmarkJpaRepository;
     private final PostOpenJpaRepository postOpenJpaRepository;
-    private final PostListReadRepository postListReadRepository;
+    private final PostDslRepository postDslRepository;
     private final RssResourceJpaRepository rssResourceJpaRepository;
 
     @Transactional(readOnly = true)
@@ -54,7 +54,7 @@ public class PostQuery {
     @Transactional(readOnly = true)
     public List<Post> readAllByAccount(AccountId accountId, PostFilter postFilter,
         Pageable pageable) {
-        return postListReadRepository
+        return postDslRepository
             .findAllByAccount(accountId.value(), postFilter, pageable)
             .stream().map(PostSummaryOutput::toReadOnly).toList();
     }
@@ -62,7 +62,7 @@ public class PostQuery {
     @Transactional(readOnly = true)
     public List<Post> readAllByFolder(AccountId accountId, FolderId folderId, PostFilter postFilter,
         Pageable pageable) {
-        return postListReadRepository
+        return postDslRepository
             .findAllByFolder(accountId.value(), folderId.value(), postFilter, pageable)
             .stream().map(PostSummaryOutput::toReadOnly).toList();
     }
@@ -70,7 +70,7 @@ public class PostQuery {
     @Transactional(readOnly = true)
     public List<Post> readAllBySubscription(AccountId accountId, RssSourceId rssSourceId,
         PostFilter postFilter, Pageable pageable) {
-        return postListReadRepository.findAllBySubscription(accountId.value(),
+        return postDslRepository.findAllBySubscription(accountId.value(),
                 rssSourceId.value(), postFilter, pageable).stream()
             .map(PostSummaryOutput::toReadOnly).toList();
     }
@@ -78,7 +78,7 @@ public class PostQuery {
     @Transactional(readOnly = true)
     public List<Post> readAllBookmarked(AccountId accountId, PostFilter postFilter,
         Pageable pageable) {
-        return postListReadRepository.findAllBookmarked(accountId.value(), postFilter, pageable)
+        return postDslRepository.findAllBookmarked(accountId.value(), postFilter, pageable)
             .stream().map(PostSummaryOutput::toReadOnly).toList();
     }
 

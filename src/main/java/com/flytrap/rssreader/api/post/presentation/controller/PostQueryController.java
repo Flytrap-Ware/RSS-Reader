@@ -2,9 +2,9 @@ package com.flytrap.rssreader.api.post.presentation.controller;
 
 import com.flytrap.rssreader.api.account.domain.AccountId;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
-import com.flytrap.rssreader.api.post.business.service.PostReadService;
+import com.flytrap.rssreader.api.post.business.service.PostQueryService;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostReadControllerApi;
+import com.flytrap.rssreader.api.post.presentation.controller.swagger.PostQueryControllerApi;
 import com.flytrap.rssreader.api.post.presentation.dto.response.PostResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
-public class PostReadController implements PostReadControllerApi {
+public class PostQueryController implements PostQueryControllerApi {
 
-    private final PostReadService postReadService;
+    private final PostQueryService postQueryService;
 
     @GetMapping("/{postId}")
     public ApplicationResponse<PostResponse> getPost(
@@ -27,7 +27,7 @@ public class PostReadController implements PostReadControllerApi {
         @Login AccountCredentials accountCredentials) {
 
         PostResponse response = PostResponse.from(
-            postReadService.viewPost(new AccountId(accountCredentials.id().value()), new PostId(postId)));
+            postQueryService.viewPost(new AccountId(accountCredentials.id().value()), new PostId(postId)));
         return new ApplicationResponse<>(response);
     }
 }
