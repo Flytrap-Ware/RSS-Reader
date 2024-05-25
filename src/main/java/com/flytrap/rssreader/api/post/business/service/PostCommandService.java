@@ -27,7 +27,7 @@ public class PostCommandService {
             .orElseThrow(() -> new NoSuchDomainException(PostAggregate.class));
         postAggregate.markAsBookmarked();
 
-        postCommand.updateOnlyOpen(postAggregate, accountId);
+        postCommand.updateOnlyBookmark(postAggregate, accountId);
     }
 
     public void unmarkAsBookmark(AccountId accountId, PostId postId) {
