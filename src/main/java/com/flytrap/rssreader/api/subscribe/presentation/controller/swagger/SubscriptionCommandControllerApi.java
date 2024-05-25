@@ -15,7 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-public interface SubscriptionControllerApi {
+public interface SubscriptionCommandControllerApi {
 
     @Operation(summary = "폴더에 구독 추가하기", description = "이미 추가된 폴더에 구독을 새로 추가한다.")
     @ApiResponses(value = {

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SubscriptionService {
+public class SubscriptionCommandService {
 
     private final FolderValidator folderValidator;
     private final SubscriptionValidator subscriptionValidator;
