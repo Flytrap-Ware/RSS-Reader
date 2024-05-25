@@ -28,7 +28,7 @@ public class RssSourceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 2500, nullable = false)
+    @Column(length = 2500)
     private String title;
 
     @Column(length = 2500, nullable = false)

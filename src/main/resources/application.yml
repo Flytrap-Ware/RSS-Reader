@@ -4,6 +4,6 @@ spring:
     group:
         local: [ local ] # localhost
         prod: [ prod ] # aws ec2
-    include: [ admin, oauth, auth, collector ]
+    include: [ admin, oauth, auth, collector, actuator ]
   jpa:
     open-in-view: false
