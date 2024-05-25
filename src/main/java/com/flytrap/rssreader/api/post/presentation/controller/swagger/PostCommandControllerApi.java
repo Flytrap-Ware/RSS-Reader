@@ -27,7 +27,7 @@ public interface PostCommandControllerApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
     })
-    ApplicationResponse<String> unmarkAsBookmark(
+    ApplicationResponse<Void> unmarkAsBookmark(
         @Parameter(description = "북마크를 제거할 게시글 ID") @PathVariable Long postId,
         @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials member
     );

@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class PostCommandController implements PostCommandControllerApi {
 
-    private static final String DELETE_BOOKMARK_MESSAGE = "북마크가 삭제되었습니다. postId = ";
-
     private final PostCommandService postCommandService;
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -49,16 +47,16 @@ public class PostCommandController implements PostCommandControllerApi {
         return new ApplicationResponse<>(new BookmarkResponse(accountCredentials.id().value(), postId));
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/posts/{postId}/bookmarks")
-    public ApplicationResponse<String> unmarkAsBookmark(
+    public ApplicationResponse<Void> unmarkAsBookmark(
         @PathVariable Long postId,
         @Login AccountCredentials accountCredentials
     ) {
         postCommandService
             .unmarkAsBookmark(new AccountId(accountCredentials.id().value()), new PostId(postId));
 
-        return new ApplicationResponse<>(DELETE_BOOKMARK_MESSAGE + postId);
+        return new ApplicationResponse<>(null);
     }
 
 }
