@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class SubscriptionCommandCommandController implements SubscriptionCommandControllerApi {
+public class SubscriptionCommandController implements SubscriptionCommandControllerApi {
 
     private final SubscriptionCommandService subscriptionCommandService;
 
@@ -44,7 +44,7 @@ public class SubscriptionCommandCommandController implements SubscriptionCommand
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/api/folders/{folderId}/subscriptions/{subscriptionId}") // TODO: url에서 rss 부분 수정하기 + 프론트
+    @DeleteMapping("/api/folders/{folderId}/subscriptions/{subscriptionId}")
     public ApplicationResponse<Void> removeSubscriptionToFolder(
         @PathVariable Long folderId,
         @PathVariable Long subscriptionId,
