@@ -12,10 +12,12 @@ import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,6 +26,7 @@ public class AlertCommandController implements AlertCommandControllerApi {
 
     private final AlertCommandService alertCommandService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/folders/{folderId}/alerts")
     public ApplicationResponse<AlertResponse> registerAlert(
         @PathVariable Long folderId,
@@ -37,6 +40,7 @@ public class AlertCommandController implements AlertCommandControllerApi {
         return new ApplicationResponse<>(AlertResponse.from(alert));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/api/folders/{folderId}/alerts/{alertId}")
     public ApplicationResponse<String> removeAlert(
         @PathVariable Long folderId,
