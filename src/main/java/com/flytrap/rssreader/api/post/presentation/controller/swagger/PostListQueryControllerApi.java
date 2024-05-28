@@ -17,7 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "게시글 목록 불러오기")
-public interface PostListReadControllerApi {
+public interface PostListQueryControllerApi {
 
     @Operation(summary = "전체 게시글 목록 불러오기", description = "회원이 구독한 모든 블로그의 게시글 목록을 반환한다.")
     @ApiResponses(value = {

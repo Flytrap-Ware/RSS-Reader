@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Tag;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag("Posts")
-public interface PostReadControllerApi {
+public interface PostQueryControllerApi {
 
     @Operation(summary = "게시글 불러오기", description = "게시글 하나를 불러온다.")
     @ApiResponses(value = {

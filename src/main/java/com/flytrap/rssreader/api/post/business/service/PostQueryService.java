@@ -9,12 +9,13 @@ import com.flytrap.rssreader.api.post.infrastructure.implementation.PostCommand;
 import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.subscribe.infrastructure.implement.RssSourceQuery;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
+import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PostReadService {
+public class PostQueryService {
 
     private final PostCommand postCommand;
     private final RssSourceQuery rssSourceQuery;
@@ -22,7 +23,8 @@ public class PostReadService {
 
     public Post viewPost(AccountId accountId, PostId postId) {
 
-        PostAggregate postAggregate = postCommand.readAggregate(postId, accountId);
+        PostAggregate postAggregate = postCommand.readAggregate(postId, accountId)
+            .orElseThrow(() -> new NoSuchDomainException(PostAggregate.class));
         RssSource rssSource = rssSourceQuery.read(postAggregate.getRssSourceId());
 
         globalEventPublisher.publish(new PostOpenEvent(postAggregate, accountId));
