@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-public interface FolderUpdateControllerApi {
+public interface FolderCommandControllerApi {
 
     @Operation(summary = "새로운 폴더 추가하기", description = "새로운 폴더를 추가한다.")
     @ApiResponses(value = {

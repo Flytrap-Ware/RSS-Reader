@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class FolderReadService {
+public class FolderQueryService {
 
     private final FolderQuery folderQuery;
 

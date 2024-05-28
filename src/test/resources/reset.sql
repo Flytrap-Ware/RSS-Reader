@@ -1,0 +1,11 @@
+TRUNCATE TABLE `account`;
+TRUNCATE TABLE `admin_system`;
+TRUNCATE TABLE `alert`;
+TRUNCATE TABLE `bookmark`;
+TRUNCATE TABLE `folder`;
+TRUNCATE TABLE `open`;
+TRUNCATE TABLE `post`;
+TRUNCATE TABLE `rss_source`;
+TRUNCATE TABLE `shared_member`;
+TRUNCATE TABLE `subscription`;
+TRUNCATE TABLE `rss_post_stat`;

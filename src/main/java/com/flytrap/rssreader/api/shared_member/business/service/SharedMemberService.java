@@ -12,6 +12,7 @@ import com.flytrap.rssreader.api.shared_member.infrastructure.implementation.Sha
 import com.flytrap.rssreader.api.shared_member.infrastructure.implementation.SharedMemberValidator;
 import com.flytrap.rssreader.global.exception.domain.DuplicateDomainException;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
+import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import com.flytrap.rssreader.global.exception.domain.NotFolderOwnerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,8 @@ public class SharedMemberService {
         SharedMember sharedMember = sharedMemberCommand
             .create(new SharedMemberCreate(folderId, inviteeId));
 
-        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+        FolderAggregate folderAggregate = folderCommand.readAggregate(folderId)
+            .orElseThrow(() -> new NoSuchDomainException(FolderAggregate.class));
         folderAggregate.toShared();
         folderCommand.update(folderAggregate);
 
@@ -60,7 +62,8 @@ public class SharedMemberService {
         sharedMemberCommand.deleteBy(folderId, accountId);
 
         if (sharedMemberValidator.hasNoSharedMembersByFolder(folderId)) {
-            FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+            FolderAggregate folderAggregate = folderCommand.readAggregate(folderId)
+                .orElseThrow(() -> new NoSuchDomainException(FolderAggregate.class));
             folderAggregate.toPrivate();
             folderCommand.update(folderAggregate);
         }
@@ -78,7 +81,8 @@ public class SharedMemberService {
         sharedMemberCommand.deleteBy(folderId, inviteeId);
 
         if (sharedMemberValidator.hasNoSharedMembersByFolder(folderId)) {
-            FolderAggregate folderAggregate = folderCommand.readAggregate(folderId);
+            FolderAggregate folderAggregate = folderCommand.readAggregate(folderId)
+                .orElseThrow(() -> new NoSuchDomainException(FolderAggregate.class));
             folderAggregate.toPrivate();
             folderCommand.update(folderAggregate);
         }
