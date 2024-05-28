@@ -2,10 +2,10 @@ package com.flytrap.rssreader.api.subscribe.presentation.controller;
 
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.folder.domain.FolderId;
-import com.flytrap.rssreader.api.subscribe.business.service.SubscriptionService;
+import com.flytrap.rssreader.api.subscribe.business.service.SubscriptionCommandService;
 import com.flytrap.rssreader.api.subscribe.domain.Subscription;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
-import com.flytrap.rssreader.api.subscribe.presentation.controller.swagger.SubscriptionControllerApi;
+import com.flytrap.rssreader.api.subscribe.presentation.controller.swagger.SubscriptionCommandControllerApi;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.AddSubscriptionRequest;
 import com.flytrap.rssreader.api.subscribe.presentation.dto.SubscriptionResponse;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class SubscriptionController implements SubscriptionControllerApi {
+public class SubscriptionCommandController implements SubscriptionCommandControllerApi {
 
-    private final SubscriptionService subscriptionService;
+    private final SubscriptionCommandService subscriptionCommandService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/folders/{folderId}/subscriptions")
@@ -33,7 +33,7 @@ public class SubscriptionController implements SubscriptionControllerApi {
         @Valid @RequestBody AddSubscriptionRequest request,
         @Login AccountCredentials accountCredentials
     ) {
-        Subscription subscription = subscriptionService
+        Subscription subscription = subscriptionCommandService
             .addSubscriptionToFolder(
                 accountCredentials.id(),
                 new FolderId(folderId),
@@ -44,13 +44,13 @@ public class SubscriptionController implements SubscriptionControllerApi {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/api/folders/{folderId}/subscriptions/{subscriptionId}") // TODO: url에서 rss 부분 수정하기 + 프론트
+    @DeleteMapping("/api/folders/{folderId}/subscriptions/{subscriptionId}")
     public ApplicationResponse<Void> removeSubscriptionToFolder(
         @PathVariable Long folderId,
         @PathVariable Long subscriptionId,
         @Login AccountCredentials accountCredentials
     ) {
-        subscriptionService.removeSubscriptionToFolder(
+        subscriptionCommandService.removeSubscriptionToFolder(
             accountCredentials.id(),
             new FolderId(folderId),
             new SubscriptionId(subscriptionId)

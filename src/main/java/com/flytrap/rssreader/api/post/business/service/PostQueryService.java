@@ -25,7 +25,8 @@ public class PostQueryService {
 
         PostAggregate postAggregate = postCommand.readAggregate(postId, accountId)
             .orElseThrow(() -> new NoSuchDomainException(PostAggregate.class));
-        RssSource rssSource = rssSourceQuery.read(postAggregate.getRssSourceId());
+        RssSource rssSource = rssSourceQuery.read(postAggregate.getRssSourceId())
+            .orElseThrow(() -> new NoSuchDomainException(RssSource.class));
 
         globalEventPublisher.publish(new PostOpenEvent(postAggregate, accountId));
 

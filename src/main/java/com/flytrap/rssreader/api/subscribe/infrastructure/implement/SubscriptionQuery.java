@@ -5,8 +5,8 @@ import com.flytrap.rssreader.api.subscribe.domain.Subscription;
 import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.output.SubscriptionOutput;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscriptionDslRepository;
-import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +16,10 @@ public class SubscriptionQuery {
 
     private final SubscriptionDslRepository subscriptionDslRepository;
 
-    public Subscription read(SubscriptionId subscriptionId) {
+    public Optional<Subscription> read(SubscriptionId subscriptionId) {
         return subscriptionDslRepository
             .findById(subscriptionId.value())
-            .orElseThrow(() -> new NoSuchDomainException(Subscription.class))
-            .toReadOnly();
+            .map(SubscriptionOutput::toReadOnly);
     }
 
     public List<Subscription> readAllByFolder(FolderId folderId) {
