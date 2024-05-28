@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class SharedMemberService {
+public class SharedMemberCommandService {
 
     private final FolderValidator folderValidator;
     private final FolderCommand folderCommand;
@@ -54,7 +54,7 @@ public class SharedMemberService {
     @Transactional
     public void leaveFolder(FolderId folderId, AccountId accountId) {
         if (folderValidator.isMyOwnFolder(folderId, accountId))
-            throw new NotFolderOwnerException(Folder.class);
+            throw new IllegalArgumentException("The owner of a folder cannot leave the folder.");
 
         if (!folderValidator.isAccessibleFolder(folderId, accountId))
             throw new ForbiddenAccessFolderException(Folder.class);

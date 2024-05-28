@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-public interface SharedMemberControllerApi {
+public interface SharedMemberCommandControllerApi {
 
     @Operation(summary = "폴더에 회원 초대", description = "폴더에 회원을 한명 초대한다.")
     @ApiResponses(value = {
@@ -31,7 +31,7 @@ public interface SharedMemberControllerApi {
     @Operation(summary = "초대된 폴더에서 떠나기", description = "내가 초대된 폴더에서 스스로 나간다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),})
-    ApplicationResponse<String> leaveFolder(
+    ApplicationResponse<Void> leaveFolder(
         @Parameter(description = "떠나고자 하는 폴더의 ID") @PathVariable Long folderId,
         @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials accountCredentials
     );
@@ -41,7 +41,7 @@ public interface SharedMemberControllerApi {
         @ApiResponse(responseCode = "200", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "400", description = "실패: 폴더에 추가되어있지 않은 멤버 삭제할 때",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "401", description = "실패: 추방 권한이 없을 때",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),})
-    ApplicationResponse<String> removeMemberFromFolder(
+    ApplicationResponse<Void> removeMemberFromFolder(
         @Parameter(description = "추방이 일어날 폴더의 ID") @PathVariable Long folderId,
         @Parameter(description = "현재 폴더에서 추방시킬 회원의 ID") @PathVariable Long inviteeId,
         @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials accountCredentials
