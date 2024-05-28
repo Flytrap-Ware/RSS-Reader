@@ -2,8 +2,9 @@ package com.flytrap.rssreader.api.subscribe.infrastructure.implement;
 
 import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
+import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
-import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +14,9 @@ public class RssSourceQuery {
 
     private final RssResourceJpaRepository rssResourceJpaRepository;
 
-    public RssSource read(RssSourceId rssSourceId) {
+    public Optional<RssSource> read(RssSourceId rssSourceId) {
         return rssResourceJpaRepository.findById(rssSourceId.value())
-            .orElseThrow(() -> new NoSuchDomainException(RssSource.class))
-            .toExistingRssSource();
+            .map(RssSourceEntity::toExistingRssSource);
     }
 
 }
