@@ -18,7 +18,6 @@ public record PostResponse(
 
     public record PostListResponse(
             List<PostResponse> posts
-            // TODO: react
     ) { }
 
     public static PostResponse from(Post post) {

@@ -67,6 +67,10 @@ dependencies {
     implementation 'com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.3.3'
     // Prometheus
     implementation 'io.micrometer:micrometer-registry-prometheus'
+    // Test Container
+    testImplementation 'org.testcontainers:testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mysql'
 }
 
 test {

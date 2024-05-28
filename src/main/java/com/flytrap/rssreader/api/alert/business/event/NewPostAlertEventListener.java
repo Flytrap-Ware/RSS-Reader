@@ -2,7 +2,9 @@ package com.flytrap.rssreader.api.alert.business.event;
 
 import com.flytrap.rssreader.api.alert.domain.Alert;
 import com.flytrap.rssreader.api.alert.infrastructure.system.AlertSendSystem;
+import com.flytrap.rssreader.api.folder.domain.Folder;
 import com.flytrap.rssreader.api.folder.infrastructure.implementatioin.FolderQuery;
+import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -23,7 +25,9 @@ public class NewPostAlertEventListener {
         if (!alerts.isEmpty()) {
             alerts.forEach(alert ->
                 alertSendSystem.sendAlertToPlatform(
-                    folderQuery.read(alert.getFolderId()).getName(),
+                    folderQuery.read(alert.getFolderId())
+                        .orElseThrow(() -> new NoSuchDomainException(Folder.class))
+                        .getName(),
                     alert.getWebhookUrl(),
                     event.posts()
                 ));

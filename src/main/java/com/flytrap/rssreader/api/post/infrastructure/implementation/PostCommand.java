@@ -10,7 +10,7 @@ import com.flytrap.rssreader.api.post.infrastructure.entity.OpenEntity;
 import com.flytrap.rssreader.api.post.infrastructure.repository.BookmarkJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenJpaRepository;
-import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,16 +24,17 @@ public class PostCommand {
     private final BookmarkJpaRepository bookmarkJpaRepository;
 
     @Transactional(readOnly = true)
-    public PostAggregate readAggregate(PostId postId, AccountId accountId) {
-
-        boolean isRead = postOpenJpaRepository.existsByAccountIdAndPostId(
-            accountId.value(), postId.value());
-        boolean isBookmark = bookmarkJpaRepository.existsByAccountIdAndPostId(
-            accountId.value(), postId.value());
+    public Optional<PostAggregate> readAggregate(PostId postId, AccountId accountId) {
 
         return postJpaRepository.findById(postId.value())
-            .orElseThrow(() -> new NoSuchDomainException(PostAggregate.class))
-            .toAggregate(Open.from(isRead), Bookmark.from(isBookmark));
+            .map(postEntity -> {
+                boolean isRead = postOpenJpaRepository.existsByAccountIdAndPostId(
+                    accountId.value(), postId.value());
+                boolean isBookmark = bookmarkJpaRepository.existsByAccountIdAndPostId(
+                    accountId.value(), postId.value());
+
+                return postEntity.toAggregate(Open.from(isRead), Bookmark.from(isBookmark));
+            });
     }
 
     @Transactional
