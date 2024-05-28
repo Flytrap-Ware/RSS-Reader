@@ -1,10 +1,9 @@
 package com.flytrap.rssreader.api.alert.presentation.controller;
 
-import com.flytrap.rssreader.api.alert.business.service.AlertService;
+import com.flytrap.rssreader.api.alert.business.service.AlertCommandService;
 import com.flytrap.rssreader.api.alert.domain.Alert;
 import com.flytrap.rssreader.api.alert.domain.AlertId;
-import com.flytrap.rssreader.api.alert.presentation.controller.swagger.AlertControllerApi;
-import com.flytrap.rssreader.api.alert.presentation.dto.AlertListResponse;
+import com.flytrap.rssreader.api.alert.presentation.controller.swagger.AlertCommandControllerApi;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertRequest;
 import com.flytrap.rssreader.api.alert.presentation.dto.AlertResponse;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
@@ -12,52 +11,43 @@ import com.flytrap.rssreader.api.folder.domain.FolderId;
 import com.flytrap.rssreader.global.model.ApplicationResponse;
 import com.flytrap.rssreader.global.presentation.resolver.Login;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class AlertController implements AlertControllerApi {
+public class AlertCommandController implements AlertCommandControllerApi {
 
-    private final AlertService alertService;
+    private final AlertCommandService alertCommandService;
 
-    @GetMapping("/api/folders/{folderId}/alerts")
-    public ApplicationResponse<AlertListResponse> getAlertsByFolder(
-        @PathVariable Long folderId,
-        @Login AccountCredentials accountCredentials
-    ) {
-        List<Alert> alerts = alertService
-            .getAlertsByFolder(new FolderId(folderId), accountCredentials.id());
-
-        return new ApplicationResponse<>(AlertListResponse.from(alerts));
-    }
-
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/folders/{folderId}/alerts")
     public ApplicationResponse<AlertResponse> registerAlert(
         @PathVariable Long folderId,
         @Valid @RequestBody AlertRequest request,
         @Login AccountCredentials accountCredentials
     ) {
-        Alert alert = alertService.registerAlert(
+        Alert alert = alertCommandService.registerAlert(
             new FolderId(folderId), accountCredentials.id(),  request.webhookUrl()
         );
 
         return new ApplicationResponse<>(AlertResponse.from(alert));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/api/folders/{folderId}/alerts/{alertId}")
     public ApplicationResponse<String> removeAlert(
         @PathVariable Long folderId,
         @PathVariable Long alertId,
         @Login AccountCredentials accountCredentials)
     {
-        alertService.removeAlert(
+        alertCommandService.removeAlert(
             new FolderId(folderId), accountCredentials.id(), new AlertId(alertId)
         );
 

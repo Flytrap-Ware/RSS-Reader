@@ -16,6 +16,10 @@ spring:
         format_sql: true
         highlight_sql: true
 
+  batch:
+    job:
+      enabled: false
+
 collector:
   subscribe-queue:
     select-batch-size: 50
