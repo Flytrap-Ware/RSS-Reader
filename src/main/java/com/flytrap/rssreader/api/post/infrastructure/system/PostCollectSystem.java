@@ -1,5 +1,6 @@
 package com.flytrap.rssreader.api.post.infrastructure.system;
 
+import com.flytrap.rssreader.api.admin.infrastructure.system.PostCollectionThreadPoolExecutor;
 import com.flytrap.rssreader.api.alert.business.event.NewPostAlertEvent;
 import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,7 @@ public class PostCollectSystem {
     private final PostJpaRepository postRepository;
     private final RssPostParser postParser;
     private final GlobalEventPublisher globalEventPublisher;
+    private final PostCollectionThreadPoolExecutor postCollectionThreadPoolExecutor;
 
     public void collectPosts(int selectBatchSize) {
         loadAndEnqueueRssResources(selectBatchSize);
@@ -48,18 +51,25 @@ public class PostCollectSystem {
 
     public void dequeueAndSaveRssResource() {
         var now = Instant.now();
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         while (!collectionQueue.isQueueEmpty()) {
+
             RssSourceEntity rssResource = collectionQueue.poll();
-            postParser.parseRssDocuments(rssResource.getUrl())
-                .ifPresent(rssPostsData -> {
-                    postRepository.saveAll(
-                        generateCollectedPostsForUpsert(rssPostsData, rssResource));
-                    rssResource.updateTitle(rssPostsData.rssSourceTitle());
-                    rssResource.updateLastCollectedAt(now);
-                    rssResourceRepository.save(rssResource);
-                });
+
+            future = postCollectionThreadPoolExecutor.runAsync(() -> {
+                postParser.parseRssDocuments(rssResource.getUrl())
+                    .ifPresent(rssPostsData -> {
+                        postRepository.saveAll(
+                            generateCollectedPostsForUpsert(rssPostsData, rssResource));
+                        rssResource.updateTitle(rssPostsData.rssSourceTitle());
+                        rssResource.updateLastCollectedAt(now);
+                        rssResourceRepository.save(rssResource);
+                    });
+            });
         }
+
+        future.join();
     }
 
     public void enqueueHighPrioritySubscription(RssSourceEntity rssSourceEntity) {
