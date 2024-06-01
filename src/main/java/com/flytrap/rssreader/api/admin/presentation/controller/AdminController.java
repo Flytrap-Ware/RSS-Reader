@@ -1,6 +1,7 @@
 package com.flytrap.rssreader.api.admin.presentation.controller;
 
 import com.flytrap.rssreader.api.admin.business.service.AdminSystemService;
+import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionCoreSizeRequest;
 import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionCycleRequest;
 import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionDelayRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
@@ -91,6 +92,16 @@ public class AdminController {
         adminSystemService.changePostCollectionDelay(request.getDelay());
 
         return new ApplicationResponse<>("게시글 수집 스케쥴 간격 변경: " + request.getDelay() + "ms");
+    }
+
+    @PatchMapping("/api/admin/post-collection/core-size")
+    public ApplicationResponse<String> changePostCollectionThreadPoolCoreSize(
+        @RequestBody @Valid PostCollectionCoreSizeRequest request,
+        @AdminLogin AccountCredentials accountCredentials
+    ) {
+        adminSystemService.changePostCollectionThreadPoolCoreSize(request.getCoreSize());
+
+        return new ApplicationResponse<>("게시글 수집 코어 스레드 수 변경: " + request.getCoreSize() + "개");
     }
 
 }

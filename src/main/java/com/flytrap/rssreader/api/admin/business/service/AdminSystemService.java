@@ -3,6 +3,7 @@ package com.flytrap.rssreader.api.admin.business.service;
 import com.flytrap.rssreader.api.admin.domain.AdminSystemAggregate;
 import com.flytrap.rssreader.api.admin.infrastructure.implementation.AdminSystemCommand;
 import com.flytrap.rssreader.api.admin.infrastructure.system.PostCollectionEnableLoader;
+import com.flytrap.rssreader.api.admin.infrastructure.system.PostCollectionThreadPoolExecutor;
 import com.flytrap.rssreader.api.post.business.service.PostCollectScheduledService;
 import com.flytrap.rssreader.api.post.infrastructure.system.PostCollectSystem;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class AdminSystemService {
     private final PostCollectionEnableLoader postCollectionEnableLoader;
     private final PostCollectSystem postCollectSystem;
     private final PostCollectScheduledService postCollectScheduledService;
+    private final PostCollectionThreadPoolExecutor postCollectionThreadPoolExecutor;
 
     public void startPostCollection() {
         AdminSystemAggregate adminSystemAggregate = adminSystemCommand.read();
@@ -37,7 +39,8 @@ public class AdminSystemService {
         if (postCollectionEnableLoader.isEnabled()) {
             throw new IllegalStateException("게시글 수집 기능이 이미 실행 중 입니다.");
         }
-        postCollectSystem.collectPosts(batchSize);
+        postCollectSystem.loadAndEnqueueRssResources(batchSize);
+        postCollectSystem.dequeueAndSaveRssResource();
     }
 
     public void changePostCollectionDelay(int delay) {
@@ -46,6 +49,14 @@ public class AdminSystemService {
 
         adminSystemCommand.save(adminSystemAggregate);
         postCollectScheduledService.changePostCollectionDelay(delay);
+    }
+
+    public void changePostCollectionThreadPoolCoreSize(int corePoolSize) {
+        AdminSystemAggregate adminSystemAggregate = adminSystemCommand.read();
+        adminSystemAggregate.changeCoreThreadPoolSize(corePoolSize);
+
+        adminSystemCommand.save(adminSystemAggregate);
+        postCollectionThreadPoolExecutor.resetCorePoolSize(corePoolSize);
     }
 
 }
