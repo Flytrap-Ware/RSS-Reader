@@ -40,4 +40,9 @@ public class SubscribeCollectionPriorityBlockingQueue implements SubscribeCollec
     public boolean isQueueEmpty() {
         return queue.isEmpty();
     }
+
+    @Override
+    public int size() {
+        return queue.size();
+    }
 }
