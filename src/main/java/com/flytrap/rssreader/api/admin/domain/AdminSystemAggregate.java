@@ -12,16 +12,18 @@ public class AdminSystemAggregate implements DefaultDomain {
     private final AdminSystemId id;
     private boolean postCollectionEnabled;
     private long postCollectionDelay;
+    private int postCollectionBatchSize;
     private int coreThreadPoolSize;
 
     @Builder
     protected AdminSystemAggregate(
         AdminSystemId id, boolean postCollectionEnabled, long postCollectionDelay,
-        int coreThreadPoolSize
+        int postCollectionBatchSize, int coreThreadPoolSize
     ) {
         this.id = id;
         this.postCollectionEnabled = postCollectionEnabled;
         this.postCollectionDelay = postCollectionDelay;
+        this.postCollectionBatchSize = postCollectionBatchSize;
         this.coreThreadPoolSize = coreThreadPoolSize;
     }
 
@@ -35,6 +37,10 @@ public class AdminSystemAggregate implements DefaultDomain {
 
     public void changePostCollectionDelay(long delay) {
         this.postCollectionDelay = delay;
+    }
+
+    public void changePostCollectionBatchSize(int postCollectionBatchSize) {
+        this.postCollectionBatchSize = postCollectionBatchSize;
     }
 
     public void changeCoreThreadPoolSize(int coreThreadPoolSize) {

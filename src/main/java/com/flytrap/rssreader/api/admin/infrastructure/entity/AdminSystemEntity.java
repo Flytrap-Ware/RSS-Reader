@@ -28,17 +28,21 @@ public class AdminSystemEntity {
     @Column(name = "post_collection_delay")
     private Long postCollectionDelay;
 
+    @Column(name = "post_collection_batch_size")
+    private Integer postCollectionBatchSize;
+
     @Column(name = "core_thread_pool_size")
     private Integer coreThreadPoolSize;
 
     @Builder
     protected AdminSystemEntity(
         Long id, boolean postCollectionEnabled, Long postCollectionDelay,
-        Integer coreThreadPoolSize
+        Integer postCollectionBatchSize, Integer coreThreadPoolSize
     ) {
         this.id = id;
         this.postCollectionEnabled = postCollectionEnabled;
         this.postCollectionDelay = postCollectionDelay;
+        this.postCollectionBatchSize = postCollectionBatchSize;
         this.coreThreadPoolSize = coreThreadPoolSize;
     }
 
@@ -48,15 +52,17 @@ public class AdminSystemEntity {
             .postCollectionEnabled(postCollectionEnabled)
             .postCollectionDelay(postCollectionDelay)
             .coreThreadPoolSize(coreThreadPoolSize)
+            .postCollectionBatchSize(postCollectionBatchSize)
             .build();
     }
 
     public static AdminSystemEntity from(AdminSystemAggregate adminSystemAggregate) {
-        return new AdminSystemEntity(
-            adminSystemAggregate.getId().value(),
-            adminSystemAggregate.isPostCollectionEnabled(),
-            adminSystemAggregate.getPostCollectionDelay(),
-            adminSystemAggregate.getCoreThreadPoolSize()
-        );
+        return AdminSystemEntity.builder()
+            .id(adminSystemAggregate.getId().value())
+            .postCollectionEnabled(adminSystemAggregate.isPostCollectionEnabled())
+            .postCollectionDelay(adminSystemAggregate.getPostCollectionDelay())
+            .postCollectionBatchSize(adminSystemAggregate.getPostCollectionBatchSize())
+            .coreThreadPoolSize(adminSystemAggregate.getCoreThreadPoolSize())
+            .build();
     }
 }

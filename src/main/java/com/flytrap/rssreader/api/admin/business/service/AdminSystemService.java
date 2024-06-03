@@ -48,7 +48,15 @@ public class AdminSystemService {
         adminSystemAggregate.changePostCollectionDelay(delay);
 
         adminSystemCommand.save(adminSystemAggregate);
-        postCollectScheduledService.changePostCollectionDelay(delay);
+        postCollectScheduledService.restartPostCollection();
+    }
+
+    public void changePostCollectionBatchSize(int batchSize) {
+        AdminSystemAggregate adminSystemAggregate = adminSystemCommand.read();
+        adminSystemAggregate.changePostCollectionBatchSize(batchSize);
+
+        adminSystemCommand.save(adminSystemAggregate);
+        postCollectScheduledService.restartPostCollection();
     }
 
     public void changePostCollectionThreadPoolCoreSize(int corePoolSize) {

@@ -49,6 +49,10 @@ public class PostCollectSystem {
     }
 
     public void dequeueAndSaveRssResource() {
+        if (collectionQueue.isQueueEmpty()) {
+            return;
+        }
+
         Instant start = Instant.now();
         List<CompletableFuture<CollectionResult>> futures = new ArrayList<>();
 

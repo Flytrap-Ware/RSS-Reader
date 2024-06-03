@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostCollectionCycleRequest {
+public class PostCollectionBatchSizeRequest {
 
     @Min(value = 1, message = "batchSize는 음수 값은 허용되지 않습니다.")
     @Max(value = 100_000, message = "batchSize는 100,000을 초과할 수 없습니다.")
