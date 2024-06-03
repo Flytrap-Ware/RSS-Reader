@@ -3,6 +3,7 @@ package com.flytrap.rssreader.api.admin.infrastructure.system;
 import com.flytrap.rssreader.api.admin.domain.AdminSystemAggregate;
 import com.flytrap.rssreader.api.admin.infrastructure.implementation.AdminSystemCommand;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -49,7 +50,11 @@ public class PostCollectionThreadPoolExecutor implements CommandLineRunner {
         threadPoolTaskExecutor.execute(task);
     }
 
-    public CompletableFuture<Void> runAsync(Runnable task) {
-        return CompletableFuture.runAsync(task, threadPoolTaskExecutor);
+    public <T> CompletableFuture<T> supplyAsync(Supplier<T> task) {
+        return CompletableFuture.supplyAsync(task, threadPoolTaskExecutor);
+    }
+
+    public int getCorePoolSize() {
+        return threadPoolTaskExecutor.getCorePoolSize();
     }
 }
