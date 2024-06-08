@@ -78,15 +78,17 @@ CREATE TABLE IF NOT EXISTS `alert`
 
 CREATE TABLE IF NOT EXISTS `admin_system`
 (
-    `id`                        bigint  NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `post_collection_enabled`   tinyint(1)   NOT NULL DEFAULT 0,
-    `post_collection_delay`     bigint
+    `id`                            bigint  NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `post_collection_enabled`       tinyint(1)   NOT NULL DEFAULT 0,
+    `post_collection_delay`         bigint,
+    `post_collection_batch_size`    int,
+    `core_thread_pool_size`         int
 );
 
 CREATE TABLE IF NOT EXISTS `rss_post_stat`
 (
-    `id`           bigint        NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `platform`	varchar(25)	NOT NULL,
-    `post_count`    bigint        NOT NULL,
-    `pub_date`      timestamp     NOT NULL
+    `id`            bigint          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `platform`	    varchar(25)	    NOT NULL,
+    `post_count`    bigint          NOT NULL,
+    `pub_date`      timestamp       NOT NULL
 );
