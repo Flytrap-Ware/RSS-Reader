@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Domain(name = "subscription")
-public class Subscription implements DefaultDomain {
+public class Subscription implements DefaultDomain<Long> {
 
     private final SubscriptionId id;
     private final String title;

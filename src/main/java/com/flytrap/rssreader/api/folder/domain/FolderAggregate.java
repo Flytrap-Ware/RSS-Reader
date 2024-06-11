@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class FolderAggregate implements DefaultDomain {
+public class FolderAggregate implements DefaultDomain<Long> {
 
     private final FolderId id;
     private String name;

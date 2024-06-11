@@ -3,10 +3,10 @@ package com.flytrap.rssreader.api.subscribe.domain;
 import com.flytrap.rssreader.global.model.DomainId;
 
 public record SubscriptionId(
-    long value
-) implements DomainId {
+    Long value
+) implements DomainId<Long> {
     public SubscriptionId {
-        if (value < 0) {
+        if (value == null || value < 0) {
             throw new IllegalArgumentException("Subscription id must be positive");
         }
     }
