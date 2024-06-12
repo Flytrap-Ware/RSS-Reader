@@ -13,7 +13,7 @@ import com.flytrap.rssreader.api.post.infrastructure.repository.PostDslRepositor
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostOpenJpaRepository;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
-import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssSourceJpaRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +29,13 @@ public class PostQuery {
     private final BookmarkJpaRepository bookmarkJpaRepository;
     private final PostOpenJpaRepository postOpenJpaRepository;
     private final PostDslRepository postDslRepository;
-    private final RssResourceJpaRepository rssResourceJpaRepository;
+    private final RssSourceJpaRepository rssSourceJpaRepository;
 
     @Transactional(readOnly = true)
     public Optional<Post> read(PostId postId, AccountId accountId) {
 
         return postJpaRepository.findById(postId.value())
-            .flatMap(postEntity -> rssResourceJpaRepository.findById(postEntity.getId())
+            .flatMap(postEntity -> rssSourceJpaRepository.findById(postEntity.getId())
                 .map(rssSourceEntity -> {
                     boolean isRead = postOpenJpaRepository
                         .existsByAccountIdAndPostId(accountId.value(), postId.value());

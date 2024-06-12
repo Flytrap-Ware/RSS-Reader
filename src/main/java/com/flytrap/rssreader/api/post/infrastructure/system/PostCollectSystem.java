@@ -9,7 +9,7 @@ import com.flytrap.rssreader.api.post.infrastructure.entity.PostSystemEntity;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostSystemJpaRepository;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
-import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssSourceJpaRepository;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import java.time.Duration;
 import java.time.Instant;
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 public class PostCollectSystem {
 
     private final SubscribeCollectionPriorityQueue collectionQueue;
-    private final RssResourceJpaRepository rssResourceRepository;
+    private final RssSourceJpaRepository rssSourceRepository;
     private final PostJpaRepository postRepository;
     private final PostSystemJpaRepository postSystemJpaRepository;
     private final RssPostParser postParser;
@@ -43,7 +43,7 @@ public class PostCollectSystem {
             0, selectBatchSize,
             Sort.by(Sort.Direction.ASC, "lastCollectedAt"));
         var rssResources =
-            rssResourceRepository.findAll(pageable).getContent();
+            rssSourceRepository.findAll(pageable).getContent();
 
         collectionQueue.addAll(rssResources, CollectPriority.LOW);
     }
@@ -58,16 +58,16 @@ public class PostCollectSystem {
 
         while (!collectionQueue.isQueueEmpty()) {
 
-            RssSourceEntity rssResource = collectionQueue.poll();
+            RssSourceEntity rssSource = collectionQueue.poll();
 
             CompletableFuture<CollectionResult> future = postCollectionThreadPoolExecutor.supplyAsync(
-                () -> postParser.parseRssDocuments(rssResource.getUrl())
+                () -> postParser.parseRssDocuments(rssSource.getUrl())
                     .map(rssPostsData -> {
                         List<PostEntity> postEntities = postRepository.saveAll(
-                            generateCollectedPostsForUpsert(rssPostsData, rssResource));
-                        rssResource.updateTitle(rssPostsData.rssSourceTitle());
-                        rssResource.updateLastCollectedAt(start);
-                        rssResourceRepository.save(rssResource);
+                            generateCollectedPostsForUpsert(rssPostsData, rssSource));
+                        rssSource.updateTitle(rssPostsData.rssSourceTitle());
+                        rssSource.updateLastCollectedAt(start);
+                        rssSourceRepository.save(rssSource);
 
                         return new CollectionResult(1, postEntities.size(), 0);
                     })
