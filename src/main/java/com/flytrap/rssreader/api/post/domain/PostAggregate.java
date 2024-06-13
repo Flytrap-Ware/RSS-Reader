@@ -12,7 +12,7 @@ import lombok.Getter;
 
 @Getter
 @Domain(name = "post")
-public class PostAggregate implements DefaultDomain<Long> {
+public class PostAggregate implements DefaultDomain<String> {
 
     private final PostId id;
     private final String guid;

@@ -21,7 +21,7 @@ public class PostQueryController implements PostQueryControllerApi {
 
     @GetMapping("/api/posts/{postId}")
     public ApplicationResponse<PostResponse> getPost(
-        @PathVariable Long postId,
+        @PathVariable String postId,
         @Login AccountCredentials accountCredentials) {
 
         PostResponse response = PostResponse.from(

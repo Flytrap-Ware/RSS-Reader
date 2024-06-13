@@ -35,7 +35,7 @@ public class PostQuery {
     public Optional<Post> read(PostId postId, AccountId accountId) {
 
         return postJpaRepository.findById(postId.value())
-            .flatMap(postEntity -> rssSourceJpaRepository.findById(postEntity.getId())
+            .flatMap(postEntity -> rssSourceJpaRepository.findById(postEntity.getRssSourceId())
                 .map(rssSourceEntity -> {
                     boolean isRead = postOpenJpaRepository
                         .existsByAccountIdAndPostId(accountId.value(), postId.value());

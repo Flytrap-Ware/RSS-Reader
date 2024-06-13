@@ -19,7 +19,7 @@ public interface PostCommandControllerApi {
         @ApiResponse(responseCode = "200", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookmarkResponse.class))),
     })
     ApplicationResponse<BookmarkResponse> markAsBookmark(
-        @Parameter(description = "북마크에 추가할 게시글 ID") @PathVariable Long postId,
+        @Parameter(description = "북마크에 추가할 게시글 ID") @PathVariable String postId,
         @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials member
     );
 
@@ -28,7 +28,7 @@ public interface PostCommandControllerApi {
         @ApiResponse(responseCode = "200", description = "성공",  content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
     })
     ApplicationResponse<Void> unmarkAsBookmark(
-        @Parameter(description = "북마크를 제거할 게시글 ID") @PathVariable Long postId,
+        @Parameter(description = "북마크를 제거할 게시글 ID") @PathVariable String postId,
         @Parameter(description = "현재 로그인한 회원 정보") @Login AccountCredentials member
     );
 }

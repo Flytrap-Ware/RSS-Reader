@@ -20,7 +20,7 @@ public interface PostQueryControllerApi {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType="application/json", schema = @Schema(implementation = PostResponse.class))),
     })
     ApplicationResponse<PostResponse> getPost(
-            @PathVariable Long postId,
+            @PathVariable String postId,
             @Login AccountCredentials accountCredentials);
 
 }

@@ -6,13 +6,12 @@ import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
+import com.flytrap.rssreader.api.post.domain.PostIdGenerator;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
@@ -32,20 +31,19 @@ import lombok.NoArgsConstructor;
 public class PostEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(length = 2500, nullable = false)
+    @Column(length = 2500)
     private String guid;
 
-    @Column(length = 2500, nullable = false)
+    @Column(length = 2500)
     private String title;
 
-    @Column(length = 2500, nullable = true)
+    @Column(length = 2500)
     private String thumbnailUrl;
 
     @Lob
-    @Column(columnDefinition = "LONGTEXT", nullable = false)
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -55,7 +53,7 @@ public class PostEntity {
     private Long rssSourceId;
 
     @Builder
-    protected PostEntity(Long id, String guid, String title, String thumbnailUrl, String description, Instant pubDate,
+    protected PostEntity(String id, String guid, String title, String thumbnailUrl, String description, Instant pubDate,
                          Long rssSourceId) {
         this.id = id;
         this.guid = guid;
@@ -66,8 +64,9 @@ public class PostEntity {
         this.rssSourceId = rssSourceId;
     }
 
-    public static PostEntity from(RssPostsData.RssItemData itemData, Long rssSourceId) {
+    public static PostEntity create(RssPostsData.RssItemData itemData, Long rssSourceId) {
         return PostEntity.builder()
+                .id(PostIdGenerator.generateString(itemData.pubDate(), rssSourceId))
                 .guid(itemData.guid())
                 .title(itemData.title())
                 .thumbnailUrl(itemData.thumbnailUrl())
