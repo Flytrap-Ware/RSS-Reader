@@ -9,7 +9,7 @@ import com.flytrap.rssreader.api.post.domain.PostId;
 import java.time.Instant;
 
 public record PostSummaryOutput(
-        Long id,
+        String id,
         Long rssSourceId,
         String guid,
         String title,

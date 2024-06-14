@@ -33,7 +33,7 @@ class PostCommandServiceTest {
         void 게시글_읽음_상태를_취소할_수_있다() {
             // given
             var accountId = new AccountId(1L);
-            var postId = new PostId(1L);
+            var postId = new PostId("20240101000000-1");
 
             // when
             postCommandService.unmarkAsOpen(accountId, postId);
@@ -47,7 +47,7 @@ class PostCommandServiceTest {
         void 존재하지_않는_게시글을_조작할_경우_예외를_던진다() {
             // given
             var accountId = new AccountId(1L);
-            var postId = new PostId(999L);
+            var postId = new PostId("00000000000000-999");
 
             // when
             Executable postExecutable = () ->
@@ -67,7 +67,7 @@ class PostCommandServiceTest {
         void 북마크를_추가할_수_있다() {
             // given
             var accountId = new AccountId(1L);
-            var postId = new PostId(1L);
+            var postId = new PostId("20240101000000-1");
 
             // when
             postCommandService.markAsBookmark(accountId, postId);
@@ -81,7 +81,7 @@ class PostCommandServiceTest {
         void 존재하지_않는_게시글을_조작할_경우_예외를_던진다() {
             // given
             var accountId = new AccountId(1L);
-            var postId = new PostId(999L);
+            var postId = new PostId("00000000000000-999");
 
             // when
             Executable postExecutable = () ->
@@ -100,7 +100,7 @@ class PostCommandServiceTest {
         void 북마크를_취소할_수_있다() {
             // given
             var accountId = new AccountId(1L);
-            var postId = new PostId(1L);
+            var postId = new PostId("20240101000000-1");
 
             // when
             postCommandService.unmarkAsBookmark(accountId, postId);
@@ -114,7 +114,7 @@ class PostCommandServiceTest {
         void 존재하지_않는_게시글을_조작할_경우_예외를_던진다() {
             // given
             var accountId = new AccountId(1L);
-            var postId = new PostId(999L);
+            var postId = new PostId("00000000000000-999");
 
             // when
             Executable postExecutable = () ->

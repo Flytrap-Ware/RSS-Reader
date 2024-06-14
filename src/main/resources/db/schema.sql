@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `rss_source`
 
 CREATE TABLE IF NOT EXISTS `post`
 (
-    `id`            bigint        NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `id`            varchar(255)        NOT NULL PRIMARY KEY,
     `guid`          varchar(2500) NOT NULL,
     `rss_source_id` bigint        NOT NULL,
     `title`         varchar(2500) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `post`
 CREATE TABLE IF NOT EXISTS `open`
 (
     `id`           bigint        NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `post_id`      bigint        NOT NULL,
+    `post_id`      varchar(255)        NOT NULL,
     `account_id`   bigint        NOT NULL
 );
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `bookmark`
 (
     `id`	        bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `account_id`	bigint	NOT NULL,
-    `post_id` 	    bigint	NOT NULL
+    `post_id` 	    varchar(255)	NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `alert`

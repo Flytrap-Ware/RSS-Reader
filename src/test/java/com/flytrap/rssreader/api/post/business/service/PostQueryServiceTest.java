@@ -31,7 +31,7 @@ class PostQueryServiceTest {
         void 게시글_정보를_불러올_수_있다() {
             // given
             var accountId = new AccountId(1L);
-            var postId = new PostId(1L);
+            var postId = new PostId("20240101000000-1");
 
             // when
             var result = postQueryService.viewPost(accountId, postId);
@@ -44,7 +44,7 @@ class PostQueryServiceTest {
         void 존재하지_않는_게시글을_불러오면_예외가_발생한다() {
             // given
             var accountId = new AccountId(1L);
-            var postId = new PostId(999L);
+            var postId = new PostId("00000000000000-999");
 
             // when
             Executable viewPostExecutable = ()

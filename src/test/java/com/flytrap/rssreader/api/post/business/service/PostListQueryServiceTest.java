@@ -1,7 +1,6 @@
 package com.flytrap.rssreader.api.post.business.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.flytrap.rssreader.CustomServiceTest;
 import com.flytrap.rssreader.api.account.domain.AccountId;
@@ -104,14 +103,14 @@ class PostListQueryServiceTest {
 
             postCommand.updateOnlyBookmark(
                 PostAggregate.builder()
-                    .id(new PostId(1L))
+                    .id(new PostId("20240101000000-1"))
                     .bookmark(Bookmark.MARKED).build(),
                 accountId
             );
 
             postCommand.updateOnlyBookmark(
                 PostAggregate.builder()
-                    .id(new PostId(2L))
+                    .id(new PostId("20240101010000-1"))
                     .bookmark(Bookmark.MARKED).build(),
                 accountId
             );

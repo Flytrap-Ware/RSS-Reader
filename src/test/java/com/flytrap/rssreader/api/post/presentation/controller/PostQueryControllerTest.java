@@ -46,7 +46,7 @@ class PostQueryControllerTest {
                 .thenReturn(accountCredentials);
 
             // when, then
-            mockMvc.perform(get("/api/posts/{postId}", 1))
+            mockMvc.perform(get("/api/posts/{postId}", "20240101000000-1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").hasJsonPath())
                 .andExpect(jsonPath("$.data.guid").hasJsonPath())
@@ -68,7 +68,7 @@ class PostQueryControllerTest {
                 .thenThrow(AuthenticationException.class);
 
             // when, then
-            mockMvc.perform(get("/api/posts/{postId}", 1))
+            mockMvc.perform(get("/api/posts/{postId}", "20240101000000-1"))
                 .andExpect(status().isUnauthorized());
         }
 

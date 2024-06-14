@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Domain(name = "alert")
-public class Alert  implements DefaultDomain {
+public class Alert  implements DefaultDomain<Long> {
 
     private final AlertId id;
     private final AccountId accountId;

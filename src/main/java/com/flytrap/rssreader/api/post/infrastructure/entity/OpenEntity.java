@@ -27,10 +27,10 @@ public class OpenEntity {
     private Long accountId;
 
     @Column(name = "post_id", nullable = false)
-    private Long postId;
+    private String postId;
 
     @Builder
-    protected OpenEntity(Long id, Long accountId, Long postId) {
+    protected OpenEntity(Long id, Long accountId, String postId) {
         this.id = id;
         this.accountId = accountId;
         this.postId = postId;

@@ -25,7 +25,7 @@ public class PostCommandController implements PostCommandControllerApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/api/posts/{postId}/read")
     public ApplicationResponse<Void> unmarkAsOpened(
-        @PathVariable Long postId,
+        @PathVariable String postId,
         @Login AccountCredentials accountCredentials
     ) {
         postCommandService.unmarkAsOpen(new AccountId(accountCredentials.id().value()), new PostId(postId));
@@ -36,7 +36,7 @@ public class PostCommandController implements PostCommandControllerApi {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/posts/{postId}/bookmarks")
     public ApplicationResponse<BookmarkResponse> markAsBookmark(
-        @PathVariable Long postId,
+        @PathVariable String postId,
         @Login AccountCredentials accountCredentials
     ) {
         postCommandService
@@ -48,7 +48,7 @@ public class PostCommandController implements PostCommandControllerApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/api/posts/{postId}/bookmarks")
     public ApplicationResponse<Void> unmarkAsBookmark(
-        @PathVariable Long postId,
+        @PathVariable String postId,
         @Login AccountCredentials accountCredentials
     ) {
         postCommandService
