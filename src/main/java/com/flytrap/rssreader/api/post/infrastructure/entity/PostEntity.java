@@ -15,8 +15,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.time.Instant;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -46,7 +44,7 @@ public class PostEntity {
     @Column(columnDefinition = "LONGTEXT")
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "pub_date", columnDefinition = "TIMESTAMP")
     private Instant pubDate;
 
     @Column(nullable = false)
