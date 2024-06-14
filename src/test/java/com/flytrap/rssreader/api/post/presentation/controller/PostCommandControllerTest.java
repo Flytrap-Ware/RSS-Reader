@@ -52,7 +52,7 @@ class PostCommandControllerTest {
         void 읽음_상태_취소_성공시_204응답을_반환한다() throws Exception {
             // given
             postCommand.updateOnlyOpen(
-                PostAggregate.builder().id(new PostId(1L)).open(Open.MARKED).build(),
+                PostAggregate.builder().id(new PostId("20240102000000-1")).open(Open.MARKED).build(),
                 new AccountId(1L)
             );
 
@@ -62,7 +62,7 @@ class PostCommandControllerTest {
             when(authorizationArgumentResolver.resolveArgument(any(), any(), any(), any()))
                 .thenReturn(accountCredentials);
 
-            mockMvc.perform(delete("/api/posts/{postId}/read", 1))
+            mockMvc.perform(delete("/api/posts/{postId}/read", "20240101000000-1"))
                 .andExpect(status().isNoContent());
         }
 
@@ -93,7 +93,7 @@ class PostCommandControllerTest {
             when(authorizationArgumentResolver.resolveArgument(any(), any(), any(), any()))
                 .thenReturn(accountCredentials);
 
-            mockMvc.perform(post("/api/posts/{postId}/bookmarks", 1))
+            mockMvc.perform(post("/api/posts/{postId}/bookmarks", "20240101000000-1"))
                 .andExpect(status().isCreated());
         }
 
@@ -107,7 +107,7 @@ class PostCommandControllerTest {
                 .thenThrow(AuthenticationException.class);
 
             // when, then
-            mockMvc.perform(post("/api/posts/{postId}/bookmarks", 1))
+            mockMvc.perform(post("/api/posts/{postId}/bookmarks", "20240101000000-1"))
                 .andExpect(status().isUnauthorized());
         }
 
@@ -121,7 +121,7 @@ class PostCommandControllerTest {
         void 북마크_취소_성공시_204응답을_반환한다() throws Exception {
             // given
             postCommand.updateOnlyBookmark(
-                PostAggregate.builder().id(new PostId(1L)).bookmark(Bookmark.MARKED).build(),
+                PostAggregate.builder().id(new PostId("20240102000000-1")).bookmark(Bookmark.MARKED).build(),
                 new AccountId(1L)
             );
 
@@ -131,7 +131,7 @@ class PostCommandControllerTest {
             when(authorizationArgumentResolver.resolveArgument(any(), any(), any(), any()))
                 .thenReturn(accountCredentials);
 
-            mockMvc.perform(delete("/api/posts/{postId}/bookmarks", 1))
+            mockMvc.perform(delete("/api/posts/{postId}/bookmarks", "20240101000000-1"))
                 .andExpect(status().isNoContent());
         }
 
@@ -144,7 +144,7 @@ class PostCommandControllerTest {
                 .thenThrow(AuthenticationException.class);
 
             // when, then
-            mockMvc.perform(delete("/api/posts/{postId}/bookmarks", 1))
+            mockMvc.perform(delete("/api/posts/{postId}/bookmarks", "20240101000000-1"))
                 .andExpect(status().isUnauthorized());
         }
     }
