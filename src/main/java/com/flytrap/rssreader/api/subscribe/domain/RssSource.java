@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Domain(name = "rssSource")
-public class RssSource implements DefaultDomain {
+public class RssSource implements DefaultDomain<Long> {
 
     private final RssSourceId id;
     private final String title;

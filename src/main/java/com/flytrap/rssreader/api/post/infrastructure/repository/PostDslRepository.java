@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostDslRepository {
 
-    Optional<PostSummaryOutput> findById(Long postId);
+    Optional<PostSummaryOutput> findById(String postId);
 
     List<PostSummaryOutput> findAllByAccount(long accountId, PostFilter postFilter, Pageable pageable);
 

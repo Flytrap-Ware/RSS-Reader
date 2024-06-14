@@ -31,7 +31,7 @@ public class PostDslRepositoryImpl implements PostDslRepository {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public Optional<PostSummaryOutput> findById(Long postId) {
+    public Optional<PostSummaryOutput> findById(String postId) {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder

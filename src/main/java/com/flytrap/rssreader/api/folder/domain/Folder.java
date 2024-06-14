@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 @Getter
-public class Folder implements DefaultDomain {
+public class Folder implements DefaultDomain<Long> {
     private final FolderId id;
     private final String name;
     private final AccountId ownerId;

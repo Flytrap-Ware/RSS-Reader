@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Domain(name = "post")
-public class AdminSystemAggregate implements DefaultDomain {
+public class AdminSystemAggregate implements DefaultDomain<Long> {
 
     private final AdminSystemId id;
     private boolean postCollectionEnabled;

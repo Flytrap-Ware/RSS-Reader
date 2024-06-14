@@ -9,7 +9,7 @@ import com.flytrap.rssreader.api.subscribe.domain.SubscriptionId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.SubscriptionEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.SubscriptionJpaRepository;
-import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssSourceJpaRepository;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubscriptionCommand {
 
     private final SubscriptionJpaRepository subscriptionJpaRepository;
-    private final RssResourceJpaRepository rssResourceJpaRepository;
+    private final RssSourceJpaRepository rssSourceJpaRepository;
     private final RssSubscribeParser rssSubscribeParser;
     private final GlobalEventPublisher globalEventPublisher;
 
     @Transactional
     public Subscription createFrom(FolderId folderId, String rssUrl) {
-        Optional<RssSourceEntity> rssSourceEntityOptional = rssResourceJpaRepository
+        Optional<RssSourceEntity> rssSourceEntityOptional = rssSourceJpaRepository
             .findByUrl(rssUrl);
 
         if (rssSourceEntityOptional.isPresent()) {
@@ -42,7 +42,7 @@ public class SubscriptionCommand {
         } else {
             RssSourceData rssSourceData = rssSubscribeParser.parseRssDocuments(rssUrl)
                 .orElseThrow();
-            RssSourceEntity newRssSourceEntity = rssResourceJpaRepository
+            RssSourceEntity newRssSourceEntity = rssSourceJpaRepository
                 .save(RssSourceEntity.from(rssSourceData));
             SubscriptionEntity newSubscriptionEntity = SubscriptionEntity.builder()
                 .folderId(folderId.value())

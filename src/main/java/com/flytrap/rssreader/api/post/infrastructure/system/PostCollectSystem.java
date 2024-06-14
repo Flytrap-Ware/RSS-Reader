@@ -7,17 +7,16 @@ import com.flytrap.rssreader.api.parser.dto.RssPostsData;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostSystemEntity;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
+import com.flytrap.rssreader.api.post.infrastructure.repository.PostMyBatisRepository;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostSystemJpaRepository;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
-import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssSourceJpaRepository;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +30,9 @@ import org.springframework.stereotype.Service;
 public class PostCollectSystem {
 
     private final SubscribeCollectionPriorityQueue collectionQueue;
-    private final RssResourceJpaRepository rssResourceRepository;
+    private final RssSourceJpaRepository rssSourceRepository;
     private final PostJpaRepository postRepository;
+    private final PostMyBatisRepository postMyBatisRepository;
     private final PostSystemJpaRepository postSystemJpaRepository;
     private final RssPostParser postParser;
     private final GlobalEventPublisher globalEventPublisher;
@@ -43,7 +43,7 @@ public class PostCollectSystem {
             0, selectBatchSize,
             Sort.by(Sort.Direction.ASC, "lastCollectedAt"));
         var rssResources =
-            rssResourceRepository.findAll(pageable).getContent();
+            rssSourceRepository.findAll(pageable).getContent();
 
         collectionQueue.addAll(rssResources, CollectPriority.LOW);
     }
@@ -58,18 +58,19 @@ public class PostCollectSystem {
 
         while (!collectionQueue.isQueueEmpty()) {
 
-            RssSourceEntity rssResource = collectionQueue.poll();
+            RssSourceEntity rssSource = collectionQueue.poll();
 
             CompletableFuture<CollectionResult> future = postCollectionThreadPoolExecutor.supplyAsync(
-                () -> postParser.parseRssDocuments(rssResource.getUrl())
+                () -> postParser.parseRssDocuments(rssSource.getUrl())
                     .map(rssPostsData -> {
-                        List<PostEntity> postEntities = postRepository.saveAll(
-                            generateCollectedPostsForUpsert(rssPostsData, rssResource));
-                        rssResource.updateTitle(rssPostsData.rssSourceTitle());
-                        rssResource.updateLastCollectedAt(start);
-                        rssResourceRepository.save(rssResource);
+                        int upsertCount = postMyBatisRepository.bulkUpsert(
+                            generateCollectedPostsForUpsert(rssPostsData, rssSource));
 
-                        return new CollectionResult(1, postEntities.size(), 0);
+                        rssSource.updateTitle(rssPostsData.rssSourceTitle());
+                        rssSource.updateLastCollectedAt(start);
+                        rssSourceRepository.save(rssSource);
+
+                        return new CollectionResult(1, upsertCount, 0);
                     })
                     .orElse(new CollectionResult(0, 0, 1)));
 
@@ -122,21 +123,21 @@ public class PostCollectSystem {
 
     private List<PostEntity> generateCollectedPostsForUpsert(RssPostsData postData,
         RssSourceEntity rssResource) {
-        List<PostEntity> existingPosts = postRepository
-            .findAllByRssSourceId(rssResource.getId());
 
-        Map<String, PostEntity> existingPostsMap = convertListToHashSet(existingPosts);
+        Optional<PostEntity> latestPost = postRepository
+            .findFirstByRssSourceIdOrderByPubDateDesc(rssResource.getId());
+        Instant standardPubDate = latestPost.isPresent()
+            ? latestPost.get().getPubDate()
+            : Instant.now();
+
         List<PostEntity> collectedPosts = new ArrayList<>();
         List<PostEntity> newPosts = new ArrayList<>();
 
         for (RssPostsData.RssItemData itemData : postData.itemData()) {
-            PostEntity post;
+            PostEntity post = PostEntity.create(itemData, rssResource.getId());
 
-            if (existingPostsMap.containsKey(itemData.guid())) {
-                post = existingPostsMap.get(itemData.guid());
-                post.updateBy(itemData);
-            } else {
-                post = PostEntity.from(itemData, rssResource.getId());
+            if (standardPubDate.compareTo(post.getPubDate()) < 0) {
+                // standardPubDate가 post.getPubDate()보다 이른 시간일 경우 해당 post는 신규 게시글로 취급한다
                 newPosts.add(post);
             }
             collectedPosts.add(post);
@@ -147,18 +148,6 @@ public class PostCollectSystem {
         }
 
         return collectedPosts;
-    }
-
-    private static Map<String, PostEntity> convertListToHashSet(
-        List<PostEntity> postEntities
-    ) {
-        Map<String, PostEntity> map = new HashMap<>();
-
-        for (PostEntity postEntity : postEntities) {
-            map.put(postEntity.getGuid(), postEntity);
-        }
-
-        return Collections.unmodifiableMap(map);
     }
 
 }

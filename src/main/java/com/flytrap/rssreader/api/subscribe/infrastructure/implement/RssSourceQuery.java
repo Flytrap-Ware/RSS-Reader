@@ -3,7 +3,7 @@ package com.flytrap.rssreader.api.subscribe.infrastructure.implement;
 import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
-import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssResourceJpaRepository;
+import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssSourceJpaRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RssSourceQuery {
 
-    private final RssResourceJpaRepository rssResourceJpaRepository;
+    private final RssSourceJpaRepository rssSourceJpaRepository;
 
     public Optional<RssSource> read(RssSourceId rssSourceId) {
-        return rssResourceJpaRepository.findById(rssSourceId.value())
+        return rssSourceJpaRepository.findById(rssSourceId.value())
             .map(RssSourceEntity::toExistingRssSource);
     }
 

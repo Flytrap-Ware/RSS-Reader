@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Domain(name = "sharedMember")
-public class SharedMember implements DefaultDomain {
+public class SharedMember implements DefaultDomain<Long> {
 
     private final SharedMemberId id;
     private final AccountId accountId;
