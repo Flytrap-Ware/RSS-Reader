@@ -4,6 +4,8 @@ import com.flytrap.rssreader.api.admin.infrastructure.system.PostCollectionThrea
 import com.flytrap.rssreader.api.alert.business.event.NewPostAlertEvent;
 import com.flytrap.rssreader.api.parser.RssPostParser;
 import com.flytrap.rssreader.api.parser.dto.RssPostsData;
+import com.flytrap.rssreader.api.post.domain.PostId;
+import com.flytrap.rssreader.api.post.domain.PostIdGenerator;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity;
 import com.flytrap.rssreader.api.post.infrastructure.entity.PostSystemEntity;
 import com.flytrap.rssreader.api.post.infrastructure.repository.PostJpaRepository;
@@ -12,6 +14,7 @@ import com.flytrap.rssreader.api.post.infrastructure.repository.PostSystemJpaRep
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssSourceJpaRepository;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -70,9 +73,13 @@ public class PostCollectSystem {
                         rssSource.updateLastCollectedAt(start);
                         rssSourceRepository.save(rssSource);
 
-                        return new CollectionResult(1, upsertCount, 0);
+                        if (upsertCount >= 0) {
+                            return new CollectionResult(1, upsertCount, 0, 0);
+                        } else {
+                            return new CollectionResult(1, 0, 0, upsertCount * -1);
+                        }
                     })
-                    .orElse(new CollectionResult(0, 0, 1)));
+                    .orElse(new CollectionResult(0, 0, 1, 0)));
 
             futures.add(future);
         }
@@ -97,11 +104,12 @@ public class PostCollectSystem {
             futures.toArray(new CompletableFuture[0]));
         allOf.thenApply(voidResult -> futures.stream()
                 .map(CompletableFuture::join)
-                .reduce(new CollectionResult(0, 0, 0), (result1, result2) ->
+                .reduce(new CollectionResult(0, 0, 0, 0), (result1, result2) ->
                     new CollectionResult(
                         result1.getRssCount() + result2.getRssCount(),
                         result1.getPostCount() + result2.getPostCount(),
-                        result1.getParsingFailureCount() + result2.getParsingFailureCount()
+                        result1.getParsingFailureCount() + result2.getParsingFailureCount(),
+                        result1.getInsertFailureCount() + result2.getInsertFailureCount()
                     )
                 ))
             .thenAccept(collectionResult -> {
@@ -116,6 +124,7 @@ public class PostCollectSystem {
                         .postCount(collectionResult.getPostCount())
                         .threadCount(postCollectionThreadPoolExecutor.getCorePoolSize())
                         .parsingFailureCount(collectionResult.getParsingFailureCount())
+                        .insertFailureCount(collectionResult.getInsertFailureCount())
                         .build()
                 );
             }).join();
@@ -134,7 +143,13 @@ public class PostCollectSystem {
         List<PostEntity> newPosts = new ArrayList<>();
 
         for (RssPostsData.RssItemData itemData : postData.itemData()) {
-            PostEntity post = PostEntity.create(itemData, rssResource.getId());
+            PostId postId = null;
+            try {
+                postId = PostIdGenerator.generateString(itemData.pubDate(), itemData.guid());
+            } catch (NoSuchAlgorithmException e) {
+                return collectedPosts;
+            }
+            PostEntity post = PostEntity.create(postId, itemData, rssResource.getId());
 
             if (standardPubDate.compareTo(post.getPubDate()) < 0) {
                 // standardPubDate가 post.getPubDate()보다 이른 시간일 경우 해당 post는 신규 게시글로 취급한다
