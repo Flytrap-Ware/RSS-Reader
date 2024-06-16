@@ -53,7 +53,6 @@ public class PostCollectScheduledService implements CommandLineRunner {
         if (postCollectionEnableLoader.isDisabled()) {
             return;
         }
-        System.out.println("수집 시작 배치사이즈: " + collectionBatchSize);
         postCollectSystem.loadAndEnqueueRssResources(collectionBatchSize);
     }
 
