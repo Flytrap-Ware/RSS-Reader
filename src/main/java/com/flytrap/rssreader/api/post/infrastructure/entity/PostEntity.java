@@ -6,7 +6,6 @@ import com.flytrap.rssreader.api.post.domain.Open;
 import com.flytrap.rssreader.api.post.domain.Post;
 import com.flytrap.rssreader.api.post.domain.PostAggregate;
 import com.flytrap.rssreader.api.post.domain.PostId;
-import com.flytrap.rssreader.api.post.domain.PostIdGenerator;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
@@ -62,9 +61,9 @@ public class PostEntity {
         this.rssSourceId = rssSourceId;
     }
 
-    public static PostEntity create(RssPostsData.RssItemData itemData, Long rssSourceId) {
+    public static PostEntity create(PostId postId, RssPostsData.RssItemData itemData, Long rssSourceId) {
         return PostEntity.builder()
-                .id(PostIdGenerator.generateString(itemData.pubDate(), rssSourceId))
+                .id(postId.value())
                 .guid(itemData.guid())
                 .title(itemData.title())
                 .thumbnailUrl(itemData.thumbnailUrl())
