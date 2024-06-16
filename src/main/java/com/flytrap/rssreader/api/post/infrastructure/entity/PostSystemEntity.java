@@ -34,10 +34,12 @@ public class PostSystemEntity {
     private Integer postCount;
     private Integer threadCount;
     private Integer parsingFailureCount;
+    private Integer insertFailureCount;
 
     @Builder
     protected PostSystemEntity(Long id, Instant startTime, Instant endTime, Long elapsedTimeMillis,
-        Integer rssCount, Integer postCount, Integer threadCount, Integer parsingFailureCount) {
+        Integer rssCount, Integer postCount, Integer threadCount, Integer parsingFailureCount,
+        Integer insertFailureCount) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -46,6 +48,7 @@ public class PostSystemEntity {
         this.postCount = postCount;
         this.threadCount = threadCount;
         this.parsingFailureCount = parsingFailureCount;
+        this.insertFailureCount = insertFailureCount;
     }
 
 }
