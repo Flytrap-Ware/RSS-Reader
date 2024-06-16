@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 public class PostEntity {
 
     @Id
+    @Column(length = 55)
     private String id;
 
     @Column(length = 2500)
