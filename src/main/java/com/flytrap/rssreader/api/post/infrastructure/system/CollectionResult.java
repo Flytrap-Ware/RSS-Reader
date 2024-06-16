@@ -9,4 +9,5 @@ public class CollectionResult {
     private int rssCount;
     private int postCount;
     private int parsingFailureCount;
+    private int insertFailureCount;
 }
