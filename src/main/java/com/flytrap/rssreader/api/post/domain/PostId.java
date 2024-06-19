@@ -3,11 +3,11 @@ package com.flytrap.rssreader.api.post.domain;
 import com.flytrap.rssreader.global.model.DomainId;
 
 public record PostId(
-    long value
-) implements DomainId {
+    String value
+) implements DomainId<String> {
     public PostId {
-        if (value < 0) {
-            throw new IllegalArgumentException("Post id must be positive");
+        if (value == null) {
+            throw new IllegalArgumentException("Post ID cannot be null.");
         }
     }
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flytrap.rssreader.api.post.infrastructure.repository.PostMyBatisMapper">
+
+  <insert id="bulkUpsert" parameterType="com.flytrap.rssreader.api.post.infrastructure.entity.PostEntity">
+    <choose>
+      <when test="list != null and list.size() > 0">
+        INSERT INTO post(id, guid, title, thumbnail_url, description, pub_date, rss_source_id)
+        VALUES
+        <foreach collection="list" index="index" item="p" separator=",">
+          (
+          #{p.id},
+          #{p.guid},
+          #{p.title},
+          #{p.thumbnailUrl},
+          #{p.description},
+          #{p.pubDate},
+          #{p.rssSourceId}
+          )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        guid = VALUES(guid),
+        title = VALUES(title),
+        thumbnail_url = VALUES(thumbnail_url),
+        description = VALUES(description),
+        pub_date = VALUES(pub_date),
+        rss_source_id = VALUES(rss_source_id);
+      </when>
+      <otherwise>
+        SELECT 1
+      </otherwise>
+    </choose>
+  </insert>
+
+</mapper>

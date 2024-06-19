@@ -1,7 +1,8 @@
 package com.flytrap.rssreader.api.admin.presentation.controller;
 
 import com.flytrap.rssreader.api.admin.business.service.AdminSystemService;
-import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionCycleRequest;
+import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionBatchSizeRequest;
+import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionCoreSizeRequest;
 import com.flytrap.rssreader.api.admin.presentation.dto.PostCollectionDelayRequest;
 import com.flytrap.rssreader.api.auth.presentation.dto.AccountCredentials;
 import com.flytrap.rssreader.api.auth.presentation.dto.LoginRequest;
@@ -74,7 +75,7 @@ public class AdminController {
 
     @PostMapping("/api/admin/post-collection/cycle")
     public ApplicationResponse<String> startPostCollectionCycle(
-        @RequestBody @Valid PostCollectionCycleRequest request,
+        @RequestBody @Valid PostCollectionBatchSizeRequest request,
         @AdminLogin AccountCredentials accountCredentials
     ) {
         adminSystemService.startPostCollectionCycle(request.getBatchSize());
@@ -91,6 +92,26 @@ public class AdminController {
         adminSystemService.changePostCollectionDelay(request.getDelay());
 
         return new ApplicationResponse<>("게시글 수집 스케쥴 간격 변경: " + request.getDelay() + "ms");
+    }
+
+    @PatchMapping("/api/admin/post-collection/batch-size")
+    public ApplicationResponse<String> changePostCollectionBatchSize(
+        @RequestBody @Valid PostCollectionBatchSizeRequest request,
+        @AdminLogin AccountCredentials accountCredentials
+    ) {
+        adminSystemService.changePostCollectionBatchSize(request.getBatchSize());
+
+        return new ApplicationResponse<>("게시글 수집 배치 사이즈 변경: " + request.getBatchSize());
+    }
+
+    @PatchMapping("/api/admin/post-collection/core-size")
+    public ApplicationResponse<String> changePostCollectionThreadPoolCoreSize(
+        @RequestBody @Valid PostCollectionCoreSizeRequest request,
+        @AdminLogin AccountCredentials accountCredentials
+    ) {
+        adminSystemService.changePostCollectionThreadPoolCoreSize(request.getCoreSize());
+
+        return new ApplicationResponse<>("게시글 수집 코어 스레드 수 변경: " + request.getCoreSize() + "개");
     }
 
 }

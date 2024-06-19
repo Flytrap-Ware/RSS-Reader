@@ -8,4 +8,5 @@ public interface SubscribeCollectionPriorityQueue {
     void addAll(List<RssSourceEntity> subscribes, CollectPriority priority);
     RssSourceEntity poll();
     boolean isQueueEmpty();
+    int size();
 }

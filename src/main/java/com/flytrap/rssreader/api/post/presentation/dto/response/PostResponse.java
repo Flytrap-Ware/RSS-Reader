@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.List;
 
 public record PostResponse(
-        long id,
+        String id,
         String guid,
         String title,
         String thumbnailUrl,
@@ -18,7 +18,6 @@ public record PostResponse(
 
     public record PostListResponse(
             List<PostResponse> posts
-            // TODO: react
     ) { }
 
     public static PostResponse from(Post post) {

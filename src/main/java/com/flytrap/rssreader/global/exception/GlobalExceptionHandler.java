@@ -1,9 +1,11 @@
 package com.flytrap.rssreader.global.exception;
 
 import com.flytrap.rssreader.global.exception.domain.ApplicationException;
+import com.flytrap.rssreader.global.exception.domain.DuplicateDomainException;
 import com.flytrap.rssreader.global.exception.domain.ForbiddenAccessFolderException;
 import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import com.flytrap.rssreader.global.exception.domain.NotBelongToMemberException;
+import com.flytrap.rssreader.global.exception.domain.NotFolderOwnerException;
 import com.flytrap.rssreader.global.model.ErrorResponse;
 import java.util.Objects;
 import javax.security.sasl.AuthenticationException;
@@ -21,11 +23,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({DuplicateKeyException.class, MethodArgumentNotValidException.class, IllegalArgumentException.class})
+    @ExceptionHandler({
+        DuplicateKeyException.class, IllegalArgumentException.class, DuplicateDomainException.class})
     public ErrorResponse handleBadInputException(RuntimeException e) {
         e.printStackTrace();
         log.error(e.getMessage());
         return ErrorResponse.occur("input error", e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ErrorResponse handleBadInputException(MethodArgumentNotValidException e) {
+        e.printStackTrace();
+        log.error(e.getMessage());
+        return ErrorResponse.occur(Objects.requireNonNull(e.getFieldError()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -53,7 +64,8 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler({ForbiddenAccessFolderException.class, NotBelongToMemberException.class})
+    @ExceptionHandler({ForbiddenAccessFolderException.class, NotBelongToMemberException.class,
+        NotFolderOwnerException.class})
     public ErrorResponse handleForbiddenException(RuntimeException e) {
         e.printStackTrace();
         log.error(e.getMessage());

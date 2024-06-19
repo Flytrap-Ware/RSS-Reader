@@ -67,6 +67,12 @@ dependencies {
     implementation 'com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.3.3'
     // Prometheus
     implementation 'io.micrometer:micrometer-registry-prometheus'
+    // Test Container
+    testImplementation 'org.testcontainers:testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mysql'
+    // MyBatis
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 }
 
 test {
@@ -94,7 +100,8 @@ tasks.named('test') {
 jacocoTestReport {
     dependsOn test
     reports {
-        xml.required = true
+        html.required = true
+        xml.required = false
         csv.required = false
     }
     finalizedBy 'jacocoTestCoverageVerification'
@@ -112,30 +119,14 @@ jacocoTestCoverageVerification { // TODO test coverage check
 //            element = 'CLASS'
 
             limit {
-                minimum = 0.01
+                minimum = 0.5
             }
-            excludes = [
-                    'com.flytrap.**.api.*',
-                    'com.flytrap.**.properties.*',
-                    'com.flytrap.**.exception.*',
-                    'com.flytrap.**.dto.*',
-                    'com.flytrap.**.output.*',
-                    'com.flytrap.**.entity.*',
-                    'com.flytrap.rssreader.global.**.*',
-                    'com.flytrap.**.config.*',
-                    'com.flytrap.**.model.*',
-                    'com.flytrap.**.repository.*',
-                    'com.flytrap.**.service.*ReadService',
-                    'com.flytrap.**.controller.*ReadController',
-                    'com.flytrap.**.controller.api.*',
-                    'com.flytrap.**.**.*Builder',
-                    'com.flytrap.**.**.*Resolver',
-                    'com.flytrap.**.**.*Context',
-                    'com.flytrap.**.**.*Event',
-                    'com.flytrap.**.**.*Publisher',
-                    'com.flytrap.**.RssReaderApplication',
-//                    '*.test.*',
-            ] + Qdomains
+
+            includes = [
+                    'com.flytrap.rssreader.api.**.business.service.*',
+                    'com.flytrap.rssreader.api.**.presentation.controller.*'
+            ]
+
         }
     }
 }

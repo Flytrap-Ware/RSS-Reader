@@ -27,10 +27,10 @@ public class BookmarkEntity {
     private Long accountId;
 
     @Column(name = "post_id", nullable = false)
-    private Long postId;
+    private String postId;
 
     @Builder
-    protected BookmarkEntity(Long id, Long accountId, Long postId) {
+    protected BookmarkEntity(Long id, Long accountId, String postId) {
         this.id = id;
         this.accountId = accountId;
         this.postId = postId;

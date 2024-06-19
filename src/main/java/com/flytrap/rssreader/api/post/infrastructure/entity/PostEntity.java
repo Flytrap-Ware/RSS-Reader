@@ -11,13 +11,9 @@ import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity
 import com.flytrap.rssreader.global.exception.domain.InconsistentDomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.time.Instant;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -32,30 +28,30 @@ import lombok.NoArgsConstructor;
 public class PostEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(length = 55)
+    private String id;
 
-    @Column(length = 2500, nullable = false)
+    @Column(length = 2500)
     private String guid;
 
-    @Column(length = 2500, nullable = false)
+    @Column(length = 2500)
     private String title;
 
-    @Column(length = 2500, nullable = true)
+    @Column(length = 2500)
     private String thumbnailUrl;
 
     @Lob
-    @Column(columnDefinition = "LONGTEXT", nullable = false)
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "pub_date", columnDefinition = "TIMESTAMP")
     private Instant pubDate;
 
     @Column(nullable = false)
     private Long rssSourceId;
 
     @Builder
-    protected PostEntity(Long id, String guid, String title, String thumbnailUrl, String description, Instant pubDate,
+    protected PostEntity(String id, String guid, String title, String thumbnailUrl, String description, Instant pubDate,
                          Long rssSourceId) {
         this.id = id;
         this.guid = guid;
@@ -66,8 +62,9 @@ public class PostEntity {
         this.rssSourceId = rssSourceId;
     }
 
-    public static PostEntity from(RssPostsData.RssItemData itemData, Long rssSourceId) {
+    public static PostEntity create(PostId postId, RssPostsData.RssItemData itemData, Long rssSourceId) {
         return PostEntity.builder()
+                .id(postId.value())
                 .guid(itemData.guid())
                 .title(itemData.title())
                 .thumbnailUrl(itemData.thumbnailUrl())

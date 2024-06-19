@@ -7,8 +7,8 @@ import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderDslRepos
 import com.flytrap.rssreader.api.folder.infrastructure.repository.FolderJpaRepository;
 import com.flytrap.rssreader.api.shared_member.infrastructure.implementation.SharedMemberQuery;
 import com.flytrap.rssreader.api.subscribe.infrastructure.implement.SubscriptionQuery;
-import com.flytrap.rssreader.global.exception.domain.NoSuchDomainException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +21,12 @@ public class FolderQuery {
     private final SubscriptionQuery subscriptionQuery;
     private final SharedMemberQuery sharedMemberQuery;
 
-    public Folder read(FolderId folderId) {
+    public Optional<Folder> read(FolderId folderId) {
         return folderJpaRepository.findById(folderId.value())
-            .orElseThrow(() -> new NoSuchDomainException(Folder.class))
-            .toReadonly(
-                subscriptionQuery.readAllByFolder(folderId),
-                sharedMemberQuery.readAllByFolder(folderId)
+            .map(entity ->
+                entity.toReadonly(
+                    subscriptionQuery.readAllByFolder(folderId),
+                    sharedMemberQuery.readAllByFolder(folderId))
             );
     }
 

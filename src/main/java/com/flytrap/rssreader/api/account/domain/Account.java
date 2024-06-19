@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Domain(name = "account")
-public class Account implements DefaultDomain {
+public class Account implements DefaultDomain<Long> {
 
     private final AccountId id;
     private final AccountName name;
