@@ -14,6 +14,8 @@ import com.flytrap.rssreader.api.post.infrastructure.repository.PostSystemJpaRep
 import com.flytrap.rssreader.api.subscribe.infrastructure.entity.RssSourceEntity;
 import com.flytrap.rssreader.api.subscribe.infrastructure.repository.RssSourceJpaRepository;
 import com.flytrap.rssreader.global.event.GlobalEventPublisher;
+import com.flytrap.rssreader.global.utill.SimpleConcurrentPriorityQueue;
+import com.flytrap.rssreader.global.utill.SimplePriorityQueue;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
@@ -32,7 +34,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PostCollectSystem {
 
-    private final SubscribeCollectionPriorityQueue collectionQueue;
+    private final SimplePriorityQueue<RssSourceEntity> collectionQueue = new SimpleConcurrentPriorityQueue<>();
     private final RssSourceJpaRepository rssSourceRepository;
     private final PostJpaRepository postRepository;
     private final PostMyBatisRepository postMyBatisRepository;
