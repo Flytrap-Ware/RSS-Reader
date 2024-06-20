@@ -1,8 +1,7 @@
-package com.flytrap.rssreader.infrastructure.api.parser;
+package com.flytrap.rssreader.api.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.flytrap.rssreader.api.parser.RssSubscribeParser;
 import com.flytrap.rssreader.api.parser.dto.RssSourceData;
 import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
 import java.util.Optional;

@@ -64,7 +64,7 @@ public record MyFoldersResponse(
     ) {
         public static SharedMemberSummary from(SharedMember sharedMember) {
             return new SharedMemberSummary(
-                sharedMember.getId().value(),
+                sharedMember.getAccountId().value(),
                 sharedMember.getName(),
                 sharedMember.getProfileUrl()
             );
