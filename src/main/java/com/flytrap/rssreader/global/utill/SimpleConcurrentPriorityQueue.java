@@ -7,40 +7,43 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class SimpleConcurrentPriorityQueue<T> implements SimplePriorityQueue<T> {
 
-    private final Deque<T> queue = new ConcurrentLinkedDeque<>();
+    private final Deque<T> lowQueue = new ConcurrentLinkedDeque<>();
+    private final Deque<T> highQueue = new ConcurrentLinkedDeque<>();
 
     @Override
     public void add(T element, CollectPriority priority) {
         if (priority == CollectPriority.HIGH) {
-            queue.addFirst(element);
+            highQueue.addLast(element);
         } else {
-            queue.addLast(element);
+            lowQueue.addLast(element);
         }
     }
 
     @Override
     public void addAll(List<T> elements, CollectPriority priority) {
         if (priority == CollectPriority.HIGH) {
-            for (int i = elements.size() - 1; i >= 0; i--) {
-                queue.addFirst(elements.get(i));
-            }
+            highQueue.addAll(elements);
         } else {
-            queue.addAll(elements);
+            lowQueue.addAll(elements);
         }
     }
 
     @Override
-    public T poll() {
-        return queue.poll();
+    public synchronized T poll() {
+        if (highQueue.isEmpty()) {
+            return lowQueue.poll();
+        } else {
+            return highQueue.poll();
+        }
     }
 
     @Override
-    public boolean isQueueEmpty() {
-        return queue.isEmpty();
+    public synchronized boolean isQueueEmpty() {
+        return highQueue.isEmpty() && lowQueue.isEmpty();
     }
 
     @Override
-    public int size() {
-        return queue.size();
+    public synchronized int size() {
+        return lowQueue.size() + highQueue.size();
     }
 }
