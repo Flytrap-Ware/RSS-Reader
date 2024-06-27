@@ -25,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
@@ -39,7 +40,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class PostCollectSystem {
 
-    private final SubscribeCollectionPriorityQueue collectionQueue;
+    private final SimplePriorityQueue<RssSourceEntity> collectionQueue = new SimpleConcurrentPriorityQueue<>();
     private final RssSourceJpaRepository rssSourceRepository;
     private final PostJpaRepository postRepository;
     private final OutBoxEventJpaRepository outBoxEventJpaRepository;
