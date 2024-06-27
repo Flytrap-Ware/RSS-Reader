@@ -73,6 +73,8 @@ dependencies {
     testImplementation 'org.testcontainers:mysql'
     // MyBatis
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    // kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 }
 
 test {

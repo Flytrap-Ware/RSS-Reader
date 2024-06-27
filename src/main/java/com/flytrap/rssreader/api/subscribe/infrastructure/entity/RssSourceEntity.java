@@ -12,7 +12,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import java.time.Instant;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +44,7 @@ public class RssSourceEntity {
 
     @Builder
     protected RssSourceEntity(Long id, String title, String url,
-            BlogPlatform platform) {
+                              BlogPlatform platform) {
         this.id = id;
         this.title = title;
         this.url = url;
@@ -59,11 +61,11 @@ public class RssSourceEntity {
 
     public static RssSourceEntity from(RssSource rssSource) {
         return RssSourceEntity.builder()
-            .id(rssSource.getId().value())
-            .title(rssSource.getTitle())
-            .url(rssSource.getUrl())
-            .platform(rssSource.getPlatform())
-            .build();
+                .id(rssSource.getId().value())
+                .title(rssSource.getTitle())
+                .url(rssSource.getUrl())
+                .platform(rssSource.getPlatform())
+                .build();
     }
 
     /**

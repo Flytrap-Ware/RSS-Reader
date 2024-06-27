@@ -19,8 +19,8 @@ public class NewPostAlertEventListener {
     private final FolderQuery folderQuery;
 
     @Async
-    @EventListener(NewPostAlertEvent.class)
-    public void handle(NewPostAlertEvent event) {
+    @EventListener(NewPostAlertEvent1.class)
+    public void handle(NewPostAlertEvent1 event) {
         List<Alert> alerts = alertSendSystem.getAlertListByRssSource(event.rssSource().getId());
         if (!alerts.isEmpty()) {
             alerts.forEach(alert ->
