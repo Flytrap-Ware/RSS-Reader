@@ -23,12 +23,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostCollectSystem {
@@ -50,10 +48,9 @@ public class PostCollectSystem {
         var pageable = PageRequest.of(
             0, selectBatchSize,
             Sort.by(Sort.Direction.ASC, "lastCollectedAt"));
-        var rssResources =
-            rssSourceRepository.findAll(pageable).getContent();
+        var rssSources = rssSourceRepository.findAll(pageable).getContent();
 
-        collectionQueue.addAll(rssResources, CollectPriority.LOW);
+        collectionQueue.addAll(rssSources, CollectPriority.LOW);
     }
 
     public void dequeueAndSaveRssResource() {
@@ -67,6 +64,12 @@ public class PostCollectSystem {
         while (!collectionQueue.isQueueEmpty()) {
 
             RssSourceEntity rssSource = collectionQueue.poll();
+
+            if (rssSource.isRestriction(start)) {
+                rssSource.updateLastCollectedAt(start);
+                rssSourceRepository.save(rssSource);
+                continue;
+            }
 
             CompletableFuture<CollectionResult> future = postCollectionThreadPoolExecutor
                 .supplyAsync(() -> {
@@ -100,15 +103,24 @@ public class PostCollectSystem {
 
                 rssSource.updateTitle(data.rssSourceTitle());
                 rssSource.updateLastCollectedAt(start);
+                rssSource.resetRestriction();
                 rssSourceRepository.save(rssSource);
 
                 if (upsertCount >= 0) {
                     return new CollectionResult(1, upsertCount, 0, 0);
                 } else {
-                    return new CollectionResult(1, 0, 0, upsertCount * -1);
+                    // bulkUpsert 메서드가 -1을 반환할 수 있기 때문에 postCount에 추가하면 잘못된 합계가 나올 수 있다.
+                    // upsertCount가 -1이라면 insertFailureCount에 따로 추가하도록 한다
+                    return new CollectionResult(1, 0, 0, 1);
                 }
             })
-            .orElse(new CollectionResult(0, 0, 1, 0));
+            .orElseGet(() -> {
+                rssSource.increaseFailCountAndApplyRestriction(start);
+                rssSource.updateLastCollectedAt(start);
+                rssSourceRepository.save(rssSource);
+
+                return new CollectionResult(0, 0, 1, 0);
+            });
     }
 
     /**
