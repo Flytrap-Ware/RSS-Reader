@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS `rss_source`
     `title`             varchar(2500),
     `url`               varchar(2500) NOT NULL,
     `platform`          varchar(25),
-    `last_collected_at` datetime(6)
+    `last_collected_at` datetime(6),
+    `fail_count`        datetime(6),
+    `restriction_until` datetime(6)
 );
 
 CREATE TABLE IF NOT EXISTS `post`
