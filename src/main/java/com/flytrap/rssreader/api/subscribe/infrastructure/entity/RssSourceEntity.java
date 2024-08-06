@@ -1,8 +1,9 @@
 package com.flytrap.rssreader.api.subscribe.infrastructure.entity;
 
-import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
-import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.parser.dto.RssSourceData;
+import com.flytrap.rssreader.api.subscribe.domain.BlogPlatform;
+import com.flytrap.rssreader.api.subscribe.domain.RestrictionPolicy;
+import com.flytrap.rssreader.api.subscribe.domain.RssSource;
 import com.flytrap.rssreader.api.subscribe.domain.RssSourceId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,13 +41,22 @@ public class RssSourceEntity {
     @Column
     private Instant lastCollectedAt;
 
+    @Column
+    private Integer failCount;
+
+    @Column
+    private Instant restrictionUntil;
+
     @Builder
-    protected RssSourceEntity(Long id, String title, String url,
-            BlogPlatform platform) {
+    protected RssSourceEntity(Long id, String title, String url, BlogPlatform platform,
+        Instant lastCollectedAt, Integer failCount, Instant restrictionUntil) {
         this.id = id;
         this.title = title;
         this.url = url;
         this.platform = platform;
+        this.lastCollectedAt = lastCollectedAt;
+        this.failCount = failCount;
+        this.restrictionUntil = restrictionUntil;
     }
 
     public static RssSourceEntity from(RssSourceData rssSourceData) {
@@ -94,7 +104,28 @@ public class RssSourceEntity {
         this.title = title;
     }
 
+    public boolean isRestriction(Instant referenceDate) {
+        if (restrictionUntil == null) {
+            return false;
+        }
+        return referenceDate.isBefore(restrictionUntil);
+    }
+
+    public void increaseFailCountAndApplyRestriction(Instant referenceDate) {
+        if (failCount == null) {
+            this.failCount = 0;
+        }
+        this.failCount += 1;
+        this.restrictionUntil = RestrictionPolicy.calculateRestrictionDate(failCount, referenceDate);
+    }
+
+    public void resetRestriction() {
+        this.failCount = 0;
+        this.restrictionUntil = null;
+    }
+
     public void updateLastCollectedAt(Instant lastCollectedAt) {
         this.lastCollectedAt = lastCollectedAt;
     }
+
 }

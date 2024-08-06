@@ -14,15 +14,21 @@ import org.springframework.stereotype.Component;
 public class PostIdGenerator {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-    private static final String hashAlgorithm = "SHA-1";
+    private static final String HASH_ALGORITHM = "SHA-1";
+    private static final MessageDigest MESSAGE_DIGEST;
 
-    public static PostId generateString(Instant pubDate, String guid)
-        throws NoSuchAlgorithmException
-    {
+    static {
+        try {
+            MESSAGE_DIGEST = MessageDigest.getInstance(HASH_ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static PostId generate(Instant pubDate, String guid) {
         ZonedDateTime zonedDateTime = pubDate.atZone(ZoneOffset.UTC);
 
-        MessageDigest messageDigest = MessageDigest.getInstance(hashAlgorithm);
-        byte[] digest = messageDigest.digest(guid.getBytes(StandardCharsets.UTF_8));
+        byte[] digest = MESSAGE_DIGEST.digest(guid.getBytes(StandardCharsets.UTF_8));
         String hashValue = DatatypeConverter.printHexBinary(digest).toLowerCase();
 
         return new PostId(zonedDateTime.format(formatter) + "-" + hashValue);
