@@ -13,7 +13,18 @@
 [프로젝트 소개 글](https://flytrap-dev.tistory.com/5)
 
 ### 사용법
-//TODO: 이미지 추가, 사용방법 추가
+# 스크린 샷
+## 게시글 보기
+![게시글 보기](https://github.com/user-attachments/assets/3ea625fe-2700-4ee8-9a08-1f49cd07a31d)
+
+## 폴더 추가
+![폴더 추가](https://github.com/user-attachments/assets/31097e1a-1e17-42f4-9b78-488f9602545f)
+
+## RSS 문서 및 멤버 추가
+![블로그추가멤버추가](https://github.com/user-attachments/assets/1162b659-b687-4f98-9a69-b73d1a52618d)
+
+## 로그인, 로그아웃
+![로그인로그아웃](https://github.com/user-attachments/assets/a64f16ff-b6aa-4d81-8ae3-b208eb88e05f)
 
 ---
 
@@ -42,46 +53,10 @@
 - Rss-Reader는 Scheduler을 통한 구독을 기준으로 포스트 크롤링 작업을 합니다.
 ---
 
-## 레이어 구조
-```
-      
-        📂 domian
-            📂 {domain_name} // 도메인 별로 패키지 생성
-                🟢 {domain_name}.java
-        📂 global
-            📂 config // 설정 파일
-            📂 event  // AOP 관련 이벤트 파일
-            📂 exception // 예외 헨들러, 처리
-                🟢 GlobalHttpExceptionHandler.java
-                🟢 ErrorObject.java
-                🟢 NoSuchElementException ... .java
-            📂 model // 공통 Response응답 값과, 도메인의 요소들
-        📂 presentation
-            📂 controller
-                 🟢 {domain_name}Controller.java
-            📂 dto
-            📂 docs // swagger custom annotation
-        📂 infrastructure
-            📂 api // Parser, OauthProvider등 외부 API 호출 관련 클래스
-                📂 dto
-            🟢 AuthProvider.java
-            🟢 RssPostParser.java
-            📂 entity
-                📂 ...{domain_name}
-                    🟢 {domain_name}Entity.java
-            📂 properties // application.yml 파일에 작성한 값들을 가져오는 패키지
-            📂 repository
-        📂 service
-            📂 dto
-       
-```
-
----
-
 ## 인프라 구조
+![Image from f3e8d6dfc18c3bd2, page 21](https://github.com/user-attachments/assets/d1cc875f-1b55-4d55-a423-3e1af9a96717)
 
-## CI/CD 구조
-//todo : CI/CD 방법 추가
+
 ---
 
 ## 프로젝트 설치 및 실행 방법
